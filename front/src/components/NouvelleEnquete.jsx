@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
-import "./NouvelleEnquete.css";
+import "./css/NouvelleEnquete.css";
 
 class Home extends Component {
   render() {

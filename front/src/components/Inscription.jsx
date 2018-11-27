@@ -1,9 +1,25 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import "./Inscription.css";
+import "./css/Inscription.css";
+//import axios from "axios";
 
 class Inscription extends Component {
+  /*isSignedIn = event => {
+    event.preventDefault();
+    axios({
+      method: "get",
+      url: "http://localhost:8080/inscription"
+    })
+      .then(res => {
+        console.log(res);
+        this.props.history.push("/inscription");
+      })
+      .catch(error => {
+        console.log("Fail: " + error);
+      });
+  };*/
+
   render() {
     return (
       <div>
@@ -13,12 +29,18 @@ class Inscription extends Component {
         <Header />
         <div className="inscription mt-3">
           <h2>Inscription</h2>
-          <form method="post" action="" className="inscriptionForm">
+          <form
+            method="POST"
+            action="http://localhost:8080/inscription"
+            className="inscriptionForm"
+            //onSubmit={this.isSignedIn}
+          >
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label>Raison Sociale *</label>
                 <input
                   type="text"
+                  name="company_name"
                   className="form-control"
                   id="inputRaisonSociale"
                   placeholder="Raison sociale"
@@ -28,6 +50,7 @@ class Inscription extends Component {
                 <label>SIRET *</label>
                 <input
                   type="text"
+                  name="siret"
                   className="form-control"
                   id="inputSiret"
                   placeholder="N° SIRET"
@@ -39,6 +62,7 @@ class Inscription extends Component {
                 <label>Nom *</label>
                 <input
                   type="text"
+                  name="lastname"
                   className="form-control"
                   id="inputNom"
                   placeholder="Nom"
@@ -48,6 +72,7 @@ class Inscription extends Component {
                 <label>Prénom *</label>
                 <input
                   type="text"
+                  name="firstname"
                   className="form-control"
                   id="inputPrenom"
                   placeholder="Prénom"
@@ -59,6 +84,7 @@ class Inscription extends Component {
                 <label>Adresse du siège *</label>
                 <input
                   type="text"
+                  name="company_address"
                   className="form-control"
                   id="inputAdresse"
                   placeholder="Adresse du siège"
@@ -81,6 +107,7 @@ class Inscription extends Component {
                 <label>Adresse e-mail *</label>
                 <input
                   type="email"
+                  name="mail"
                   className="form-control"
                   id="inputEmail"
                   placeholder="E-mail"
@@ -101,6 +128,7 @@ class Inscription extends Component {
                 <label>N° de téléphone *</label>
                 <input
                   type="text"
+                  name="phone_number"
                   className="form-control"
                   id="inputTel"
                   placeholder="06XXXXXXXX"
@@ -116,6 +144,7 @@ class Inscription extends Component {
                 <label>Création du mot de passe *</label>
                 <input
                   type="password"
+                  name="password"
                   className="form-control"
                   id="inputPassword"
                   placeholder="Choisissez votre mot de passe"

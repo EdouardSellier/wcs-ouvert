@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import "./Connexion.css";
+import "./css/Connexion.css";
 
 class Connexion extends Component {
   constructor(props) {
@@ -11,14 +11,14 @@ class Connexion extends Component {
     };
   }
 
-  handleSubmit = event => {
+  /*handleSubmit = event => {
     event.preventDefault();
     if (this.state.email.includes("rh")) {
       this.props.history.push("/monespace");
     } else if (this.state.email.includes("admin")) {
       this.props.history.push("/admin");
     }
-  };
+  };*/
 
   handleChange = event => {
     this.setState({
@@ -37,14 +37,15 @@ class Connexion extends Component {
           <h2>Connexion à mon espace</h2>
           <form
             method="post"
-            action=""
+            action="http://localhost:8080/connexion"
             className="mt-5"
-            onSubmit={this.handleSubmit}
+            //onSubmit={this.handleSubmit}
           >
             <div className="form-group offset-3 col-md-6">
               <label>Adresse e-mail *</label>
               <input
                 type="email"
+                name="mail"
                 className="form-control"
                 id="inputEmailConnexion"
                 placeholder="Adresse e-mail"
@@ -56,6 +57,7 @@ class Connexion extends Component {
               <label>Mot de passe *</label>
               <input
                 type="password"
+                name="password"
                 className="form-control"
                 id="inputPasswordConnexion"
                 placeholder="Mot de passe"

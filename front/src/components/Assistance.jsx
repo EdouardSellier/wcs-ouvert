@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
-import "./Assistance.css";
+import "./css/Assistance.css";
 
 class Assistance extends Component {
   render() {

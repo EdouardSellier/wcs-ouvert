@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderAdmin from "./HeaderAdmin";
 import Footer from "./Footer";
-import "./ListeEntreprises.css";
+import "./css/ListeEntreprises.css";
 
 class ListeEntreprises extends Component {
   render() {

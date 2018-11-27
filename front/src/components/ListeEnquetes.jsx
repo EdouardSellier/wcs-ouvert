@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderAdmin from "./HeaderAdmin";
 import Footer from "./Footer";
-import "./ListeEnquetes.css";
+import "./css/ListeEnquetes.css";
 
 class ListeEnquetes extends Component {
   render() {

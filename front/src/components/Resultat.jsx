@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
-import "./Resultat.css";
+import "./css/Resultat.css";
 
 class Resultat extends Component {
   render() {

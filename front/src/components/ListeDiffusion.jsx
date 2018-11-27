@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
-import "./ListeDiffusion.css";
+import "./css/ListeDiffusion.css";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
 

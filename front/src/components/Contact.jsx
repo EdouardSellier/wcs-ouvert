@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import "./Contact.css";
+import "./css/Contact.css";
 
 class Contact extends Component {
   render() {

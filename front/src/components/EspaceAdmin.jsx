@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderAdmin from "./HeaderAdmin";
 import Footer from "./Footer";
-import "./EspaceAdmin.css";
+import "./css/EspaceAdmin.css";
 
 class AccueilAdmin extends Component {
   render() {

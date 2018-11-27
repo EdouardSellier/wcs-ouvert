@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
-import "./Sondage.css";
+import "./css/Sondage.css";
 
 class Sondage extends Component {
   render() {
