@@ -2,28 +2,45 @@ import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import "./css/Connexion.css";
+import axios from "axios";
 
 class Connexion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
+      mail: "",
       password: ""
     };
   }
 
-  /*handleSubmit = event => {
+  isLoggedIn = event => {
     event.preventDefault();
-    if (this.state.email.includes("rh")) {
-      this.props.history.push("/monespace");
-    } else if (this.state.email.includes("admin")) {
-      this.props.history.push("/admin");
-    }
-  };*/
+    let body = {
+      mail: this.state.mail,
+      password: this.state.password
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/connexion",
+      data: body
+    })
+      .then(res => {
+        if (res.data === "SUCCESS") {
+          this.setState({
+            mail: "",
+            password: ""
+          });
+          this.props.history.push("/monespace");
+        }
+      })
+      .catch(error => {
+        console.log("Fail: " + error);
+      });
+  };
 
   handleChangeEmail = event => {
     this.setState({
-      email: event.target.value
+      mail: event.target.value
     });
   };
 
@@ -42,12 +59,7 @@ class Connexion extends Component {
         <Header />
         <div className="connexion mt-3">
           <h2>Connexion à mon espace</h2>
-          <form
-            method="post"
-            action="http://localhost:8080/connexion"
-            className="mt-5"
-            //onSubmit={this.handleSubmit}
-          >
+          <form className="mt-5" onSubmit={this.isLoggedIn}>
             <div className="form-group offset-3 col-md-6">
               <label>Adresse e-mail *</label>
               <input
@@ -57,6 +69,7 @@ class Connexion extends Component {
                 id="inputEmailConnexion"
                 placeholder="Adresse e-mail"
                 onChange={this.handleChangeEmail}
+                value={this.state.mail}
               />
             </div>
             <div className="form-group offset-3 col-md-6">
@@ -68,6 +81,7 @@ class Connexion extends Component {
                 id="inputPasswordConnexion"
                 placeholder="Mot de passe"
                 onChange={this.handleChangePassword}
+                value={this.state.password}
               />
             </div>
             <button type="submit" className="btn btn-primary">
