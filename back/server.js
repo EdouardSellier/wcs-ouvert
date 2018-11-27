@@ -12,6 +12,16 @@ app.use(
   })
 );
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+
+//USER SESSION
 let nbSession = 1;
 
 app.use(
@@ -34,10 +44,9 @@ app.get("/auth", (req, res) => {
   console.log(nbSession);
 });
 
+//INSERT DATA IN DATABASE FOR INSCRIPTION
 app.post("/inscription", (req, res) => {
   if (req.body) {
-    res.header("Access-Control-Allow-Origin", "*");
-    console.log(req.body);
     const formData = req.body;
     connection.query("INSERT INTO user SET ?", formData, (err, results) => {
       if (err) {
@@ -53,6 +62,7 @@ app.post("/inscription", (req, res) => {
   }
 });
 
+//CHECK DATA BEFORE LOGIN
 app.post("/connexion", (req, res) => {
   if (req.body) {
     console.log(req.body);

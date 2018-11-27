@@ -7,7 +7,8 @@ class Connexion extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: ""
+      email: "",
+      password: ""
     };
   }
 
@@ -20,9 +21,15 @@ class Connexion extends Component {
     }
   };*/
 
-  handleChange = event => {
+  handleChangeEmail = event => {
     this.setState({
       email: event.target.value
+    });
+  };
+
+  handleChangePassword = event => {
+    this.setState({
+      password: event.target.value
     });
   };
 
@@ -49,8 +56,7 @@ class Connexion extends Component {
                 className="form-control"
                 id="inputEmailConnexion"
                 placeholder="Adresse e-mail"
-                value={this.state.email}
-                onChange={this.handleChange}
+                onChange={this.handleChangeEmail}
               />
             </div>
             <div className="form-group offset-3 col-md-6">
@@ -61,6 +67,7 @@ class Connexion extends Component {
                 className="form-control"
                 id="inputPasswordConnexion"
                 placeholder="Mot de passe"
+                onChange={this.handleChangePassword}
               />
             </div>
             <button type="submit" className="btn btn-primary">
