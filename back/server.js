@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-//USER SESSION
+
 let nbSession = 1;
 
 app.use(
@@ -44,7 +44,7 @@ app.get("/auth", (req, res) => {
   console.log(nbSession);
 });
 
-//INSERT DATA IN DATABASE FOR INSCRIPTION
+
 app.post("/inscription", (req, res) => {
   if (req.body) {
     const formData = req.body;
@@ -62,7 +62,7 @@ app.post("/inscription", (req, res) => {
   }
 });
 
-//CHECK DATA BEFORE LOGIN
+
 app.post("/connexion", (req, res) => {
   if (req.body) {
     console.log(req.body);
