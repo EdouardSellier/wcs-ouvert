@@ -145,8 +145,34 @@ class Sondage extends Component {
                   onChange={e => this.questionsUpdate(e, 1)}
                 />
                 <br />
+                Deux roues non motorisées dit transport doux (vélo, trottinette,
+                roller...) :{" "}
+                <input
+                  type="checkbox"
+                  id="questionTwo"
+                  name="Deux roues non motorisées dit transport doux (vélo,
+                    trottinette, roller...)"
+                  onChange={e => this.questionsUpdate(e, 1)}
+                />
+                <br />
+                Marche à pied (ou course) :{" "}
+                <input
+                  type="checkbox"
+                  id="questionTwo"
+                  name="Marche à pied (ou course)"
+                  onChange={e => this.questionsUpdate(e, 1)}
+                />
+                <br />
+                Autre :{" "}
+                <input
+                  type="checkbox"
+                  id="questionTwo"
+                  name="Autre"
+                  onChange={e => this.questionsUpdate(e, 1)}
+                />
+                <br />
                 {this.state.questionTwo.map(res => (
-                  <span> -> {res}</span>
+                  <span className="text-success"> -> {res}</span>
                 ))}
               </div>
             )}
