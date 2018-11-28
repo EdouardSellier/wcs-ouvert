@@ -4,6 +4,7 @@ const session = require("express-session");
 const port = 8080;
 const connection = require("./conf");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt");
 
 app.use(bodyParser.json());
 app.use(
@@ -20,7 +21,6 @@ app.use(function(req, res, next) {
   );
   next();
 });
-
 
 let nbSession = 1;
 
@@ -44,7 +44,6 @@ app.get("/auth", (req, res) => {
   console.log(nbSession);
 });
 
-
 app.post("/inscription", (req, res) => {
   if (req.body) {
     const formData = req.body;
@@ -62,13 +61,14 @@ app.post("/inscription", (req, res) => {
   }
 });
 
-
 app.post("/connexion", (req, res) => {
   if (req.body) {
     console.log(req.body);
     const formData = req.body;
     connection.query(
-      `SELECT * FROM user WHERE mail = "${req.body.mail}"`,
+      `SELECT * FROM user WHERE mail = "${req.body.mail}" and password = "${
+        req.body.password
+      }"`,
       formData,
       (err, results) => {
         if (err) {
@@ -77,7 +77,7 @@ app.post("/connexion", (req, res) => {
         } else {
           console.log(results);
           if (results.length === 0) {
-            res.status(500).send("This mail doesn't exist");
+            res.send("INCORRECT");
           } else {
             res.status(201).send("SUCCESS");
           }
