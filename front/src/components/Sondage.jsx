@@ -7,7 +7,16 @@ class Sondage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: ["un seul mode de transport", ""],
+      questions: [
+        "un seul mode de transport",
+        "",
+        "",
+        null,
+        null,
+        null,
+        null,
+        ""
+      ],
       questionTwo: []
     };
   }
@@ -27,7 +36,9 @@ class Sondage extends Component {
       }
       questions[index] = questionTwo;
     }
+
     alert(questions);
+
     this.setState({
       questions: questions,
       questionTwo: questionTwo
@@ -174,9 +185,126 @@ class Sondage extends Component {
                 {this.state.questionTwo.map(res => (
                   <span className="text-success"> -> {res}</span>
                 ))}
+                <div>
+                  <label for="questionThree">
+                    Quel est celui dans lequel vous passez le plus de temps au
+                    cours de votre trajet domicile-travail :
+                  </label>
+                  <br />
+                  <select
+                    onChange={e => this.questionsUpdate(e, 2)}
+                    id="questionThree"
+                  >
+                    <option>Voiture personnelle</option>
+                    <option>Voiture de fonction/service</option>
+                    <option>Covoiturage</option>
+                    <option>Train (RER,…)</option>
+                    <option>Métro</option>
+                    <option>Bus</option>
+                    <option>Tramway</option>
+                    <option>
+                      Deux roues non motorisées dit transport doux (vélo,
+                      trottinette, roller...)
+                    </option>
+                    <option>Deux roues motorisées (moto, scooter)</option>
+                    <option>Marche à pied (ou course)</option>
+                    <option>Autre</option>
+                  </select>
+                </div>
               </div>
             )}
+            <span>Combien de temps (en minutes) mettez-vous pour :</span>
             <br />
+            <label for="questionFore">L’aller (domicile-travail) :</label>
+            <br />
+            <input
+              type="number"
+              onChange={e => this.questionsUpdate(e, 3)}
+              id="questionFore"
+            />
+            <br />
+            <label for="questionFive">Le retour (travail-domicile) :</label>
+            <br />
+            <input
+              type="number"
+              onChange={e => this.questionsUpdate(e, 4)}
+              id="questionFive"
+            />
+            <br />
+            <label for="questionSix">
+              Quelle distance (en kms) parcourez-vous pour le trajet
+              domicile-travail ou travail-domicile ?
+            </label>
+            <br />
+            <input
+              type="number"
+              onChange={e => this.questionsUpdate(e, 5)}
+              id="questionSix"
+            />
+            <br />
+            <label for="questionSeven">
+              Combien vous coûtent (en euros) vos déplacements en moyenne pour
+              aller travailler (par mois) ?
+            </label>
+            <br />
+            <input
+              type="number"
+              onChange={e => this.questionsUpdate(e, 6)}
+              id="questionSeven"
+            />
+            <br />
+            <label for="questionHeight">
+              Pour quelle(s) raison(s) avez-vous choisi votre mode de
+              déplacement principal ?
+            </label>
+            <br />
+            Pas d’obligation(s) particulière(s) :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="Pas d’obligation(s) particulière(s)"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
+            <br />
+            Activité(s) personnelle(s) (loisirs, courses, …) :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="Activité(s) personnelle(s) (loisirs, courses, …)"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
+            <br />
+            Accompagnement des enfants ou du conjoint :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="Accompagnement des enfants ou du conjoint"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
+            <br />
+            Horaires (début matinal, sortie tardive) :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="Horaires (début matinal, sortie tardive)"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
+            <br />
+            Déplacements professionnels :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="Déplacements professionnels"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
+            <br />
+            Réseau des transports en commun mal desservi :{" "}
+            <input
+              type="checkbox"
+              id="questionHeight"
+              name="réseau des transports en commun mal desservi"
+              onChange={e => this.questionsUpdate(e, 7)}
+            />
           </form>
         </div>
 
