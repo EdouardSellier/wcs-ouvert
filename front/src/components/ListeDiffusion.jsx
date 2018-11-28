@@ -14,7 +14,7 @@ class ListeDiffusion extends Component {
   }
 
   handleFiles = files => {
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = e => {
       this.setState({
         mailsData: reader.result
