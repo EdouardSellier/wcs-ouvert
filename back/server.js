@@ -4,7 +4,6 @@ const session = require("express-session");
 const port = 8080;
 const connection = require("./conf");
 const bodyParser = require("body-parser");
-const bcrypt = require("bcrypt");
 
 app.use(bodyParser.json());
 app.use(
@@ -32,8 +31,9 @@ app.use(
   })
 );
 
-app.get("/auth", (req, res) => {
+app.get("/connexion", (req, res) => {
   sess = req.session;
+  console.log(sess);
   if (sess.admin) {
     res.send(String(sess.admin));
   } else {
