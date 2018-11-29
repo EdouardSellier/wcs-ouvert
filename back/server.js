@@ -52,6 +52,9 @@ app.post("/inscription", (req, res) => {
         console.log(err);
         res.status(500).send("The database crashed BOUM !");
       } else {
+        bcrypt.hash("${req.body.password}", 10, function(err, hash) {
+          console.log(hash);
+        });
         res.status(201).send("SUCCESS");
       }
     });
