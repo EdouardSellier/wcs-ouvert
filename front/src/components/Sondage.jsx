@@ -7,18 +7,8 @@ class Sondage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: [
-        "un seul mode de transport",
-        "Voiture personnelle",
-        "",
-        null,
-        null,
-        null,
-        null,
-        "",
-        "Tous les jours",
-        "Oui, toujours"
-      ],
+      /* This states are usuless for the moment but let's keep them, just must modif them after.. */
+      questions: ["", "", "", null, null, null, null, "", "", ""],
       questionTwo: [],
       questionHeight: []
     };
@@ -70,7 +60,7 @@ class Sondage extends Component {
                 </select>
               </div>
             )}
-            {this.state.questions[0] !== "un seul mode de transport" && (
+            {this.state.questions[0] !== "" && (
               <div>
                 <label for="questionTwo">
                   Quels sont vos modes de transport habituels par ordre de
@@ -152,7 +142,7 @@ class Sondage extends Component {
             )}
             <span>Combien de temps (en minutes) mettez-vous pour :</span>
             <br />
-            <label for="questionFo">L’aller (domicile-travail) :</label>
+            <label for="questionFour">L’aller (domicile-travail) :</label>
             <br />
             <input type="number" id="questionFour" />
             <br />
@@ -221,9 +211,7 @@ class Sondage extends Component {
               name="réseau des transports en commun mal desservi"
             />
             <br />
-            {this.state.questionHeight.includes(
-              "Pas d’obligation(s) particulière(s)"
-            ) === false &&
+            {this.state.questionHeight.includes("") === false &&
               this.state.questionHeight.length > 0 && (
                 <div>
                   <label for="questionNine" className="mt-2">
@@ -249,6 +237,7 @@ class Sondage extends Component {
               <option>Non, jamais</option>
             </select>
             <br />
+            {/* Just to have a condition, the condition must be changed after */}
             {1 === true && (
               <div>
                 <label for="questionEleven" className="mt-2">
@@ -337,6 +326,150 @@ class Sondage extends Component {
               <option>Oui, de temps en temps</option>
               <option>Non, ma voiture m’apporte trop d’avantages</option>
             </select>
+            <br />
+            <label for="questionSeventeen">
+              Quelle affirmation correspond le plus à vos habitudes de
+              déplacements aujourd’hui pour vous rendre au travail :
+            </label>
+            <br />
+            <select id="questionSeventeen">
+              <option>
+                Je connais des alternatives à la voiture individuelle, j’essaye
+                de les utiliser lorsque c’est possible et j’envisage de les
+                utiliser davantage
+              </option>
+              <option>
+                Je connais des alternatives à la voiture individuelle mais je ne
+                les ai pas encore mises en pratique
+              </option>
+              <option>
+                Je ne connais pas suffisamment les différentes possibilités de
+                me rendre au travail sans voiture
+              </option>
+              <option>
+                J’utilise la voiture individuelle et  je n’ai malheureusement
+                pas d’autres choix à l’heure actuelle
+              </option>
+              <option>
+                J’utilise la voiture individuelle et je n’ai pas envie de
+                changer mes habitudes de déplacements
+              </option>
+            </select>
+            <br />
+            <label for="questionEighteen">
+              Quelles sont les mesures qui pourraient vous inciter à utiliser
+              davantage les transports en commun ?
+            </label>
+            <br />
+            des stations/arrêts plus proches de mon domicile{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="des stations/arrêts plus proches de mon domicile"
+            />
+            <br />
+            des stations/arrêts plus proches de mon lieu de travail{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="des stations/arrêts plus proches de mon lieu de travail"
+            />
+            <br />
+            Une meilleure prise en charge de l’abonnement{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Une meilleure prise en charge de l’abonnement"
+            />
+            <br />
+            Des fréquences de passage plus importantes{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Des fréquences de passage plus importantes"
+            />
+            <br />
+            Aucune mesure, je ne souhaite pas utiliser les transports en commun{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Aucune mesure, je ne souhaite pas utiliser les transports en commun"
+            />
+            <br />
+            Autre <input type="checkbox" id="questionEighteen" name="Autre" />
+            <br />
+            <label for="questionEighteen">
+              Quelles sont les mesures qui pourraient vous inciter à utiliser
+              davantage le vélo ?
+            </label>
+            <br />
+            Des aménagements cyclables plus nombreux sur mon trajet{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Des aménagements cyclables plus nombreux sur mon trajet"
+            />
+            <br />
+            Une information sur les pistes cyclables{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Une information sur les pistes cyclables"
+            />
+            <br />
+            Une aide financière pour acheter un vélo{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Une aide financière pour acheter un vélo"
+            />
+            <br />
+            Une indemnité kilométrique vélo{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Une indemnité kilométrique vélo"
+            />
+            <br />
+            La présence d’une station de vélo en libre-service à proximité du
+            site ou de mon domicile{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="La présence d’une station de vélo en libre-service à proximité du site ou de mon domicile"
+            />
+            <br />
+            Un stationnement vélo sécurisé et abrité
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Un stationnement vélo sécurisé et abrité"
+            />
+            <br />
+            Des douches et des vestiaires{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Des douches et des vestiaires"
+            />
+            <br />
+            L’offre d’équipement adapté (cadenas, vêtement de pluie, lumière,
+            casque){" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="L’offre d’équipement adapté (cadenas, vêtement de pluie, lumière, casque)"
+            />
+            <br />
+            Un retour assuré en cas de mauvais temps{" "}
+            <input
+              type="checkbox"
+              id="questionEighteen"
+              name="Un retour assuré en cas de mauvais temps"
+            />
+            <br />
+            Autre
+            <input type="checkbox" id="questionEighteen" name="Autre" />
             <br />
           </form>
         </div>
