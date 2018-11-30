@@ -3,6 +3,14 @@ import Header from "./Header";
 import Footer from "./Footer";
 import "./css/Connexion.css";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const dangerMsg = {
+  place: "tr",
+  message: "Ton email ou ton mot de passe est incorrect",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class Connexion extends Component {
   constructor(props) {
@@ -12,6 +20,10 @@ class Connexion extends Component {
       password: ""
     };
   }
+
+  alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
+  };
 
   isLoggedIn = event => {
     event.preventDefault();
@@ -31,6 +43,8 @@ class Connexion extends Component {
             password: ""
           });
           this.props.history.push("/monespace");
+        } else {
+          this.alertFunctionDanger();
         }
       })
       .catch(error => {
@@ -58,6 +72,7 @@ class Connexion extends Component {
         </p>
         <Header />
         <div className="connexion mt-3">
+          <NotificationAlert ref="notificationAlert" />
           <h2>Connexion à mon espace</h2>
           <form className="mt-5" onSubmit={this.isLoggedIn}>
             <div className="form-group offset-3 col-md-6">
