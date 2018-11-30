@@ -4,6 +4,7 @@ const session = require("express-session");
 const port = 8080;
 const connection = require("./conf");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcryptjs");
 
 app.use(bodyParser.json());
 app.use(
@@ -21,6 +22,25 @@ app.use(function(req, res, next) {
   next();
 });
 
+app.post("/inscription", (req, res) => {
+  if (req.body) {
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+      req.body.password = hash;
+      const formData = req.body;
+      connection.query("INSERT INTO user SET ?", formData, (err, results) => {
+        if (err) {
+          console.log(err);
+          res.status(500).send("The database crashed BOUM !");
+        } else {
+          res.status(201).send("SUCCESS");
+        }
+      });
+    });
+  } else {
+    console.log("Wrong use of POST /answer !");
+    res.status(403).send("You must provide all informations !");
+  }
+});
 
 let nbSession = 1;
 
@@ -28,12 +48,13 @@ app.use(
   session({
     secret: "password",
     saveUninitialized: false,
-    resave: false
+    resave: true
   })
 );
 
-app.get("/auth", (req, res) => {
+/*app.get("/connexion", (req, res) => {
   sess = req.session;
+  console.log(sess);
   if (sess.admin) {
     res.send(String(sess.admin));
   } else {
@@ -42,52 +63,40 @@ app.get("/auth", (req, res) => {
   }
   nbSession++;
   console.log(nbSession);
-});
-
-
-app.post("/inscription", (req, res) => {
-  if (req.body) {
-    const formData = req.body;
-    connection.query("INSERT INTO user SET ?", formData, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send("The database crashed BOUM !");
-      } else {
-        res.status(201).send("SUCCESS");
-      }
-    });
-  } else {
-    console.log("Wrong use of POST /answer !");
-    res.status(403).send("You must provide all informations !");
-  }
-});
-
+});*/
 
 app.post("/connexion", (req, res) => {
-  if (req.body) {
-    console.log(req.body);
-    const formData = req.body;
-    connection.query(
-      `SELECT * FROM user WHERE mail = "${req.body.mail}"`,
-      formData,
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send("The database crashed BOUM !");
-        } else {
-          console.log(results);
-          if (results.length === 0) {
-            res.status(500).send("This mail doesn't exist");
+  sess = req.session;
+  sess.rh = nbSession;
+  console.log(sess);
+  nbSession++;
+  console.log(nbSession);
+  let mail = req.body.mail;
+  let password = req.body.password;
+  connection.query("SELECT * FROM user WHERE mail = ?", [mail], function(
+    error,
+    results,
+    fields
+  ) {
+    if (error) {
+      res.json({
+        status: false,
+        message: "there are some error with query"
+      });
+    } else {
+      if (results.length > 0) {
+        bcrypt.compare(password, results[0].password, function(err, ress) {
+          if (!ress) {
+            res.send("WRONG");
           } else {
-            res.status(201).send("SUCCESS");
+            res.send("SUCCESS");
           }
-        }
+        });
+      } else {
+        res.send("DON'T EXIST");
       }
-    );
-  } else {
-    console.log("Wrong use of POST /answer !");
-    res.status(403).send("You must provide all informations !");
-  }
+    }
+  });
 });
 
 app.listen(port, err => {
