@@ -15,15 +15,18 @@ class Sondage extends Component {
         null,
         null,
         null,
+        "",
         ""
       ],
-      questionTwo: []
+      questionTwo: [],
+      questionHeight: []
     };
   }
 
   questionsUpdate(e, index) {
     let questions = this.state.questions;
     let questionTwo = this.state.questionTwo;
+    let questionHeight = this.state.questionHeight;
     questions[index] = e.target.value;
     if (
       this.state.questions[0] !== "un seul mode de transport" &&
@@ -35,13 +38,21 @@ class Sondage extends Component {
         questionTwo.push(e.target.name);
       }
       questions[index] = questionTwo;
+    } else if (index === 7) {
+      if (questionHeight.includes(e.target.name)) {
+        questionHeight = questionHeight.filter(res => res !== e.target.name);
+      } else {
+        questionHeight.push(e.target.name);
+      }
+      questions[index] = questionHeight;
     }
 
     alert(questions);
 
     this.setState({
       questions: questions,
-      questionTwo: questionTwo
+      questionTwo: questionTwo,
+      questionHeight: questionHeight
     });
   }
   render() {
@@ -305,6 +316,25 @@ class Sondage extends Component {
               name="réseau des transports en commun mal desservi"
               onChange={e => this.questionsUpdate(e, 7)}
             />
+            <br />
+            {}
+            <label for="questionNine" className="mt-2">
+              Cette contrainte est-elle régulière :
+            </label>
+            <br />
+            {this.state.questionHeight.includes(
+              "Pas d’obligation(s) particulière(s)"
+            ) === false &&
+              this.state.questionHeight.length > 0 && (
+                <select
+                  onChange={e => this.questionsUpdate(e, 8)}
+                  id="questionNine"
+                >
+                  <option>Tous les jours</option>
+                  <option>Trois à quatre fois par semaine</option>
+                  <option>Une à deux fois par semaine</option>
+                </select>
+              )}
           </form>
         </div>
 
