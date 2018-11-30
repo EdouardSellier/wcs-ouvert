@@ -9,52 +9,21 @@ class Sondage extends Component {
     this.state = {
       questions: [
         "un seul mode de transport",
+        "Voiture personnelle",
         "",
-        "",
         null,
         null,
         null,
         null,
         "",
-        ""
+        "Tous les jours",
+        "Oui, toujours"
       ],
       questionTwo: [],
       questionHeight: []
     };
   }
 
-  questionsUpdate(e, index) {
-    let questions = this.state.questions;
-    let questionTwo = this.state.questionTwo;
-    let questionHeight = this.state.questionHeight;
-    questions[index] = e.target.value;
-    if (
-      this.state.questions[0] !== "un seul mode de transport" &&
-      index === 1
-    ) {
-      if (questionTwo.includes(e.target.name)) {
-        questionTwo = questionTwo.filter(res => res !== e.target.name);
-      } else {
-        questionTwo.push(e.target.name);
-      }
-      questions[index] = questionTwo;
-    } else if (index === 7) {
-      if (questionHeight.includes(e.target.name)) {
-        questionHeight = questionHeight.filter(res => res !== e.target.name);
-      } else {
-        questionHeight.push(e.target.name);
-      }
-      questions[index] = questionHeight;
-    }
-
-    alert(questions);
-
-    this.setState({
-      questions: questions,
-      questionTwo: questionTwo,
-      questionHeight: questionHeight
-    });
-  }
   render() {
     return (
       <div>
@@ -70,7 +39,7 @@ class Sondage extends Component {
               utilisez-vous :
             </label>
             <br />
-            <select onChange={e => this.questionsUpdate(e, 0)} id="questionOne">
+            <select id="questionOne">
               <option>un seul mode de transport</option>
               <option>
                 plusieurs modes de transport successivement dans un même trajet
@@ -83,10 +52,7 @@ class Sondage extends Component {
                   Quel est votre mode de transport habituel :
                 </label>
                 <br />
-                <select
-                  onChange={e => this.questionsUpdate(e, 1)}
-                  id="questionTwo"
-                >
+                <select id="questionTwo">
                   <option>Voiture personnelle</option>
                   <option>Voiture de fonction/service</option>
                   <option>Covoiturage</option>
@@ -116,7 +82,6 @@ class Sondage extends Component {
                   type="checkbox"
                   id="questionTwo"
                   name="Voiture personnelle"
-                  onChange={e => this.questionsUpdate(e, 1)}
                 />
                 <br />
                 Voiture de fonction/service :{" "}
@@ -124,48 +89,20 @@ class Sondage extends Component {
                   type="checkbox"
                   id="questionTwo"
                   name="Voiture de fonction/service"
-                  onChange={e => this.questionsUpdate(e, 1)}
                 />
                 <br />
                 Covoiturage :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Covoiturage"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                <input type="checkbox" id="questionTwo" name="Covoiturage" />
                 <br />
                 Train (RER,…) :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Train (RER,…)"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                <input type="checkbox" id="questionTwo" name="Train (RER,…)" />
                 <br />
-                Métro :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Métro"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                Métro : <input type="checkbox" id="questionTwo" name="Métro" />
                 <br />
-                Bus :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Bus"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                Bus : <input type="checkbox" id="questionTwo" name="Bus" />
                 <br />
                 Tramway :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Tramway"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                <input type="checkbox" id="questionTwo" name="Tramway" />
                 <br />
                 Deux roues non motorisées dit transport doux (vélo, trottinette,
                 roller...) :{" "}
@@ -174,7 +111,6 @@ class Sondage extends Component {
                   id="questionTwo"
                   name="Deux roues non motorisées dit transport doux (vélo,
                     trottinette, roller...)"
-                  onChange={e => this.questionsUpdate(e, 1)}
                 />
                 <br />
                 Marche à pied (ou course) :{" "}
@@ -182,16 +118,9 @@ class Sondage extends Component {
                   type="checkbox"
                   id="questionTwo"
                   name="Marche à pied (ou course)"
-                  onChange={e => this.questionsUpdate(e, 1)}
                 />
                 <br />
-                Autre :{" "}
-                <input
-                  type="checkbox"
-                  id="questionTwo"
-                  name="Autre"
-                  onChange={e => this.questionsUpdate(e, 1)}
-                />
+                Autre : <input type="checkbox" id="questionTwo" name="Autre" />
                 <br />
                 {this.state.questionTwo.map(res => (
                   <span className="text-success"> -> {res}</span>
@@ -202,10 +131,7 @@ class Sondage extends Component {
                     cours de votre trajet domicile-travail :
                   </label>
                   <br />
-                  <select
-                    onChange={e => this.questionsUpdate(e, 2)}
-                    id="questionThree"
-                  >
+                  <select id="questionThree">
                     <option>Voiture personnelle</option>
                     <option>Voiture de fonction/service</option>
                     <option>Covoiturage</option>
@@ -228,41 +154,25 @@ class Sondage extends Component {
             <br />
             <label for="questionFore">L’aller (domicile-travail) :</label>
             <br />
-            <input
-              type="number"
-              onChange={e => this.questionsUpdate(e, 3)}
-              id="questionFore"
-            />
+            <input type="number" id="questionFore" />
             <br />
             <label for="questionFive">Le retour (travail-domicile) :</label>
             <br />
-            <input
-              type="number"
-              onChange={e => this.questionsUpdate(e, 4)}
-              id="questionFive"
-            />
+            <input type="number" id="questionFive" />
             <br />
             <label for="questionSix">
               Quelle distance (en kms) parcourez-vous pour le trajet
               domicile-travail ou travail-domicile ?
             </label>
             <br />
-            <input
-              type="number"
-              onChange={e => this.questionsUpdate(e, 5)}
-              id="questionSix"
-            />
+            <input type="number" id="questionSix" />
             <br />
             <label for="questionSeven">
               Combien vous coûtent (en euros) vos déplacements en moyenne pour
               aller travailler (par mois) ?
             </label>
             <br />
-            <input
-              type="number"
-              onChange={e => this.questionsUpdate(e, 6)}
-              id="questionSeven"
-            />
+            <input type="number" id="questionSeven" />
             <br />
             <label for="questionHeight">
               Pour quelle(s) raison(s) avez-vous choisi votre mode de
@@ -274,7 +184,6 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="Pas d’obligation(s) particulière(s)"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
             <br />
             Activité(s) personnelle(s) (loisirs, courses, …) :{" "}
@@ -282,7 +191,6 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="Activité(s) personnelle(s) (loisirs, courses, …)"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
             <br />
             Accompagnement des enfants ou du conjoint :{" "}
@@ -290,7 +198,6 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="Accompagnement des enfants ou du conjoint"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
             <br />
             Horaires (début matinal, sortie tardive) :{" "}
@@ -298,7 +205,6 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="Horaires (début matinal, sortie tardive)"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
             <br />
             Déplacements professionnels :{" "}
@@ -306,7 +212,6 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="Déplacements professionnels"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
             <br />
             Réseau des transports en commun mal desservi :{" "}
@@ -314,27 +219,35 @@ class Sondage extends Component {
               type="checkbox"
               id="questionHeight"
               name="réseau des transports en commun mal desservi"
-              onChange={e => this.questionsUpdate(e, 7)}
             />
-            <br />
-            {}
-            <label for="questionNine" className="mt-2">
-              Cette contrainte est-elle régulière :
-            </label>
             <br />
             {this.state.questionHeight.includes(
               "Pas d’obligation(s) particulière(s)"
             ) === false &&
               this.state.questionHeight.length > 0 && (
-                <select
-                  onChange={e => this.questionsUpdate(e, 8)}
-                  id="questionNine"
-                >
-                  <option>Tous les jours</option>
-                  <option>Trois à quatre fois par semaine</option>
-                  <option>Une à deux fois par semaine</option>
-                </select>
+                <div>
+                  <label for="questionNine" className="mt-2">
+                    Cette contrainte est-elle régulière :
+                  </label>
+                  <br />
+                  <select id="questionNine">
+                    <option>Tous les jours</option>
+                    <option>Trois à quatre fois par semaine</option>
+                    <option>Une à deux fois par semaine</option>
+                  </select>
+                </div>
               )}
+            <label for="questionTen" className="mt-2">
+              Vous déplacez-vous à l’extérieur du site à la pause déjeuner
+              (repas, courses…) ?
+            </label>
+            <br />
+            <select id="questionTen">
+              <option>Oui, toujours</option>
+              <option>Oui, souvent (deux fois ou plus par semaine)</option>
+              <option>Oui, rarement (deux fois par mois)</option>
+              <option>Non, jamais</option>
+            </select>
           </form>
         </div>
 
