@@ -5,6 +5,7 @@ const port = 8080;
 const connection = require("./conf");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
+const uuidv4 = require("uuid/v4");
 
 app.use(bodyParser.json());
 app.use(
@@ -42,13 +43,14 @@ app.post("/inscription", (req, res) => {
   }
 });
 
-let nbSession = 1;
-
 app.use(
   session({
-    secret: "password",
-    saveUninitialized: false,
-    resave: true
+    genid: req => {
+      return uuidv4();
+    },
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: true
   })
 );
 
@@ -71,11 +73,8 @@ app.post("/connexion", (req, res) => {
           if (!ress) {
             res.status(500).send("WRONG");
           } else {
-            sess = req.session;
-            sess.rh = nbSession;
-            console.log(sess);
-            nbSession++;
-            console.log(nbSession);
+            let session = uuidv4();
+            console.log(session);
             res.status(200).send("SUCCESS");
           }
         });
