@@ -29,15 +29,15 @@ app.post("/inscription", (req, res) => {
       const formData = req.body;
       connection.query("INSERT INTO user SET ?", formData, (err, results) => {
         if (err) {
-          console.log(err);
-          res.status(500).send("The database crashed BOUM !");
+          res
+            .status(500)
+            .send("The database crashed BOUM ! The reason is " + err);
         } else {
           res.status(201).send("SUCCESS");
         }
       });
     });
   } else {
-    console.log("Wrong use of POST /answer !");
     res.status(403).send("You must provide all informations !");
   }
 });
@@ -52,25 +52,7 @@ app.use(
   })
 );
 
-/*app.get("/connexion", (req, res) => {
-  sess = req.session;
-  console.log(sess);
-  if (sess.admin) {
-    res.send(String(sess.admin));
-  } else {
-    sess.admin = nbSession;
-    res.send("Initialize new session");
-  }
-  nbSession++;
-  console.log(nbSession);
-});*/
-
 app.post("/connexion", (req, res) => {
-  sess = req.session;
-  sess.rh = nbSession;
-  console.log(sess);
-  nbSession++;
-  console.log(nbSession);
   let mail = req.body.mail;
   let password = req.body.password;
   connection.query("SELECT * FROM user WHERE mail = ?", [mail], function(
@@ -81,19 +63,24 @@ app.post("/connexion", (req, res) => {
     if (error) {
       res.json({
         status: false,
-        message: "there are some error with query"
+        message: "There are some error with query"
       });
     } else {
       if (results.length > 0) {
         bcrypt.compare(password, results[0].password, function(err, ress) {
           if (!ress) {
-            res.send("WRONG");
+            res.status(500).send("WRONG");
           } else {
-            res.send("SUCCESS");
+            sess = req.session;
+            sess.rh = nbSession;
+            console.log(sess);
+            nbSession++;
+            console.log(nbSession);
+            res.status(200).send("SUCCESS");
           }
         });
       } else {
-        res.send("DON'T EXIST");
+        res.status(404).send("USER DON'T EXIST");
       }
     }
   });
