@@ -41,6 +41,30 @@ const Checkbox = props => {
   );
 };
 
+const Number = props => {
+  return (
+    <React.Fragment>
+      <label for={props.data.id}>{props.data.label}</label>
+      <br />
+      {props.data.possibilities.map(content => {
+        return (
+          <div>
+            <span>{content} </span>
+            <br />
+            <input
+              type="number"
+              id={props.data.id}
+              name={content}
+              onChange={props.function}
+            />
+          </div>
+        );
+      })}
+      <p />
+    </React.Fragment>
+  );
+};
+
 class Sondage extends Component {
   constructor(props) {
     super(props);
@@ -113,23 +137,30 @@ class Sondage extends Component {
           ]
         },
         {
-          id: "spendTimeTransport",
+          id: "minuteTimeTransport",
+          type: "number",
+          label: "Combien de temps (en minutes) mettez-vous pour :",
+          possibilities: ["Voiture personnelle", "Voiture de fonction/service"]
+        },
+        {
+          id: "distanceTransport",
+          type: "number",
+          label: "Quelle distance (en kms) parcourez-vous pour :",
+          possibilities: ["le trajet domicile-travail ou travail-domicile ?"]
+        },
+        {
+          id: "moneyTransport",
+          type: "number",
+          label:
+            "Combien vous coûtent (en euros) vos déplacements en moyenne pour :",
+          possibilities: ["aller travailler (par mois) ? "]
+        },
+        {
+          id: "distanceTransport",
           type: "option",
           label:
-            "Parmi les modes de transports suivants, quel est celui dans lequel vous passez le plus de temps au cours de votre trajet domicile-travail ?",
-          possibilities: [
-            "Voiture personnelle",
-            "Voiture de fonction/service",
-            "Covoiturage",
-            "Train (RER,…)",
-            "Métro",
-            "Bus",
-            "Tramway",
-            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
-            "Deux roues motorisées (moto, scooter)",
-            "Marche à pied (ou course)",
-            "Autre"
-          ]
+            "Pour quelle(s) raison(s) avez-vous choisi votre mode de déplacement principal ?",
+          possibilities: ["aller travailler (par mois) ? "]
         }
       ]
     };
@@ -156,25 +187,14 @@ class Sondage extends Component {
 
                 case "checkbox":
                   return <Checkbox data={data} />;
+                case "number":
+                  return <Number data={data} />;
                 default:
                   return <p>Il y a une erreur.</p>;
               }
 
               //return <p>{data.type}</p>;
             })}
-
-            {/*<Option
-              data={this.state.questions[0]}
-              function={e => this.change(e)}
-            />
-            <Option
-              data={this.state.questions[1]}
-              function={e => this.change(e)}
-            />
-            <Checkbox
-              data={this.state.questions[2]}
-              function={e => this.change(e)}
-            />*/}
           </form>
         </div>
 
