@@ -44,7 +44,7 @@ class Sondage extends Component {
     this.state = {
       questions: [
         {
-          id: "questionOne",
+          id: "generalTransport",
           type: "option",
           label:
             "De manière générale, pour vos déplacements domicile-travail, utilisez-vous : ",
@@ -54,7 +54,7 @@ class Sondage extends Component {
           ]
         },
         {
-          id: "questionTwo",
+          id: "oneTransport",
           type: "option",
           label:
             "Quel est votre mode de transport habituel votre trajet domicile-travail ?",
@@ -73,7 +73,25 @@ class Sondage extends Component {
           ]
         },
         {
-          id: "questionThree",
+          id: "severalTransport",
+          type: "checkbox",
+          label: "Dans quel ordre les utilisez-vous ?",
+          possibilities: [
+            "Voiture personnelle",
+            "Voiture de fonction/service",
+            "Covoiturage",
+            "Train (RER,…)",
+            "Métro",
+            "Bus",
+            "Tramway",
+            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
+            "Deux roues motorisées (moto, scooter)",
+            "Marche à pied (ou course)",
+            "Autre"
+          ]
+        },
+        {
+          id: "questionFour",
           type: "checkbox",
           label: "Dans quel ordre les utilisez-vous ?",
           possibilities: [
@@ -121,6 +139,7 @@ class Sondage extends Component {
 
               //return <p>{data.type}</p>;
             })}
+
             {/*<Option
               data={this.state.questions[0]}
               function={e => this.change(e)}
