@@ -203,6 +203,31 @@ class Sondage extends Component {
             "Difficilement",
             "Très difficilement"
           ]
+        },
+        {
+          id: "accessibility",
+          type: "option",
+          label: "Les trouvez-vous pratiques, accessibles ?",
+          possibilities: ["Oui", "Non"]
+        },
+        {
+          id: "unavailable",
+          type: "option",
+          label:
+            "Si votre mode de déplacement principal n’est pas disponible, vers quelle solution vous reportez-vous ?",
+          possibilities: [
+            "Voiture personnelle",
+            "Voiture de fonction/service",
+            "Covoiturage",
+            "Train (RER,…)",
+            "Métro",
+            "Bus",
+            "Tramway",
+            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
+            "Deux roues motorisées (moto, scooter)",
+            "Marche à pied (ou course)",
+            "Autre"
+          ]
         }
       ]
     };
