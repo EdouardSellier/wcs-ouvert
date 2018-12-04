@@ -259,8 +259,6 @@ class Sondage extends Component {
                 default:
                   return <p>Il y a une erreur.</p>;
               }
-
-              //return <p>{data.type}</p>;
             })}
           </form>
         </div>
