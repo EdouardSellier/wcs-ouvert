@@ -1,9 +1,15 @@
 .connexion {
-  min-height: 100vh;
+  min-height: 80vh;
 }
 
 .homeSlogan {
   color: #38909d;
   font-size: 1.5em;
   padding-top: 5px;
+}
+
+.formContainer {
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
