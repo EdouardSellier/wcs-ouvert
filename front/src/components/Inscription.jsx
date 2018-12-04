@@ -16,7 +16,7 @@ const successMsg = {
 const errorMsg = {
   place: "tr",
   message:
-    "Notre service est momentanément indisponible, vous pouvez nous contacter par e-mail ou par téléphone. Merci de votre compréhension",
+    "Il semblerait qu'il y ait un problème avec votre inscription, merci de vérifier tous les champs",
   type: "danger",
   autoDismiss: 4
 };
@@ -310,7 +310,7 @@ class Inscription extends React.Component {
                   md={{ size: 3, offset: 4 }}
                   sm={{ size: 10 }}
                 >
-                  <button className="btn btn-primary">
+                  <button className="btn text-white mb-3">
                     Valider mon inscription
                   </button>
                 </Col>
