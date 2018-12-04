@@ -25,6 +25,12 @@ class Connexion extends Component {
     this.refs.notificationAlert.notificationAlert(dangerMsg);
   };
 
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
+
   isLoggedIn = event => {
     event.preventDefault();
     let body = {
@@ -47,18 +53,6 @@ class Connexion extends Component {
       });
   };
 
-  handleChangeEmail = event => {
-    this.setState({
-      mail: event.target.value
-    });
-  };
-
-  handleChangePassword = event => {
-    this.setState({
-      password: event.target.value
-    });
-  };
-
   render() {
     return (
       <div>
@@ -69,6 +63,7 @@ class Connexion extends Component {
         <div className="connexion mt-3">
           <NotificationAlert ref="notificationAlert" />
           <h2>Connexion à mon espace</h2>
+
           <form className="mt-5" onSubmit={this.isLoggedIn}>
             <div className="form-group offset-3 col-md-6">
               <label>Adresse e-mail *</label>
@@ -76,9 +71,10 @@ class Connexion extends Component {
                 type="email"
                 name="mail"
                 className="form-control"
-                id="inputEmailConnexion"
+                id="inputMailConnexion"
+                ref={ref => (this.inputMailConnexion = ref)}
                 placeholder="Adresse e-mail"
-                onChange={this.handleChangeEmail}
+                onChange={this.handleChange}
                 value={this.state.mail}
               />
             </div>
@@ -89,8 +85,9 @@ class Connexion extends Component {
                 name="password"
                 className="form-control"
                 id="inputPasswordConnexion"
+                ref={ref => (this.inputPasswordConnexion = ref)}
                 placeholder="Mot de passe"
-                onChange={this.handleChangePassword}
+                onChange={this.handleChange}
                 value={this.state.password}
               />
             </div>

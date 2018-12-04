@@ -65,7 +65,7 @@ app.post("/connexion", (req, res) => {
     if (error) {
       res.json({
         status: false,
-        message: "There are some error with query"
+        message: "There are some error with this query"
       });
     } else {
       if (results.length > 0) {
