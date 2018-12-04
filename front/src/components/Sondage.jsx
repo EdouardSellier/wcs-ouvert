@@ -25,12 +25,15 @@ const Checkbox = props => {
       <br />
       {props.data.possibilities.map(content => {
         return (
-          <input
-            type="checkbox"
-            id={props.data.id}
-            name={content}
-            onChange={props.function}
-          />
+          <div>
+            <span>{content} </span>
+            <input
+              type="checkbox"
+              id={props.data.id}
+              name={content}
+              onChange={props.function}
+            />
+          </div>
         );
       })}
       <p />
@@ -91,9 +94,29 @@ class Sondage extends Component {
           ]
         },
         {
-          id: "questionFour",
-          type: "checkbox",
-          label: "Dans quel ordre les utilisez-vous ?",
+          id: "spendTimeTransport",
+          type: "option",
+          label:
+            "Parmi les modes de transports suivants, quel est celui dans lequel vous passez le plus de temps au cours de votre trajet domicile-travail ?",
+          possibilities: [
+            "Voiture personnelle",
+            "Voiture de fonction/service",
+            "Covoiturage",
+            "Train (RER,…)",
+            "Métro",
+            "Bus",
+            "Tramway",
+            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
+            "Deux roues motorisées (moto, scooter)",
+            "Marche à pied (ou course)",
+            "Autre"
+          ]
+        },
+        {
+          id: "spendTimeTransport",
+          type: "option",
+          label:
+            "Parmi les modes de transports suivants, quel est celui dans lequel vous passez le plus de temps au cours de votre trajet domicile-travail ?",
           possibilities: [
             "Voiture personnelle",
             "Voiture de fonction/service",
