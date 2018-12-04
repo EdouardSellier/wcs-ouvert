@@ -41,14 +41,14 @@ app.post("/inscription", (req, res) => {
               port: 587,
               secure: false, // true for 465, false for other ports
               auth: {
-                user: "vinchent.maureen@gmail.com", // generated ethereal user
-                pass: "Franksinatra007" // generated ethereal password
+                user: "ouvert.wcs@gmail.com", // generated ethereal user
+                pass: "ouvert2018" // generated ethereal password
               }
             });
             // setup email data with unicode symbols
             let mailOptions = {
               from: '"Fred Foo" <foo@example.com>', // sender address
-              to: "vinchent.maureen@gmail.com", // list of receivers
+              to: "ouvert.wcs@gmail.com", // list of receivers
               subject: "Hello ✔", // Subject line
               text: "Hello world?", // plain text body
               html: "<b>Hello world?</b>" // html body
