@@ -38,16 +38,11 @@ class Connexion extends Component {
     })
       .then(res => {
         if (res.data === "SUCCESS") {
-          this.setState({
-            mail: "",
-            password: ""
-          });
           this.props.history.push("/monespace");
-        } else {
-          this.alertFunctionDanger();
         }
       })
       .catch(error => {
+        this.alertFunctionDanger();
         console.log("Fail: " + error);
       });
   };
