@@ -178,6 +178,31 @@ class Sondage extends Component {
             "Trois à quatre fois par semaine",
             "Une à deux fois par semaine"
           ]
+        },
+        {
+          id: "breakfast",
+          type: "option",
+          label:
+            "Vous déplacez-vous à l’extérieur du site à la pause déjeuner (repas, courses…) ?",
+          possibilities: [
+            "Oui, toujours",
+            "Oui, souvent (deux fois ou plus par semaine)",
+            "Oui, rarement (deux fois par mois)",
+            "Non, jamais"
+          ]
+        },
+
+        {
+          id: "parking",
+          type: "option",
+          label:
+            "En arrivant sur votre lieu de travail, trouvez-vous une place :",
+          possibilities: [
+            "Très facilement",
+            "Facilement",
+            "Difficilement",
+            "Très difficilement"
+          ]
         }
       ]
     };
