@@ -6,6 +6,7 @@ const connection = require("./conf");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const uuidv4 = require("uuid/v4");
+const nodemailer = require("nodemailer");
 
 app.use(bodyParser.json());
 app.use(
@@ -22,7 +23,6 @@ app.use(function(req, res, next) {
   );
   next();
 });
-
 app.post("/inscription", (req, res) => {
   if (req.body) {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -34,6 +34,32 @@ app.post("/inscription", (req, res) => {
             .status(500)
             .send("The database crashed BOUM ! The reason is " + err);
         } else {
+          nodemailer.createTestAccount((err, account) => {
+            // create reusable transporter object using the default SMTP transport
+            let transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 587,
+              secure: false, // true for 465, false for other ports
+              auth: {
+                user: "vinchent.maureen@gmail.com", // generated ethereal user
+                pass: "Franksinatra007" // generated ethereal password
+              }
+            });
+            // setup email data with unicode symbols
+            let mailOptions = {
+              from: '"Fred Foo" <foo@example.com>', // sender address
+              to: "vinchent.maureen@gmail.com", // list of receivers
+              subject: "Hello ✔", // Subject line
+              text: "Hello world?", // plain text body
+              html: "<b>Hello world?</b>" // html body
+            };
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                return console.log(error);
+              }
+            });
+          });
           res.status(201).send("SUCCESS");
         }
       });
