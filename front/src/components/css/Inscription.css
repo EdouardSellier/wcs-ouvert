@@ -1,13 +1,39 @@
-.inscription {
-  min-height: 85vh;
-}
-
-.inscriptionForm {
-  padding: 50px;
-}
-
 .homeSlogan {
   color: #38909d;
   font-size: 1.5em;
   padding-top: 5px;
+}
+
+.errorMsg {
+  color: #cc0000;
+  font-style: italic;
+  text-align: left;
+  padding-bottom: 10px;
+  padding-top: 5px;
+  padding-left: 20px;
+}
+
+.emptyMsg {
+  color: #cc0000;
+  font-style: italic;
+  text-align: center;
+  padding-bottom: 10px;
+  padding-top: 15px;
+}
+
+#register,
+#login {
+  padding: 15px 15px 15px 15px;
+  font-family: arial;
+  line-height: 16px;
+  color: #333333;
+  font-size: 14px;
+  background: #ffffff;
+  margin-top: 20px;
+}
+
+form label {
+  font-size: 17px;
+  padding-bottom: 5px;
+  padding-top: 20px;
 }
