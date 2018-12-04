@@ -156,11 +156,28 @@ class Sondage extends Component {
           possibilities: ["aller travailler (par mois) ? "]
         },
         {
-          id: "distanceTransport",
+          id: "reasonTransport",
           type: "option",
           label:
             "Pour quelle(s) raison(s) avez-vous choisi votre mode de déplacement principal ?",
-          possibilities: ["aller travailler (par mois) ? "]
+          possibilities: [
+            "Pas d’obligation(s) particulière(s)",
+            "Activité(s) personnelle(s) (loisirs, courses, …)",
+            "Accompagnement des enfants ou du conjoint",
+            "Horaires (début matinal, sortie tardive)",
+            "Déplacements professionnels",
+            "réseau des transports en commun mal desservi"
+          ]
+        },
+        {
+          id: "regularStressTransport",
+          type: "option",
+          label: "Cette contrainte est-elle régulière ?",
+          possibilities: [
+            "Tous les jours",
+            "Trois à quatre fois par semaine",
+            "Une à deux fois par semaine"
+          ]
         }
       ]
     };
