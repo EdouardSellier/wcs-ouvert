@@ -108,7 +108,21 @@ class Inscription extends React.Component {
     let fields = this.state.fields;
     let errors = {};
     let formIsValid = true;
-    if (!fields[""]) {
+    if (
+      !fields["siret"] &&
+      !fields["company_name"] &&
+      !fields["company_address"] &&
+      !fields["company_address2"] &&
+      !fields["company_address2"] &&
+      !fields["lastname"] &&
+      !fields["firstname"] &&
+      !fields["phone_number"] &&
+      !fields["nb_sites"] &&
+      !fields["mail"] &&
+      !fields["confirmMail"] &&
+      !fields["password"] &&
+      !fields["confirmPassword"]
+    ) {
       formIsValid = false;
       errors["empty"] =
         "Merci de renseigner tous les champs accompagnés d'une étoile *";
