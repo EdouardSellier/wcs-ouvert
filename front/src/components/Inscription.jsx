@@ -85,6 +85,7 @@ class Inscription extends React.Component {
       fields["confirmMail"] = "";
       fields["password"] = "";
       fields["confirmPassword"] = "";
+      fields["nb_sites"] = "";
       this.setState({ fields: fields });
       axios({
         method: "post",
