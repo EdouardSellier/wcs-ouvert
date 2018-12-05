@@ -35,25 +35,24 @@ app.post("/inscription", (req, res) => {
             .send("The database crashed BOUM ! The reason is " + err);
         } else {
           nodemailer.createTestAccount((err, account) => {
-            // create reusable transporter object using the default SMTP transport
             let transporter = nodemailer.createTransport({
               host: "smtp.gmail.com",
               port: 587,
-              secure: false, // true for 465, false for other ports
+              secure: false, 
               auth: {
-                user: "ouvert.wcs@gmail.com", // generated ethereal user
-                pass: "ouvert2018" // generated ethereal password
+                user: "ouvert.wcs@gmail.com", 
+                pass: "ouvert2018" 
               }
             });
-            // setup email data with unicode symbols
+            
             let mailOptions = {
-              from: '"Fred Foo" <foo@example.com>', // sender address
-              to: "ouvert.wcs@gmail.com", // list of receivers
-              subject: "Hello ✔", // Subject line
-              text: "Hello world?", // plain text body
-              html: "<b>Hello world?</b>" // html body
+              from: '"Fred Foo" <foo@example.com>', 
+              to: "ouvert.wcs@gmail.com", 
+              subject: "Hello ✔", 
+              text: "Hello world?", 
+              html: "<b>Hello world?</b>"
             };
-            // send mail with defined transport object
+            
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 return console.log(error);
