@@ -1,137 +1,133 @@
-import React, { Component } from "react";
+import React from "react";
+import "./css/Inscription.css";
 import Header from "./Header";
 import Footer from "./Footer";
-import "./css/Inscription.css";
+import { Row, Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 
 const successMsg = {
   place: "tr",
-  message: "Ton inscription a bien été prise en compte",
+  message: "Votre inscription a bien été prise en compte",
   type: "success",
   autoDismiss: 4
 };
 
-class Inscription extends Component {
-  constructor(props) {
-    super(props);
+const errorMsg = {
+  place: "tr",
+  message:
+    "Il semblerait qu'il y ait un problème avec votre inscription, merci de vérifier tous les champs",
+  type: "danger",
+  autoDismiss: 4
+};
+
+class Inscription extends React.Component {
+  constructor() {
+    super();
     this.state = {
-      mail: "",
-      confirmMail: "",
-      password: "",
-      confirmPassword: "",
-      lastname: "",
-      firstname: "",
-      companyName: "",
-      siret: "",
-      companyAddress: "",
-      phoneNumber: ""
+      fields: {
+        mail: "",
+        confirmMail: "",
+        password: "",
+        confirmPassword: "",
+        lastname: "",
+        firstname: "",
+        company_name: "",
+        siret: "",
+        company_address: "",
+        company_address2: "",
+        phone_number: "",
+        nb_sites: "",
+        empty: ""
+      },
+      errors: {}
     };
   }
 
   alertFunctionSuccess = () => {
-    this.refs.notificationAlert.notificationAlert(successMsg);
+    this.refs.notificationAlertSuccess.notificationAlert(successMsg);
   };
 
-  handleChangePassword = event => {
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
+
+  handleChange = e => {
+    let fields = this.state.fields;
+    fields[e.target.name] = e.target.value;
     this.setState({
-      password: event.target.value
+      fields
     });
   };
 
-  handleChangeConfirmPassword = event => {
-    this.setState({
-      confirmPassword: event.target.value
-    });
-  };
-
-  handleChangeMail = event => {
-    this.setState({
-      mail: event.target.value
-    });
-  };
-
-  handleChangeConfirmMail = event => {
-    this.setState({
-      confirmMail: event.target.value
-    });
-  };
-
-  handleChangeLastname = event => {
-    this.setState({
-      lastname: event.target.value
-    });
-  };
-
-  handleChangeFirstname = event => {
-    this.setState({
-      firstname: event.target.value
-    });
-  };
-
-  handleChangeCompanyAddress = event => {
-    this.setState({
-      companyAddress: event.target.value
-    });
-  };
-
-  handleChangePhoneNumber = event => {
-    this.setState({
-      phoneNumber: event.target.value
-    });
-  };
-
-  handleChangeCompanyName = event => {
-    this.setState({
-      companyName: event.target.value
-    });
-  };
-
-  handleChangeSiret = event => {
-    this.setState({
-      siret: event.target.value
-    });
-  };
-
-  isSignedIn = event => {
-    event.preventDefault();
+  submitUserRegistrationForm = e => {
+    e.preventDefault();
     let body = {
-      mail: this.state.mail,
-      password: this.state.password,
-      lastname: this.state.lastname,
-      firstname: this.state.firstname,
-      company_name: this.state.companyName,
-      siret: this.state.siret,
-      company_address: this.state.companyAddress,
-      phone_number: this.state.phoneNumber
+      mail: this.state.fields.mail,
+      password: this.state.fields.password,
+      lastname: this.state.fields.lastname,
+      firstname: this.state.fields.firstname,
+      company_name: this.state.fields.company_name,
+      siret: this.state.fields.siret,
+      company_address: this.state.fields.company_address,
+      phone_number: this.state.fields.phone_number
     };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/inscription",
-      data: body
-    })
-      .then(res => {
-        if (res.data === "SUCCESS") {
-          this.setState({
-            mail: "",
-            confirmMail: "",
-            password: "",
-            confirmPassword: "",
-            lastname: "",
-            firstname: "",
-            companyName: "",
-            siret: "",
-            companyAddress: "",
-            phoneNumber: ""
-          });
-          this.props.history.push("/inscription");
-          this.alertFunctionSuccess();
-        }
+    if (this.validateForm()) {
+      let fields = {};
+      fields["siret"] = "";
+      fields["company_address"] = "";
+      fields["company_address2"] = "";
+      fields["lastname"] = "";
+      fields["firstname"] = "";
+      fields["phone_number"] = "";
+      fields["nb_sites"] = "";
+      fields["mail"] = "";
+      fields["confirmMail"] = "";
+      fields["password"] = "";
+      fields["confirmPassword"] = "";
+      this.setState({ fields: fields });
+      axios({
+        method: "post",
+        url: "http://localhost:8080/inscription",
+        data: body
       })
-      .catch(error => {
-        console.log("Fail: " + error);
-      });
+        .then(res => {
+          if (res.data === "SUCCESS") {
+            this.props.history.push("/inscription");
+            this.alertFunctionSuccess();
+          }
+        })
+        .catch(error => {
+          console.log("Fail: " + error);
+          this.alertFunctionError();
+        });
+    }
   };
+
+  validateForm() {
+    let fields = this.state.fields;
+    let errors = {};
+    let formIsValid = true;
+    if (!fields[""]) {
+      formIsValid = false;
+      errors["empty"] =
+        "Merci de renseigner tous les champs accompagnés d'une étoile *";
+    }
+    if (fields["confirmMail"] !== fields["mail"]) {
+      formIsValid = false;
+      errors["confirmMail"] =
+        "L'adresse e-mail est différente de l'adresse saisie";
+    }
+    if (fields["confirmPassword"] !== fields["password"]) {
+      formIsValid = false;
+      errors["confirmPassword"] =
+        "Le mot de passe est différent du mot de passe saisi";
+    }
+    this.setState({
+      errors: errors
+    });
+    return formIsValid;
+  }
 
   render() {
     return (
@@ -140,159 +136,187 @@ class Inscription extends Component {
           MOUV'R : Enquête de mobilité pour vos salariés
         </p>
         <Header />
-        <div className="inscription mt-3">
-          <NotificationAlert ref="notificationAlert" />
+        <div
+          id="main-registration-container"
+          className="ml-lg-5 mr-lg-5 mt-lg-2"
+        >
           <h2>Inscription</h2>
-          <form className="inscriptionForm" onSubmit={this.isSignedIn}>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>Raison Sociale *</label>
-                <input
-                  type="text"
-                  name="company_name"
-                  value={this.state.companyName}
-                  onChange={this.handleChangeCompanyName}
-                  className="form-control"
-                  id="inputRaisonSociale"
-                  placeholder="Raison sociale"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>SIRET *</label>
-                <input
-                  type="text"
-                  name="siret"
-                  value={this.state.siret}
-                  onChange={this.handleChangeSiret}
-                  className="form-control"
-                  id="inputSiret"
-                  placeholder="N° SIRET"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>Nom *</label>
-                <input
-                  type="text"
-                  name="lastname"
-                  value={this.state.lastname}
-                  onChange={this.handleChangeLastname}
-                  className="form-control"
-                  id="inputNom"
-                  placeholder="Nom"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>Prénom *</label>
-                <input
-                  type="text"
-                  name="firstname"
-                  value={this.state.firstname}
-                  onChange={this.handleChangeFirstname}
-                  className="form-control"
-                  id="inputPrenom"
-                  placeholder="Prénom"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>Adresse du siège *</label>
-                <input
-                  type="text"
-                  name="company_address"
-                  value={this.state.companyAddress}
-                  onChange={this.handleChangeCompanyAddress}
-                  className="form-control"
-                  id="inputAdresse"
-                  placeholder="Adresse du siège"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>
-                  Adresse de facturation (si différente de l'adresse du siège)
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="inputAdresse2"
-                  placeholder="Adresse de facturation"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>Adresse e-mail *</label>
-                <input
-                  type="email"
-                  name="mail"
-                  value={this.state.mail}
-                  onChange={this.handleChangeMail}
-                  className="form-control"
-                  id="inputEmail"
-                  placeholder="E-mail"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>Confirmation adresse e-mail *</label>
-                <input
-                  type="text"
-                  onChange={this.handleChangeConfirmMail}
-                  value={this.state.confirmMail}
-                  className="form-control"
-                  id="inputEmail2"
-                  placeholder="Confirmation e-mail"
-                />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>N° de téléphone *</label>
-                <input
-                  type="text"
-                  name="phone_number"
-                  value={this.state.phoneNumber}
-                  onChange={this.handleChangePhoneNumber}
-                  className="form-control"
-                  id="inputTel"
-                  placeholder="06XXXXXXXX"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>Nombre de site soumis à la réglementation PDM *</label>
-                <input type="text" className="form-control" id="inputNbSites" />
-              </div>
-            </div>
-            <div className="form-row">
-              <div className="form-group col-md-6">
-                <label>Création du mot de passe *</label>
-                <input
-                  type="password"
-                  name="password"
-                  value={this.state.password}
-                  onChange={this.handleChangePassword}
-                  className="form-control"
-                  id="inputPassword"
-                  placeholder="Choisissez votre mot de passe"
-                />
-              </div>
-              <div className="form-group col-md-6">
-                <label>Confirmation du mot de passe *</label>
-                <input
-                  type="password"
-                  onChange={this.handleChangeConfirmPassword}
-                  value={this.state.confirmPassword}
-                  className="form-control"
-                  id="inputPassword2"
-                  placeholder="Confirmez votre mot de passe"
-                />
-              </div>
-            </div>
-            <button type="submit" className="btn btn-primary mt-3">
-              Valider mon inscription
-            </button>
-          </form>
+          <NotificationAlert ref="notificationAlertSuccess" />
+          <NotificationAlert ref="notificationAlertError" />
+          <div id="register">
+            <form
+              method="post"
+              name="userRegistrationForm"
+              onSubmit={this.submitUserRegistrationForm}
+            >
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Raison sociale *</label>
+                  <input
+                    type="text"
+                    name="company_name"
+                    onChange={this.handleChange}
+                    value={this.state.fields.company_name}
+                    placeholder="Nom de la société"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>SIRET *</label>
+                  <input
+                    type="text"
+                    name="siret"
+                    onChange={this.handleChange}
+                    value={this.state.fields.siret}
+                    placeholder="N° SIRET (14 chiffres)"
+                    className="form-control"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Nom *</label>
+                  <input
+                    type="text"
+                    name="lastname"
+                    onChange={this.handleChange}
+                    value={this.state.fields.lastname}
+                    placeholder="ex: Dupont"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Prénom *</label>
+                  <input
+                    type="text"
+                    name="firstname"
+                    onChange={this.handleChange}
+                    value={this.state.fields.firstname}
+                    placeholder="ex: Jean"
+                    className="form-control"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Adresse du siège *</label>
+                  <input
+                    type="text"
+                    name="company_address"
+                    onChange={this.handleChange}
+                    value={this.state.fields.company_address}
+                    placeholder="ex: 1 rue de Paris 59000 Lille"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Adresse de facturation</label>
+                  <input
+                    type="text"
+                    name="company_address2"
+                    onChange={this.handleChange}
+                    value={this.state.fields.company_address2}
+                    placeholder="Si différente de l'adresse du siège"
+                    className="form-control"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Numéro de téléphone *</label>
+                  <input
+                    type="text"
+                    name="phone_number"
+                    onChange={this.handleChange}
+                    value={this.state.fields.phone_number}
+                    placeholder="ex: 0601020304"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Nombre de sites *</label>
+                  <input
+                    type="text"
+                    name="nb_sites"
+                    onChange={this.handleChange}
+                    value={this.state.fields.nb_sites}
+                    placeholder="Nombre de sites soumis à la réglementation"
+                    className="form-control"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Adresse e-mail *</label>
+                  <input
+                    type="text"
+                    name="mail"
+                    onChange={this.handleChange}
+                    value={this.state.fields.mail}
+                    placeholder="ex: dupont.jean@mail.com"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Confirmation adresse e-mail *</label>
+                  <input
+                    type="email"
+                    name="confirmMail"
+                    onChange={this.handleChange}
+                    value={this.state.fields.confirmMail}
+                    placeholder="Confirmez votre adresse e-mail"
+                    className="form-control"
+                  />
+                  <div className="errorMsg">
+                    {this.state.errors.confirmMail}
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
+                  <label>Mot de passe *</label>
+                  <input
+                    type="password"
+                    name="password"
+                    onChange={this.handleChange}
+                    value={this.state.fields.password}
+                    placeholder="Choisissez un mot de passe sécurisé"
+                    className="form-control"
+                  />
+                </Col>
+                <Col>
+                  <label>Confirmation mot de passe *</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    onChange={this.handleChange}
+                    value={this.state.fields.confirmPassword}
+                    placeholder="Confirmez votre mot de passe"
+                    className="form-control"
+                  />
+                  <div className="errorMsg">
+                    {this.state.errors.confirmPassword}
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <div className="emptyMsg pb-4">{this.state.errors.empty}</div>
+                </Col>
+              </Row>
+              <Row>
+                <Col
+                  lg={{ size: 4, offset: 4 }}
+                  md={{ size: 3, offset: 4 }}
+                  sm={{ size: 10 }}
+                >
+                  <button className="btn text-white mb-3">
+                    Valider mon inscription
+                  </button>
+                </Col>
+              </Row>
+            </form>
+          </div>
         </div>
         <Footer />
       </div>
