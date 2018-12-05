@@ -171,7 +171,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="company_name"
                     onChange={this.handleChange}
-                    value={this.state.fields.company_name}
+                    value={this.state.fields.company_name || ""}
                     placeholder="Nom de la société"
                     className="form-control"
                   />
@@ -182,7 +182,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="siret"
                     onChange={this.handleChange}
-                    value={this.state.fields.siret}
+                    value={this.state.fields.siret || ""}
                     placeholder="N° SIRET (14 chiffres)"
                     className="form-control"
                   />
@@ -195,7 +195,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="lastname"
                     onChange={this.handleChange}
-                    value={this.state.fields.lastname}
+                    value={this.state.fields.lastname || ""}
                     placeholder="ex: Dupont"
                     className="form-control"
                   />
@@ -206,7 +206,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="firstname"
                     onChange={this.handleChange}
-                    value={this.state.fields.firstname}
+                    value={this.state.fields.firstname || ""}
                     placeholder="ex: Jean"
                     className="form-control"
                   />
@@ -219,7 +219,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="company_address"
                     onChange={this.handleChange}
-                    value={this.state.fields.company_address}
+                    value={this.state.fields.company_address || ""}
                     placeholder="ex: 1 rue de Paris 59000 Lille"
                     className="form-control"
                   />
@@ -230,7 +230,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="company_address2"
                     onChange={this.handleChange}
-                    value={this.state.fields.company_address2}
+                    value={this.state.fields.company_address2 || ""}
                     placeholder="Si différente de l'adresse du siège"
                     className="form-control"
                   />
@@ -243,7 +243,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="phone_number"
                     onChange={this.handleChange}
-                    value={this.state.fields.phone_number}
+                    value={this.state.fields.phone_number || ""}
                     placeholder="ex: 0601020304"
                     className="form-control"
                   />
@@ -254,7 +254,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="nb_sites"
                     onChange={this.handleChange}
-                    value={this.state.fields.nb_sites}
+                    value={this.state.fields.nb_sites || ""}
                     placeholder="Nombre de sites soumis à la réglementation"
                     className="form-control"
                   />
@@ -267,7 +267,7 @@ class Inscription extends React.Component {
                     type="text"
                     name="mail"
                     onChange={this.handleChange}
-                    value={this.state.fields.mail}
+                    value={this.state.fields.mail || ""}
                     placeholder="ex: dupont.jean@mail.com"
                     className="form-control"
                   />
@@ -278,7 +278,7 @@ class Inscription extends React.Component {
                     type="email"
                     name="confirmMail"
                     onChange={this.handleChange}
-                    value={this.state.fields.confirmMail}
+                    value={this.state.fields.confirmMail || ""}
                     placeholder="Confirmez votre adresse e-mail"
                     className="form-control"
                   />
@@ -294,7 +294,7 @@ class Inscription extends React.Component {
                     type="password"
                     name="password"
                     onChange={this.handleChange}
-                    value={this.state.fields.password}
+                    value={this.state.fields.password || ""}
                     placeholder="Choisissez un mot de passe sécurisé"
                     className="form-control"
                   />
@@ -305,7 +305,7 @@ class Inscription extends React.Component {
                     type="password"
                     name="confirmPassword"
                     onChange={this.handleChange}
-                    value={this.state.fields.confirmPassword}
+                    value={this.state.fields.confirmPassword || ""}
                     placeholder="Confirmez votre mot de passe"
                     className="form-control"
                   />
