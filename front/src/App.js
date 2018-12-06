@@ -1,21 +1,23 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
+import "./App.css";
+
 import Accueil from "./components/Accueil";
 import Inscription from "./components/Inscription";
 import Connexion from "./components/Connexion";
 import Contact from "./components/Contact";
+
 import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
-import ListeDiffusion from "./components/ListeDiffusion";
-import ListeAdresses from "./components/ListeAdresses";
+import Geolocalisation from "./components/Geolocalisation";
 import Sondage from "./components/Sondage";
 import Resultat from "./components/Resultat";
 import Assistance from "./components/Assistance";
+
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
-import "./App.css";
 
 class App extends Component {
   render() {
@@ -30,8 +32,7 @@ class App extends Component {
             <Route path="/monespace" component={EspaceRH} />
             <Route path="/nouvelleenquete" component={NouvelleEnquete} />
             <Route path="/listeenquetesrh" component={ListeEnquetesRH} />
-            <Route path="/listediffusion" component={ListeDiffusion} />
-            <Route path="/listeadresses" component={ListeAdresses} />
+            <Route path="/geolocalisation" component={Geolocalisation} />
             <Route path="/sondage" component={Sondage} />
             <Route path="/resultat" component={Resultat} />
             <Route path="/assistance" component={Assistance} />
