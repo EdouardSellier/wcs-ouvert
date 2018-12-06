@@ -7,38 +7,49 @@ const MultipleOption = props => {
   return (
     <React.Fragment>
       <br />
-      <div>
-        <label for={props.data.id} class="w-50">
+      <div className="mb-5">
+        <label htmlFor={props.data.id} className="w-50">
           {props.data.label}
         </label>
-        <div class="d-flex justify-content-center">
-          <div class="threeInput">
+        <div className="d-flex justify-content-center">
+          <div className="threeInput">
             <span>1.</span>
-            <select id={props.data.id} class="w-100" onChange={props.function}>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
               {props.data.possibilities.map(content => {
-                return <option>{content}</option>;
+                return <option key={content}>{content}</option>;
               })}
             </select>
           </div>
-          <div class="threeInput">
+          <div className="threeInput">
             <span>2.</span>
-            <select id={props.data.id} class="w-100" onChange={props.function}>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
               {props.data.possibilities.map(content => {
-                return <option>{content}</option>;
+                return <option key={content}>{content}</option>;
               })}
             </select>
           </div>
-          <div class="threeInput">
+          <div className="threeInput">
             <span>3.</span>
-            <select id={props.data.id} class="w-100" onChange={props.function}>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
               {props.data.possibilities.map(content => {
-                return <option>{content}</option>;
+                return <option key={content}>{content}</option>;
               })}
             </select>
           </div>
         </div>
       </div>
-      <p />
     </React.Fragment>
   );
 };
@@ -46,9 +57,9 @@ const MultipleOption = props => {
 const Text = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <textarea />;
+      <textarea onChange={props.function} className="mb-5 commentary" />
       <p />
     </React.Fragment>
   );
@@ -57,36 +68,13 @@ const Text = props => {
 const Option = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <select id={props.data.id} onChange={props.function}>
+      <select className="mb-5" id={props.data.id} onChange={props.function}>
         {props.data.possibilities.map(content => {
-          return <option>{content}</option>;
+          return <option key={content}>{content}</option>;
         })}
       </select>
-      <p />
-    </React.Fragment>
-  );
-};
-
-const Checkbox = props => {
-  return (
-    <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
-      <br />
-      {props.data.possibilities.map(content => {
-        return (
-          <div>
-            <span>{content} </span>
-            <input
-              type="checkbox"
-              id={props.data.id}
-              name={content}
-              onChange={props.function}
-            />
-          </div>
-        );
-      })}
       <p />
     </React.Fragment>
   );
@@ -95,23 +83,15 @@ const Checkbox = props => {
 const Number = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      {props.data.possibilities.map(content => {
-        return (
-          <div>
-            <span>{content} </span>
-            <br />
-            <input
-              type="number"
-              id={props.data.id}
-              name={content}
-              onChange={props.function}
-            />
-          </div>
-        );
-      })}
-      <p />
+      <input
+        className="mb-5"
+        type="number"
+        id={props.data.id}
+        onChange={props.function}
+      />
+      <br />
     </React.Fragment>
   );
 };
@@ -202,22 +182,20 @@ class Sondage extends Component {
           id: "distanceKlms",
           type: "number",
           label: "Quelle distance (en km) parcourez-vous pour :",
-          possibilities: ["vous rendre sur votre lieu de travail ?"]
+          possibilities: []
         },
         {
           id: "distanceMin",
           type: "number",
           label: "Combien de temps (en minutes) mettez-vous pour :",
-          possibilities: [
-            "faire le trajet domicile–travail (aller ou retour) ?"
-          ]
+          possibilities: []
         },
 
         {
           id: "distanceMoney",
           type: "number",
           label: "Quel budget (en euros) dépensez-vous pour :",
-          possibilities: ["vos trajets domicile–travail ?"]
+          possibilities: []
         },
         {
           id: "elements",
@@ -424,8 +402,8 @@ class Sondage extends Component {
     };
   }
 
-  change(e) {
-    alert(e.target.value);
+  changeState(e) {
+    console.log("the value of the input selected is '" + e.target.value + "'");
   }
 
   render() {
@@ -441,23 +419,43 @@ class Sondage extends Component {
             {this.state.questions.map(data => {
               switch (data.type) {
                 case "option":
-                  return <Option data={data} />;
-
-                case "checkbox":
-                  return <Checkbox data={data} />;
+                  return (
+                    <Option
+                      key={data.id}
+                      data={data}
+                      function={e => this.changeState(e)}
+                    />
+                  );
                 case "number":
-                  return <Number data={data} />;
+                  return (
+                    <Number
+                      key={data.id}
+                      data={data}
+                      function={e => this.changeState(e)}
+                    />
+                  );
                 case "multipleOption":
-                  return <MultipleOption data={data} />;
+                  return (
+                    <MultipleOption
+                      key={data.id}
+                      data={data}
+                      function={e => this.changeState(e)}
+                    />
+                  );
                 case "text":
-                  return <Text data={data} />;
+                  return (
+                    <Text
+                      key={data.id}
+                      data={data}
+                      function={e => this.changeState(e)}
+                    />
+                  );
                 default:
                   return <p>Il y a une erreur.</p>;
               }
             })}
           </form>
         </div>
-
         <Footer />
       </div>
     );
