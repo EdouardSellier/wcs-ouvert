@@ -18,6 +18,10 @@ class Home extends Component {
     this.props.history.push("/monespace");
   };
 
+  handleForm = event => {
+    event.preventDefault();
+  };
+
   creatingSurvey = event => {
     event.preventDefault();
     this.props.history.push("/listeenquetesrh");
@@ -64,7 +68,7 @@ class Home extends Component {
               magnam dolorum odio aliquam culpa! Natus.
             </Col>
           </Row>
-          <form>
+          <form onSubmit={this.handleForm}>
             <Row>
               <Col md={{ size: 6, offset: 3 }}>
                 <label>Nom de l'enquête</label>
@@ -127,10 +131,9 @@ class Home extends Component {
                   fileTypes={[".csv"]}
                   handleFiles={this.handleFiles}
                 >
-                  <input
-                    className="btn newSurveyButton text-white mb-3"
-                    defaultValue=" Importer un fichier CSV"
-                  />
+                  <button className="btn newSurveyButton text-white mb-3">
+                    Importer un fichier csv
+                  </button>
                 </ReactFileReader>
                 <div className="card importMails">
                   <CsvToHtmlTable
