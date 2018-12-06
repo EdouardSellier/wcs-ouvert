@@ -11,7 +11,7 @@ const MultipleOption = props => {
         <label htmlFor={props.data.id} className="w-50">
           {props.data.label}
         </label>
-        <div className="d-flex justify-content-center">
+        <div className="d-flex">
           <div className="threeInput">
             <span>1.</span>
             <select
@@ -415,46 +415,49 @@ class Sondage extends Component {
         <HeaderRH />
         <div className="sondage mt-2">
           <h3>Sondage</h3>
-          <form className="mt-5">
-            {this.state.questions.map(data => {
-              switch (data.type) {
-                case "option":
-                  return (
-                    <Option
-                      key={data.id}
-                      data={data}
-                      function={e => this.changeState(e)}
-                    />
-                  );
-                case "number":
-                  return (
-                    <Number
-                      key={data.id}
-                      data={data}
-                      function={e => this.changeState(e)}
-                    />
-                  );
-                case "multipleOption":
-                  return (
-                    <MultipleOption
-                      key={data.id}
-                      data={data}
-                      function={e => this.changeState(e)}
-                    />
-                  );
-                case "text":
-                  return (
-                    <Text
-                      key={data.id}
-                      data={data}
-                      function={e => this.changeState(e)}
-                    />
-                  );
-                default:
-                  return <p>Il y a une erreur.</p>;
-              }
-            })}
-          </form>
+          <div className="textAlignLeft pl-5">
+            <form className="mt-5">
+              {this.state.questions.map(data => {
+                switch (data.type) {
+                  case "option":
+                    return (
+                      <Option
+                        key={data.id}
+                        data={data}
+                        function={e => this.changeState(e)}
+                      />
+                    );
+                  case "number":
+                    return (
+                      <Number
+                        key={data.id}
+                        data={data}
+                        function={e => this.changeState(e)}
+                      />
+                    );
+                  case "multipleOption":
+                    return (
+                      <MultipleOption
+                        key={data.id}
+                        data={data}
+                        function={e => this.changeState(e)}
+                      />
+                    );
+                  case "text":
+                    return (
+                      <Text
+                        key={data.id}
+                        data={data}
+                        function={e => this.changeState(e)}
+                      />
+                    );
+                  default:
+                    return <p>Il y a une erreur.</p>;
+                }
+              })}
+              <button className="btn btn-primary btn-lg mb-5">Envoyer</button>
+            </form>
+          </div>
         </div>
         <Footer />
       </div>
