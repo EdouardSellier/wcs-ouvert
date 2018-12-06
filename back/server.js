@@ -2,10 +2,11 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const port = 8080;
-const connection = require("./conf");
+const { connection, userTransporter } = require("./conf");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const uuidv4 = require("uuid/v4");
+const nodemailer = require("nodemailer");
 
 app.use(bodyParser.json());
 app.use(
@@ -22,7 +23,6 @@ app.use(function(req, res, next) {
   );
   next();
 });
-
 app.post("/inscription", (req, res) => {
   if (req.body) {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -30,10 +30,37 @@ app.post("/inscription", (req, res) => {
       const formData = req.body;
       connection.query("INSERT INTO user SET ?", formData, (err, results) => {
         if (err) {
-          res
-            .status(500)
-            .send("The database crashed BOUM ! The reason is " + err);
+          res.status(500).send("The database crashed ! The reason is " + err);
         } else {
+          nodemailer.createTestAccount((err, account) => {
+            let transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 587,
+              secure: false,
+              auth: {
+                user: userTransporter.user,
+                pass: userTransporter.pass
+              }
+            });
+
+            let mailOptions = {
+              from: "no-reply@ouvert.com",
+              to: req.body.mail,
+              subject: "Hello ✔",
+              text: "Hello world?",
+              html: "<b>Hello world?</b>"
+            };
+
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                res
+                  .status(500)
+                  .send(
+                    "An error occured with confirmation e-mail after sign up."
+                  );
+              }
+            });
+          });
           res.status(201).send("SUCCESS");
         }
       });
@@ -48,7 +75,7 @@ app.use(
     genid: req => {
       return uuidv4();
     },
-    secret: "keyboard cat",
+    secret: "this is a random string",
     resave: false,
     saveUninitialized: true
   })
@@ -65,7 +92,7 @@ app.post("/connexion", (req, res) => {
     if (error) {
       res.json({
         status: false,
-        message: "There are some error with query"
+        message: "There are some error with this query"
       });
     } else {
       if (results.length > 0) {
@@ -74,7 +101,6 @@ app.post("/connexion", (req, res) => {
             res.status(500).send("WRONG");
           } else {
             let session = uuidv4();
-            console.log(session);
             res.status(200).send("SUCCESS");
           }
         });
