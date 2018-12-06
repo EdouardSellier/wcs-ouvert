@@ -53,7 +53,11 @@ app.post("/inscription", (req, res) => {
 
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
-                return console.log(error);
+                res
+                  .status(500)
+                  .send(
+                    "An error occured with confirmation e-mail after sign up."
+                  );
               }
             });
           });
@@ -97,7 +101,6 @@ app.post("/connexion", (req, res) => {
             res.status(500).send("WRONG");
           } else {
             let session = uuidv4();
-            console.log(session);
             res.status(200).send("SUCCESS");
           }
         });
