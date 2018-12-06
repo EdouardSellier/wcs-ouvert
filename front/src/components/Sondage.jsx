@@ -402,8 +402,10 @@ class Sondage extends Component {
     };
   }
 
-  changeState(e) {
-    console.log("the value of the input selected is '" + e.target.value + "'");
+  changeFormState(event) {
+    console.log(
+      "the value of the input selected is '" + event.target.value + "'"
+    );
   }
 
   render() {
@@ -424,7 +426,7 @@ class Sondage extends Component {
                       <Option
                         key={data.id}
                         data={data}
-                        function={e => this.changeState(e)}
+                        function={event => this.changeFormState(event)}
                       />
                     );
                   case "number":
@@ -432,7 +434,7 @@ class Sondage extends Component {
                       <Number
                         key={data.id}
                         data={data}
-                        function={e => this.changeState(e)}
+                        function={event => this.changeFormState(event)}
                       />
                     );
                   case "multipleOption":
@@ -440,7 +442,7 @@ class Sondage extends Component {
                       <MultipleOption
                         key={data.id}
                         data={data}
-                        function={e => this.changeState(e)}
+                        function={event => this.changeFormState(event)}
                       />
                     );
                   case "text":
@@ -448,7 +450,7 @@ class Sondage extends Component {
                       <Text
                         key={data.id}
                         data={data}
-                        function={e => this.changeState(e)}
+                        function={event => this.changeFormState(event)}
                       />
                     );
                   default:
