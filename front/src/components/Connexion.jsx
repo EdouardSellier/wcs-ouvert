@@ -8,7 +8,7 @@ import NotificationAlert from "react-notification-alert";
 
 const dangerMsg = {
   place: "tr",
-  message: "Ton email ou ton mot de passe est incorrect",
+  message: "Votre email et/ou votre mot de passe sont incorrects",
   type: "danger",
   autoDismiss: 4
 };
@@ -50,7 +50,6 @@ class Connexion extends Component {
       })
       .catch(error => {
         this.alertFunctionDanger();
-        console.log("Fail: " + error);
       });
   };
 

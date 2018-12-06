@@ -110,18 +110,16 @@ class Inscription extends React.Component {
     let errors = {};
     let formIsValid = true;
     if (
-      !fields["siret"] &&
-      !fields["company_name"] &&
-      !fields["company_address"] &&
-      !fields["company_address2"] &&
-      !fields["company_address2"] &&
-      !fields["lastname"] &&
-      !fields["firstname"] &&
-      !fields["phone_number"] &&
-      !fields["nb_sites"] &&
-      !fields["mail"] &&
-      !fields["confirmMail"] &&
-      !fields["password"] &&
+      !fields["siret"] ||
+      !fields["company_name"] ||
+      !fields["company_address"] ||
+      !fields["lastname"] ||
+      !fields["firstname"] ||
+      !fields["phone_number"] ||
+      !fields["nb_sites"] ||
+      !fields["mail"] ||
+      !fields["confirmMail"] ||
+      !fields["password"] ||
       !fields["confirmPassword"]
     ) {
       formIsValid = false;
