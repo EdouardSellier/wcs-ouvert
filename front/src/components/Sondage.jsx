@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
 import "./css/Sondage.css";
 
@@ -243,7 +242,6 @@ class Sondage extends Component {
         <p className="homeSlogan">
           MOUV'R : Enquête de mobilité pour vos salariés
         </p>
-        <HeaderRH />
         <div className="sondage mt-2">
           <h3>Sondage</h3>
           <form className="mt-5">
