@@ -402,7 +402,7 @@ class Sondage extends Component {
     };
   }
 
-  changeFormState(event) {
+  changeFormState(event, a) {
     console.log(
       "the value of the input selected is '" + event.target.value + "'"
     );
@@ -426,7 +426,7 @@ class Sondage extends Component {
                       <Option
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        function={this.changeFormState}
                       />
                     );
                   case "number":
@@ -434,7 +434,7 @@ class Sondage extends Component {
                       <Number
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        function={this.changeFormState}
                       />
                     );
                   case "multipleOption":
@@ -442,7 +442,7 @@ class Sondage extends Component {
                       <MultipleOption
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        function={this.changeFormState}
                       />
                     );
                   case "text":
@@ -450,7 +450,7 @@ class Sondage extends Component {
                       <Text
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        function={this.changeFormState}
                       />
                     );
                   default:
