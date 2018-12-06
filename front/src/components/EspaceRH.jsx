@@ -44,15 +44,13 @@ class EspaceRH extends Component {
               </div>
             </div>
             <hr />
-            <div className="container mt-3 mb-3">
+            <div className="container mt-5 mb-3">
               <div className="row justify-content-between">
                 <div className="col-lg-3">
                   <div className="card">
-                    <div className="card-header">
-                      Commencer une nouvelle enquête
-                    </div>
+                    <div className="card-header">Nouvelle enquête</div>
                     <div className="card-body">
-                      <Link to="/nouvelleenquete" className="">
+                      <Link to="/nouvelleenquete">
                         <img
                           src="https://image.freepik.com/iconen-gratis/het-invoeren-van-tekst-op-browser-cirkelsymbool_318-57678.jpg"
                           alt="icon"
@@ -65,16 +63,14 @@ class EspaceRH extends Component {
                 </div>
                 <div className="col-lg-3">
                   <div className="card">
-                    <div className="card-header">
-                      Consulter mes enquêtes en cours
-                    </div>
+                    <div className="card-header">Géolocaliser mes salariés</div>
                     <div className="card-body">
-                      <Link to="/listeenquetesrh" className="">
+                      <Link to="/listeadresses">
                         <img
-                          src="https://monsieurlepsy.files.wordpress.com/2015/04/checklist-41335_640.png"
+                          src="https://upload.wikimedia.org/wikipedia/commons/3/39/Simpleicons_Places_map-with-placeholder.svg"
                           alt="icon"
-                          width="170"
-                          height="170"
+                          width="180"
+                          height="180"
                         />
                       </Link>
                     </div>
@@ -82,11 +78,9 @@ class EspaceRH extends Component {
                 </div>
                 <div className="col-lg-3">
                   <div className="card">
-                    <div className="card-header">
-                      Si vous avez besoin d'assistance
-                    </div>
+                    <div className="card-header">Assistance</div>
                     <div className="card-body">
-                      <Link to="/assistance" className="">
+                      <Link to="/assistance">
                         <img
                           src="http://cdn.onlinewebfonts.com/svg/img_571111.png"
                           alt="icon"
