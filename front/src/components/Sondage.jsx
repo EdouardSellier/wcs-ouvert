@@ -3,39 +3,78 @@ import HeaderRH from "./HeaderRH";
 import Footer from "./Footer";
 import "./css/Sondage.css";
 
-const Option = props => {
+const MultipleOption = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
       <br />
-      <select id={props.data.id} onChange={props.function}>
-        {props.data.possibilities.map(content => {
-          return <option>{content}</option>;
-        })}
-      </select>
+      <div className="mb-5">
+        <label htmlFor={props.data.id} className="w-50">
+          {props.data.label}
+        </label>
+        <div className="d-flex">
+          <div className="threeInput">
+            <span>1.</span>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
+              {props.data.possibilities.map(content => {
+                return <option key={content}>{content}</option>;
+              })}
+            </select>
+          </div>
+          <div className="threeInput">
+            <span>2.</span>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
+              {props.data.possibilities.map(content => {
+                return <option key={content}>{content}</option>;
+              })}
+            </select>
+          </div>
+          <div className="threeInput">
+            <span>3.</span>
+            <select
+              id={props.data.id}
+              className="w-100"
+              onChange={props.function}
+            >
+              {props.data.possibilities.map(content => {
+                return <option key={content}>{content}</option>;
+              })}
+            </select>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+const Text = props => {
+  return (
+    <React.Fragment>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
+      <br />
+      <textarea onChange={props.function} className="mb-5 commentary" />
       <p />
     </React.Fragment>
   );
 };
 
-const Checkbox = props => {
+const Option = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      {props.data.possibilities.map(content => {
-        return (
-          <div>
-            <span>{content} </span>
-            <input
-              type="checkbox"
-              id={props.data.id}
-              name={content}
-              onChange={props.function}
-            />
-          </div>
-        );
-      })}
+      <select className="mb-5" id={props.data.id} onChange={props.function}>
+        {props.data.possibilities.map(content => {
+          return <option key={content}>{content}</option>;
+        })}
+      </select>
       <p />
     </React.Fragment>
   );
@@ -44,23 +83,15 @@ const Checkbox = props => {
 const Number = props => {
   return (
     <React.Fragment>
-      <label for={props.data.id}>{props.data.label}</label>
+      <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      {props.data.possibilities.map(content => {
-        return (
-          <div>
-            <span>{content} </span>
-            <br />
-            <input
-              type="number"
-              id={props.data.id}
-              name={content}
-              onChange={props.function}
-            />
-          </div>
-        );
-      })}
-      <p />
+      <input
+        className="mb-5"
+        type="number"
+        id={props.data.id}
+        onChange={props.function}
+      />
+      <br />
     </React.Fragment>
   );
 };
@@ -71,170 +102,310 @@ class Sondage extends Component {
     this.state = {
       questions: [
         {
-          id: "generalTransport",
+          id: "genre",
           type: "option",
-          label:
-            "De manière générale, pour vos déplacements domicile-travail, utilisez-vous : ",
+          label: "Vous êtes :",
           possibilities: [
-            "un seul mode de transport",
-            "plusieurs modes de transport successivement dans un même trajet"
+            "Un homme",
+            "Une femme",
+            "Je ne souhaite pas répondre"
           ]
         },
         {
-          id: "oneTransport",
+          id: "age",
           type: "option",
+          label: "Vous avez :",
+          possibilities: [
+            "25 ans ou moins",
+            "Entre 26 et 40 ans",
+            "Entre 41 et 55 ans",
+            "56 ans ou plus",
+            "Je ne souhaite pas répondre"
+          ]
+        },
+        {
+          id: "goToWork",
+          type: "multipleOption",
           label:
-            "Quel est votre mode de transport habituel votre trajet domicile-travail ?",
+            "Quel(s) mode(s) de déplacements utilisez-vous pour venir travailler ? Si vous utilisez plusieurs modes de déplacements au cours de votre trajet domicile-travail, veuillez les renseigner dans l’ordre d’importance qu’ils ont dans votre parcours (en termes de temps et de distance)",
           possibilities: [
             "Voiture personnelle",
             "Voiture de fonction/service",
             "Covoiturage",
-            "Train (RER,…)",
-            "Métro",
-            "Bus",
-            "Tramway",
-            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
-            "Deux roues motorisées (moto, scooter)",
-            "Marche à pied (ou course)",
-            "Autre"
+            "Train",
+            "Transports en commun (tramway, métro bus)",
+            "Vélo",
+            "Trottinette",
+            "Gyropode",
+            "Deux-roues motorisés",
+            "Marche à pied"
           ]
         },
         {
-          id: "severalTransport",
-          type: "checkbox",
-          label: "Dans quel ordre les utilisez-vous ?",
+          id: "ocasionaly",
+          type: "multipleOption",
+          label:
+            "Peut-être utilisez-vous occasionnellement d’autres modes de déplacements en fonction du jour de la semaine, de vos horaires, de la météo…",
           possibilities: [
             "Voiture personnelle",
             "Voiture de fonction/service",
             "Covoiturage",
-            "Train (RER,…)",
-            "Métro",
-            "Bus",
-            "Tramway",
-            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
-            "Deux roues motorisées (moto, scooter)",
-            "Marche à pied (ou course)",
-            "Autre"
+            "Train",
+            "Transports en commun (tramway, métro bus)",
+            "Vélo",
+            "Trottinette",
+            "Gyropode",
+            "Deux-roues motorisés",
+            "Marche à pied"
           ]
         },
         {
-          id: "spendTimeTransport",
+          id: "reason",
           type: "option",
           label:
-            "Parmi les modes de transports suivants, quel est celui dans lequel vous passez le plus de temps au cours de votre trajet domicile-travail ?",
+            "Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ?",
           possibilities: [
-            "Voiture personnelle",
-            "Voiture de fonction/service",
-            "Covoiturage",
-            "Train (RER,…)",
-            "Métro",
-            "Bus",
-            "Tramway",
-            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
-            "Deux roues motorisées (moto, scooter)",
-            "Marche à pied (ou course)",
-            "Autre"
+            "Rapidité",
+            "Pas d’autres choix",
+            "Coût avantageux",
+            "Pour ma santé, mon bien-être",
+            "Moins stressant",
+            "Plus écologique",
+            "Adapté à mes horaires",
+            "Sécurité",
+            "Indépendance",
+            "Autre raison"
+          ]
+        },
+
+        {
+          id: "distanceKlms",
+          type: "number",
+          label: "Quelle distance (en km) parcourez-vous pour :",
+          possibilities: []
+        },
+        {
+          id: "distanceMin",
+          type: "number",
+          label: "Combien de temps (en minutes) mettez-vous pour :",
+          possibilities: []
+        },
+
+        {
+          id: "distanceMoney",
+          type: "number",
+          label: "Quel budget (en euros) dépensez-vous pour :",
+          possibilities: []
+        },
+        {
+          id: "elements",
+          type: "multipleOption",
+          label:
+            "Quels éléments prenez-vous en compte pour organiser vos déplacements domicile–travail ?",
+          possibilities: [
+            "Pas d’obligation particulière",
+            "Accompagnement des enfants",
+            "Horaires (début matinal, sortie tardive, imprévisibles…)",
+            "Activités sur le temps de midi",
+            "Déplacements professionnels fréquents",
+            "Autre :"
           ]
         },
         {
-          id: "minuteTimeTransport",
-          type: "number",
-          label: "Combien de temps (en minutes) mettez-vous pour :",
-          possibilities: ["Voiture personnelle", "Voiture de fonction/service"]
-        },
-        {
-          id: "distanceTransport",
-          type: "number",
-          label: "Quelle distance (en kms) parcourez-vous pour :",
-          possibilities: ["le trajet domicile-travail ou travail-domicile ?"]
-        },
-        {
-          id: "moneyTransport",
-          type: "number",
-          label:
-            "Combien vous coûtent (en euros) vos déplacements en moyenne pour :",
-          possibilities: ["aller travailler (par mois) ? "]
-        },
-        {
-          id: "reasonTransport",
+          id: "parking",
           type: "option",
           label:
-            "Pour quelle(s) raison(s) avez-vous choisi votre mode de déplacement principal ?",
+            "Si vous vous rendez en voiture sur votre lieu de travail, y-trouvez-vous facilement une place de parking ?",
           possibilities: [
-            "Pas d’obligation(s) particulière(s)",
-            "Activité(s) personnelle(s) (loisirs, courses, …)",
-            "Accompagnement des enfants ou du conjoint",
-            "Horaires (début matinal, sortie tardive)",
-            "Déplacements professionnels",
-            "réseau des transports en commun mal desservi"
-          ]
-        },
-        {
-          id: "regularStressTransport",
-          type: "option",
-          label: "Cette contrainte est-elle régulière ?",
-          possibilities: [
-            "Tous les jours",
-            "Trois à quatre fois par semaine",
-            "Une à deux fois par semaine"
+            "Oui",
+            "Non",
+            "Je ne me rends pas sur mon lieu de travail en voiture"
           ]
         },
         {
           id: "breakfast",
           type: "option",
-          label:
-            "Vous déplacez-vous à l’extérieur du site à la pause déjeuner (repas, courses…) ?",
+          label: "Où déjeunez–vous le plus souvent le midi ?",
           possibilities: [
-            "Oui, toujours",
-            "Oui, souvent (deux fois ou plus par semaine)",
-            "Oui, rarement (deux fois par mois)",
-            "Non, jamais"
+            "Sur mon lieu de travail dans le restaurant d’entreprise",
+            "Sur mon lieu de travail avec mon propre repas",
+            "A mon domicile",
+            "A l’extérieur"
           ]
         },
+        {
+          id: "frequency",
+          type: "option",
+          label:
+            "En moyenne, à quelle fréquence effectuez–vous des déplacements le midi ?",
+          possibilities: [
+            "Jamais",
+            "Moins d’une fois par semaine",
+            "1 fois par semaine",
+            "2 à 4 fois par semaine",
+            "Tous les jours"
+          ]
+        },
+        {
+          id: "transportBreakfast",
+          type: "option",
+          label:
+            "Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?",
 
-        {
-          id: "parking",
-          type: "option",
-          label:
-            "En arrivant sur votre lieu de travail, trouvez-vous une place :",
-          possibilities: [
-            "Très facilement",
-            "Facilement",
-            "Difficilement",
-            "Très difficilement"
-          ]
-        },
-        {
-          id: "accessibility",
-          type: "option",
-          label: "Les trouvez-vous pratiques, accessibles ?",
-          possibilities: ["Oui", "Non"]
-        },
-        {
-          id: "unavailable",
-          type: "option",
-          label:
-            "Si votre mode de déplacement principal n’est pas disponible, vers quelle solution vous reportez-vous ?",
           possibilities: [
             "Voiture personnelle",
             "Voiture de fonction/service",
             "Covoiturage",
-            "Train (RER,…)",
-            "Métro",
-            "Bus",
-            "Tramway",
-            "Deux roues non motorisées dit transport doux (vélo, trottinette, roller...)",
-            "Deux roues motorisées (moto, scooter)",
-            "Marche à pied (ou course)",
-            "Autre"
+            "Train",
+            "Transports en commun (tramway, métro bus)",
+            "Vélo",
+            "Trottinette",
+            "Gyropode",
+            "Deux-roues motorisés",
+            "Marche à pied"
           ]
+        },
+        {
+          id: "frequencyPro",
+          type: "option",
+          label:
+            "A quelle fréquence effectuez–vous des déplacements professionnels ?",
+
+          possibilities: [
+            "Je ne fais jamais de déplacements professionnels",
+            "Quelques fois par an",
+            "1 à 2 fois par mois",
+            "1 à 2 fois par semaine",
+            "Plus de 2 fois par semaine"
+          ]
+        },
+        {
+          id: "distancePro",
+          type: "option",
+          label:
+            "A quelle distance (aller ou retour, en km) vous déplacez–vous en moyenne pour les déplacements professionnels ?",
+
+          possibilities: [
+            "Je ne fais jamais de déplacements professionnels",
+            "Moins de 10 km",
+            "Entre 10 et 30 km",
+            "Entre 30 et 50 km",
+            "Plus de 50 km"
+          ]
+        },
+        {
+          id: "deplacementPro",
+          type: "option",
+          label:
+            "Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?",
+          possibilities: [
+            "Voiture personnelle",
+            "Voiture de fonction/service",
+            "Covoiturage",
+            "Train",
+            "Transports en commun (tramway, métro bus)",
+            "Vélo",
+            "Trottinette",
+            "Gyropode",
+            "Deux-roues motorisés",
+            "Marche à pied"
+          ]
+        },
+        {
+          id: "carPro",
+          type: "option",
+          label:
+            "Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?",
+          possibilities: [
+            "Pas d’autres solutions identifiées",
+            "Confort",
+            "Rapidité",
+            "Flexibilité (si déplacement tôt ou tard)",
+            "Aucune raison particulière",
+            "Je n’utilise pas ma voiture personnelle pour les déplacements professionnels"
+          ]
+        },
+        {
+          id: "deplacementMethodPro",
+          type: "option",
+          label:
+            "Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont vous vous déplacez pour vous rendre sur votre lieu de travail ?",
+          possibilities: [
+            "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
+            "Je connais des alternatives à la voiture individuelle, j’essaye de les utiliser lorsque c’est possible et j’envisage de les utiliser davantage",
+            "Je connais des alternatives à la voiture individuelle mais je ne les ai pas encore mises en pratique",
+            "Je ne connais pas suffisamment les différentes possibilités de me rendre au travail sans voiture",
+            "Mes contraintes (logement, obligations familiales…) ne me permettent pas d’utiliser un autre mode de déplacement que la voiture",
+            "Je n’ai pas envie de changer mes habitudes de déplacements"
+          ]
+        },
+        {
+          id: "communTransport",
+          type: "multipleOption",
+          label:
+            "Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?",
+          possibilities: [
+            "J’utilise déjà souvent les transports en commun",
+            "Une meilleure offre de transports en commun (accessibilité, temps de trajet, desserte, correspondances)",
+            "Un meilleur sentiment de sécurité",
+            "Un abonnement à une offre de transports en commun moins onéreuse",
+            "Autre :"
+          ]
+        },
+        {
+          id: "bike",
+          type: "multipleOption",
+          label:
+            "Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?",
+          possibilities: [
+            "Je me déplace déjà souvent à vélo",
+            "Un meilleur sentiment de sécurité",
+            "Des aménagements cyclables plus nombreux sur mon trajet",
+            "Des aménagements cyclables de meilleure qualité sur mon trajet",
+            "La mise à disposition d’informations sur les pistes cyclables",
+            "La mise en place de l’indemnité kilométrique vélo",
+            "Un stationnement vélo sécurisé et abrité",
+            "Des douches et des vestiaires",
+            "Autre :",
+            "Rien, je ne souhaite pas pédaler"
+          ]
+        },
+        {
+          id: "sharingCar",
+          type: "multipleOption",
+          label:
+            "Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?",
+          possibilities: [
+            "Je covoiture déjà souvent",
+            "Une place de parking dédiée aux covoitureurs à proximité de l’entrée",
+            "Une mise en relation avec les collègues habitant à proximité de chez moi",
+            "Un retour assuré en cas de désistement du covoitureur ou circonstances imprévues",
+            "Autre :",
+            "Rien, je ne souhaite pas covoiturer "
+          ]
+        },
+        {
+          id: "otherThanCar",
+          type: "text",
+          label:
+            "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
+          possibilities: []
+        },
+        {
+          id: "commentary",
+          type: "text",
+          label:
+            "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
+          possibilities: []
         }
       ]
     };
   }
 
-  change(e) {
-    alert(e.target.value);
+  changeFormState(event) {
+    console.log(
+      "the value of the input selected is '" + event.target.value + "'"
+    );
   }
 
   render() {
@@ -246,23 +417,50 @@ class Sondage extends Component {
         <HeaderRH />
         <div className="sondage mt-2">
           <h3>Sondage</h3>
-          <form className="mt-5">
-            {this.state.questions.map(data => {
-              switch (data.type) {
-                case "option":
-                  return <Option data={data} />;
-
-                case "checkbox":
-                  return <Checkbox data={data} />;
-                case "number":
-                  return <Number data={data} />;
-                default:
-                  return <p>Il y a une erreur.</p>;
-              }
-            })}
-          </form>
+          <div className="textAlignLeft pl-5">
+            <form className="mt-5">
+              {this.state.questions.map(data => {
+                switch (data.type) {
+                  case "option":
+                    return (
+                      <Option
+                        key={data.id}
+                        data={data}
+                        function={event => this.changeFormState(event)}
+                      />
+                    );
+                  case "number":
+                    return (
+                      <Number
+                        key={data.id}
+                        data={data}
+                        function={event => this.changeFormState(event)}
+                      />
+                    );
+                  case "multipleOption":
+                    return (
+                      <MultipleOption
+                        key={data.id}
+                        data={data}
+                        function={event => this.changeFormState(event)}
+                      />
+                    );
+                  case "text":
+                    return (
+                      <Text
+                        key={data.id}
+                        data={data}
+                        function={event => this.changeFormState(event)}
+                      />
+                    );
+                  default:
+                    return <p>Il y a une erreur.</p>;
+                }
+              })}
+              <button className="btn btn-primary btn-lg mb-5">Envoyer</button>
+            </form>
+          </div>
         </div>
-
         <Footer />
       </div>
     );

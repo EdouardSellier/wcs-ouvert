@@ -1,3 +1,18 @@
 .sondage {
   min-height: 85vh;
+  overflow: hidden;
+}
+
+.commentary {
+  width: 33%;
+  height: 600px;
+}
+
+.threeInput {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.textAlignLeft {
+  text-align: left;
 }
