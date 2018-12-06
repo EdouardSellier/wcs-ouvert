@@ -31,16 +31,6 @@ class HeaderRH extends Component {
                     </Link>
                   </li>
                   <li className="nav-item pl-3">
-                    <Link to="/listediffusion" className="navLink">
-                      Liste de diffusion
-                    </Link>
-                  </li>
-                  <li className="nav-item pl-3">
-                    <Link to="/listeadresses" className="navLink">
-                      Géolocaliser mes salariés
-                    </Link>
-                  </li>
-                  <li className="nav-item pl-3">
                     <Link to="/sondage" className="navLink">
                       Consulter le sondage
                     </Link>
