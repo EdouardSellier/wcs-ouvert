@@ -17,7 +17,7 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.function(event, props.data.index)}
+              onChange={event => props.changeFormState(event, props.data.index)}
             >
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
@@ -29,7 +29,7 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.function(event, props.data.index)}
+              onChange={event => props.changeFormState(event, props.data.index)}
             >
               <option>------</option>
               {props.data.possibilities.map(content => {
@@ -42,7 +42,7 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.function(event, props.data.index)}
+              onChange={event => props.changeFormState(event, props.data.index)}
             >
               <option>------</option>
               {props.data.possibilities.map(content => {
@@ -61,7 +61,7 @@ const Text = props => {
     <React.Fragment>
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <textarea onChange={props.function} className="mb-5 commentary" />
+      <textarea onChange={props.changeFormState} className="mb-5 commentary" />
       <p />
     </React.Fragment>
   );
@@ -75,7 +75,7 @@ const Option = props => {
       <select
         className="mb-5"
         id={props.data.id}
-        onChange={event => props.function(event, props.data.index)}
+        onChange={event => props.changeFormState(event, props.data.index)}
       >
         {props.data.possibilities.map(content => {
           return <option key={content}>{content}</option>;
@@ -95,7 +95,7 @@ const Number = props => {
         className="mb-5"
         type="number"
         id={props.data.id}
-        onChange={props.function}
+        onChange={props.changeFormState}
       />
       <br />
     </React.Fragment>
@@ -477,7 +477,7 @@ class Sondage extends Component {
                       <Option
                         key={data.id}
                         data={data}
-                        function={this.changeFormState}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "number":
@@ -485,7 +485,7 @@ class Sondage extends Component {
                       <Number
                         key={data.id}
                         data={data}
-                        function={this.changeFormState}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "multipleOption":
@@ -493,7 +493,7 @@ class Sondage extends Component {
                       <MultipleOption
                         key={data.id}
                         data={data}
-                        function={this.changeFormState}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "text":
@@ -501,7 +501,7 @@ class Sondage extends Component {
                       <Text
                         key={data.id}
                         data={data}
-                        function={this.changeFormState}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   default:
