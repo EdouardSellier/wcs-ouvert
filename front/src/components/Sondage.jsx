@@ -70,7 +70,11 @@ const Option = props => {
     <React.Fragment>
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <select className="mb-5" id={props.data.id} onChange={props.function}>
+      <select
+        className="mb-5"
+        id={props.data.id}
+        onChange={event => props.function(event, props.data.od)}
+      >
         {props.data.possibilities.map(content => {
           return <option key={content}>{content}</option>;
         })}
@@ -109,7 +113,8 @@ class Sondage extends Component {
             "Un homme",
             "Une femme",
             "Je ne souhaite pas répondre"
-          ]
+          ],
+          od: 1
         },
         {
           id: "age",
@@ -402,10 +407,8 @@ class Sondage extends Component {
     };
   }
 
-  changeFormState(event, a) {
-    console.log(
-      "the value of the input selected is '" + event.target.value + "'"
-    );
+  changeFormState(event, index) {
+    console.log("the value of the input selected is '" + index + "'");
   }
 
   render() {
