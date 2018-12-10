@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 import Footer from "./Footer";
+import APIGeoloc from "./APIGeoloc";
 import "./css/Geolocalisation.css";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
 import { Container, Row, Col } from "reactstrap";
+import csv from "csv";
 
 class Geolocalisation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addressData: undefined
+      addressDataToTable: undefined,
+      addressDataToArray: []
     };
   }
 
@@ -21,14 +24,20 @@ class Geolocalisation extends Component {
   handleFiles = files => {
     const reader = new FileReader();
     reader.onload = e => {
+      csv.parse(reader.result, (err, data) => {
+        this.setState({
+          addressDataToArray: data
+        });
+      });
       this.setState({
-        addressData: reader.result
+        addressDataToTable: reader.result
       });
     };
     reader.readAsText(files[0]);
   };
 
   render() {
+    const addressData = this.state.addressDataToArray;
     return (
       <div>
         <p className="homeSlogan">
@@ -68,18 +77,44 @@ class Geolocalisation extends Component {
                 Importer un fichier CSV d'adresses postales
               </button>
             </ReactFileReader>
-            <div className="card importAddress">
+            <div className="importAddress">
+              {this.state.addressDataToTable !== undefined ? (
+                <CsvToHtmlTable
+                  data={this.state.addressDataToTable}
+                  csvDelimiter=","
+                  tableClassName="table table-striped table-hover"
+                  hasHeader={false}
+                />
+              ) : (
+                <div className="csvExample">
+                  Exemple de fichier .csv
+                  <table className=" mt-3 table table-striped ">
+                    <tr>
+                      <td>50</td>
+                      <td>rue</td>
+                      <td>de Provence</td>
+                      <td>59000</td>
+                      <td>Lille</td>
+                    </tr>
+                    <tr>
+                      <td>3 B</td>
+                      <td>boulevard</td>
+                      <td>Vauban</td>
+                      <td>59000</td>
+                      <td>Lille</td>
+                    </tr>
+                  </table>
+                </div>
+              )}
               <CsvToHtmlTable
-                data={this.state.addressData}
+                data={this.state.addressDataToTable}
                 csvDelimiter=","
                 tableClassName="table table-striped table-hover"
                 hasHeader={false}
               />
             </div>
-            <button className="btn text-white mt-4 mb-3">
-              Géolocaliser mes salariés
-            </button>
           </Container>
+          <APIGeoloc addressData={addressData} />
         </div>
         <Footer />
       </div>
