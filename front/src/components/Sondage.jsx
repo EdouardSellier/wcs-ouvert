@@ -17,7 +17,7 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event => props.function(event, props.data.index)}
             >
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
@@ -29,8 +29,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event => props.function(event, props.data.index)}
             >
+              <option>------</option>
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
               })}
@@ -41,8 +42,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event => props.function(event, props.data.index)}
             >
+              <option>------</option>
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
               })}
@@ -429,14 +431,13 @@ class Sondage extends Component {
       statesForm: {
         genre: undefined,
         age: undefined,
-        principalTransport: undefined
+        principalTransport: []
       }
     };
   }
 
   changeFormState(event, index) {
-    let statesForm = this.state.statesForm;
-    switch (index) {
+    /*switch (index) {
       case "genre":
         statesForm.genre = event.target.value;
         break;
@@ -444,11 +445,11 @@ class Sondage extends Component {
         statesForm.age = event.target.value;
         break;
       case "principalTransport":
-        statesForm.principalTransport = event.target.value;
+        alert("dty");
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
-    }
+    }*/
   }
 
   render() {
