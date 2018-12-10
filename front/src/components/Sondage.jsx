@@ -436,7 +436,7 @@ class Sondage extends Component {
     };
   }
 
-  changeFormState(event, index) {
+  changeFormState = (event, index) => {
     /*switch (index) {
       case "genre":
         statesForm.genre = event.target.value;
@@ -449,8 +449,15 @@ class Sondage extends Component {
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
+
+
+
     }*/
-  }
+
+    this.setState({
+      questions: []
+    });
+  };
 
   render() {
     return (
