@@ -426,12 +426,19 @@ class Sondage extends Component {
           index: "commentary"
         }
       ],
-      statesForm: {}
+      statesForm: { genre: undefined }
     };
   }
 
   changeFormState(event, index) {
-    console.log("the value of the input selected is '" + index + "'");
+    let statesForm = this.state.statesForm;
+    switch (index) {
+      case "genre":
+        statesForm.genre = event.target.value;
+        break;
+      default:
+        return <p>Une erreur a été rencontrée.</p>;
+    }
   }
 
   render() {
