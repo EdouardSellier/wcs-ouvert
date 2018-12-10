@@ -1,9 +1,48 @@
 .listAddress {
-  min-height: 85vh;
   padding: 15px;
 }
 
 .importAddress {
   max-height: 200px;
   overflow: scroll;
+}
+
+.csvExample {
+  font-style: italic;
+  color: grey;
+}
+
+.leaflet-container {
+  height: 500px;
+  width: 100%;
+}
+
+.legend {
+  text-align: left;
+  font-size: 0.8em;
+  border: 1px solid #cfcfcf;
+  padding-left: 35px;
+  padding-top: 10px;
+  border-radius: 3%;
+}
+
+.bluePolygon {
+  color: blue;
+  background-color: blue;
+  font-size: 0.5em;
+  line-height: 0.5px;
+}
+
+.redPolygon {
+  color: red;
+  background-color: red;
+  font-size: 0.5em;
+  line-height: 0.5px;
+}
+
+.yellowPolygon {
+  color: yellow;
+  background-color: yellow;
+  font-size: 0.5em;
+  line-height: 0.5px;
 }
