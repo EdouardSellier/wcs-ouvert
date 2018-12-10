@@ -426,7 +426,11 @@ class Sondage extends Component {
           index: "commentary"
         }
       ],
-      statesForm: { genre: undefined }
+      statesForm: {
+        genre: undefined,
+        age: undefined,
+        principalTransport: undefined
+      }
     };
   }
 
@@ -435,6 +439,12 @@ class Sondage extends Component {
     switch (index) {
       case "genre":
         statesForm.genre = event.target.value;
+        break;
+      case "age":
+        statesForm.age = event.target.value;
+        break;
+      case "principalTransport":
+        statesForm.principalTransport = event.target.value;
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
