@@ -73,7 +73,7 @@ const Option = props => {
       <select
         className="mb-5"
         id={props.data.id}
-        onChange={event => props.function(event, props.data.od)}
+        onChange={event => props.function(event, props.data.index)}
       >
         {props.data.possibilities.map(content => {
           return <option key={content}>{content}</option>;
@@ -114,7 +114,7 @@ class Sondage extends Component {
             "Une femme",
             "Je ne souhaite pas répondre"
           ],
-          od: 1
+          index: "genre"
         },
         {
           id: "age",
@@ -403,7 +403,8 @@ class Sondage extends Component {
             "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
           possibilities: []
         }
-      ]
+      ],
+      statesForm: {}
     };
   }
 
