@@ -414,14 +414,16 @@ class Sondage extends Component {
           type: "text",
           label:
             "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
-          possibilities: []
+          possibilities: [],
+          index: "otherThanCar"
         },
         {
           id: "commentary",
           type: "text",
           label:
             "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
-          possibilities: []
+          possibilities: [],
+          index: "commentary"
         }
       ],
       statesForm: {}
