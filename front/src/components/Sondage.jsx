@@ -61,7 +61,10 @@ const Text = props => {
     <React.Fragment>
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <textarea onChange={props.changeFormState} className="mb-5 commentary" />
+      <textarea
+        onChange={event => props.changeFormState(event, props.data.index)}
+        className="mb-5 commentary"
+      />
       <p />
     </React.Fragment>
   );
@@ -95,7 +98,7 @@ const Number = props => {
         className="mb-5"
         type="number"
         id={props.data.id}
-        onChange={props.changeFormState}
+        onChange={event => props.changeFormState(event, props.data.index)}
       />
       <br />
     </React.Fragment>
@@ -437,7 +440,8 @@ class Sondage extends Component {
   }
 
   changeFormState = (event, index) => {
-    /*switch (index) {
+    let statesForm = this.state.statesForm;
+    switch (index) {
       case "genre":
         statesForm.genre = event.target.value;
         break;
@@ -449,13 +453,11 @@ class Sondage extends Component {
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
+    }
 
-
-
-    }*/
-
+    console.log(statesForm);
     this.setState({
-      questions: []
+      statesForm: statesForm
     });
   };
 
