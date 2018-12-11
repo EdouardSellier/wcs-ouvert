@@ -199,7 +199,7 @@ class Sondage extends Component {
         },
 
         {
-          id: "distanceKlms",
+          id: "distanceKlm",
           type: "number",
           label: "Quelle distance (en km) parcourez-vous pour :",
           possibilities: [],
@@ -443,7 +443,8 @@ class Sondage extends Component {
         principalTransport: ["Voiture personnelle", "------", "------"],
         ocasionalyTransport: ["Voiture personnelle", "------", "------"],
         reasonTransport: "Rapidité",
-        distanceKlm: null
+        distanceKlm: null,
+        distanceMin: null
       }
     };
   }
@@ -466,11 +467,17 @@ class Sondage extends Component {
       case "reasonTransport":
         statesForm.reasonTransport = event.target.value;
         break;
-      case "distanceKlms":
-        statesForm.distanceKlms = event.target.value;
+      case "distanceKlm":
+        statesForm.distanceKlm = event.target.value;
+        break;
+      case "distanceMin":
+        statesForm.distanceMin = event.target.value;
+        break;
+      case "distanceMoney":
+        statesForm.distanceMoney = event.target.value;
         break;
       default:
-        return <p>Une erreur a été rencontrée.</p>;
+        return console.log("Une erreur a été rencontrée");
     }
 
     console.log(statesForm);
