@@ -447,7 +447,8 @@ class Sondage extends Component {
         distanceMin: null,
         distanceMoney: null,
         elements: ["Pas d’obligation particulière", "------", "------"],
-        parkingPlace: "Oui"
+        parkingPlace: "Oui",
+        midday: "Sur mon lieu de travail dans le restaurant d’entreprise"
       }
     };
   }
@@ -484,6 +485,9 @@ class Sondage extends Component {
         break;
       case "parkingPlace":
         statesForm.parkingPlace = event.target.value;
+        break;
+      case "midday":
+        statesForm.midday = event.target.value;
         break;
 
       default:
