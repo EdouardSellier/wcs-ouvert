@@ -442,7 +442,8 @@ class Sondage extends Component {
         age: "25 ans ou moins",
         principalTransport: ["Voiture personnelle", "------", "------"],
         ocasionalyTransport: ["Voiture personnelle", "------", "------"],
-        reasonTransport: "Rapidité"
+        reasonTransport: "Rapidité",
+        distanceKlm: null
       }
     };
   }
@@ -464,6 +465,9 @@ class Sondage extends Component {
         break;
       case "reasonTransport":
         statesForm.reasonTransport = event.target.value;
+        break;
+      case "distanceKlms":
+        statesForm.distanceKlms = event.target.value;
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
