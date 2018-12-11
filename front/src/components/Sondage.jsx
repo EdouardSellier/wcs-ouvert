@@ -6,10 +6,8 @@ const MultipleOption = props => {
   return (
     <React.Fragment>
       <br />
-      <div className="mb-5">
-        <label htmlFor={props.data.id} className="w-50">
-          {props.data.label}
-        </label>
+      <div className="marginMultipleOption">
+        <label htmlFor={props.data.id}>{props.data.label}</label>
         <div className="d-flex">
           <div className="threeInput">
             <span>1.</span>
@@ -68,7 +66,7 @@ const Text = props => {
       <br />
       <textarea
         onChange={event => props.changeFormState(event, props.data.index)}
-        className="mb-5 commentary"
+        className="commentary"
       />
       <p />
     </React.Fragment>
@@ -81,7 +79,7 @@ const Option = props => {
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
       <select
-        className="mb-5"
+        className="marginOption"
         id={props.data.id}
         onChange={event => props.changeFormState(event, props.data.index)}
       >
@@ -100,7 +98,7 @@ const Number = props => {
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
       <input
-        className="mb-5"
+        className="marginNumber"
         type="number"
         id={props.data.id}
         onChange={event => props.changeFormState(event, props.data.index)}
@@ -557,50 +555,54 @@ class Sondage extends Component {
         <p className="homeSlogan">
           MOUV'R : Enquête de mobilité pour vos salariés
         </p>
-        <div className="sondage mt-2">
+        <div className="sondage">
           <h3>Sondage</h3>
-          <div className="textAlignLeft pl-5">
-            <form className="mt-5">
-              {this.state.questions.map(data => {
-                switch (data.type) {
-                  case "option":
-                    return (
-                      <Option
-                        key={data.id}
-                        data={data}
-                        changeFormState={this.changeFormState}
-                      />
-                    );
-                  case "number":
-                    return (
-                      <Number
-                        key={data.id}
-                        data={data}
-                        changeFormState={this.changeFormState}
-                      />
-                    );
-                  case "multipleOption":
-                    return (
-                      <MultipleOption
-                        key={data.id}
-                        data={data}
-                        changeFormState={this.changeFormState}
-                      />
-                    );
-                  case "text":
-                    return (
-                      <Text
-                        key={data.id}
-                        data={data}
-                        changeFormState={this.changeFormState}
-                      />
-                    );
-                  default:
-                    return <p>Il y a une erreur.</p>;
-                }
-              })}
-              <button className="btn btn-primary btn-lg mb-5">Envoyer</button>
-            </form>
+          <div className="d-flex justify-content-center">
+            <div className="textAlignLeft col-6 pl-5">
+              <form className="">
+                {this.state.questions.map(data => {
+                  switch (data.type) {
+                    case "option":
+                      return (
+                        <Option
+                          key={data.id}
+                          data={data}
+                          changeFormState={this.changeFormState}
+                        />
+                      );
+                    case "number":
+                      return (
+                        <Number
+                          key={data.id}
+                          data={data}
+                          changeFormState={this.changeFormState}
+                        />
+                      );
+                    case "multipleOption":
+                      return (
+                        <MultipleOption
+                          key={data.id}
+                          data={data}
+                          changeFormState={this.changeFormState}
+                        />
+                      );
+                    case "text":
+                      return (
+                        <Text
+                          key={data.id}
+                          data={data}
+                          changeFormState={this.changeFormState}
+                        />
+                      );
+                    default:
+                      return <p>Il y a une erreur.</p>;
+                  }
+                })}
+                <button className="btn btn-primary btn-lg buttonSubmit">
+                  Envoyer
+                </button>
+              </form>
+            </div>
           </div>
         </div>
         <Footer />
