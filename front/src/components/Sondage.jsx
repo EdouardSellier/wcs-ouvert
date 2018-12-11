@@ -448,7 +448,8 @@ class Sondage extends Component {
         distanceMoney: null,
         elements: ["Pas d’obligation particulière", "------", "------"],
         parkingPlace: "Oui",
-        midday: "Sur mon lieu de travail dans le restaurant d’entreprise"
+        midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
+        frequencyMidday: "Jamais"
       }
     };
   }
@@ -489,9 +490,11 @@ class Sondage extends Component {
       case "midday":
         statesForm.midday = event.target.value;
         break;
-
+      case "frequencyMidday":
+        statesForm.frequencyMidday = event.target.value;
+        break;
       default:
-        return console.log("Une erreur a été rencontrée");
+        return false;
     }
 
     console.log(statesForm);
