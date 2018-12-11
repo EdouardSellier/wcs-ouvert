@@ -16,7 +16,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 0)
+              }
             >
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
@@ -28,8 +30,11 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 1)
+              }
             >
+              <option>------</option>
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
               })}
@@ -40,8 +45,11 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={props.function}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 2)
+              }
             >
+              <option>------</option>
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
               })}
@@ -58,7 +66,10 @@ const Text = props => {
     <React.Fragment>
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <textarea onChange={props.function} className="mb-5 commentary" />
+      <textarea
+        onChange={event => props.changeFormState(event, props.data.index)}
+        className="mb-5 commentary"
+      />
       <p />
     </React.Fragment>
   );
@@ -69,7 +80,11 @@ const Option = props => {
     <React.Fragment>
       <label htmlFor={props.data.id}>{props.data.label}</label>
       <br />
-      <select className="mb-5" id={props.data.id} onChange={props.function}>
+      <select
+        className="mb-5"
+        id={props.data.id}
+        onChange={event => props.changeFormState(event, props.data.index)}
+      >
         {props.data.possibilities.map(content => {
           return <option key={content}>{content}</option>;
         })}
@@ -88,7 +103,7 @@ const Number = props => {
         className="mb-5"
         type="number"
         id={props.data.id}
-        onChange={props.function}
+        onChange={event => props.changeFormState(event, props.data.index)}
       />
       <br />
     </React.Fragment>
@@ -108,7 +123,8 @@ class Sondage extends Component {
             "Un homme",
             "Une femme",
             "Je ne souhaite pas répondre"
-          ]
+          ],
+          index: "genre"
         },
         {
           id: "age",
@@ -120,10 +136,11 @@ class Sondage extends Component {
             "Entre 41 et 55 ans",
             "56 ans ou plus",
             "Je ne souhaite pas répondre"
-          ]
+          ],
+          index: "age"
         },
         {
-          id: "goToWork",
+          id: "principalTransport",
           type: "multipleOption",
           label:
             "Quel(s) mode(s) de déplacements utilisez-vous pour venir travailler ? Si vous utilisez plusieurs modes de déplacements au cours de votre trajet domicile-travail, veuillez les renseigner dans l’ordre d’importance qu’ils ont dans votre parcours (en termes de temps et de distance)",
@@ -138,10 +155,11 @@ class Sondage extends Component {
             "Gyropode",
             "Deux-roues motorisés",
             "Marche à pied"
-          ]
+          ],
+          index: "principalTransport"
         },
         {
-          id: "ocasionaly",
+          id: "ocasionalyTransport",
           type: "multipleOption",
           label:
             "Peut-être utilisez-vous occasionnellement d’autres modes de déplacements en fonction du jour de la semaine, de vos horaires, de la météo…",
@@ -156,10 +174,11 @@ class Sondage extends Component {
             "Gyropode",
             "Deux-roues motorisés",
             "Marche à pied"
-          ]
+          ],
+          index: "ocasionalyTransport"
         },
         {
-          id: "reason",
+          id: "reasonTransport",
           type: "option",
           label:
             "Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ?",
@@ -174,27 +193,31 @@ class Sondage extends Component {
             "Sécurité",
             "Indépendance",
             "Autre raison"
-          ]
+          ],
+          index: "reasonTransport"
         },
 
         {
-          id: "distanceKlms",
+          id: "distanceKlm",
           type: "number",
           label: "Quelle distance (en km) parcourez-vous pour :",
-          possibilities: []
+          possibilities: [],
+          index: "distanceKlm"
         },
         {
           id: "distanceMin",
           type: "number",
           label: "Combien de temps (en minutes) mettez-vous pour :",
-          possibilities: []
+          possibilities: [],
+          index: "distanceMin"
         },
 
         {
           id: "distanceMoney",
           type: "number",
           label: "Quel budget (en euros) dépensez-vous pour :",
-          possibilities: []
+          possibilities: [],
+          index: "distanceMoney"
         },
         {
           id: "elements",
@@ -208,10 +231,11 @@ class Sondage extends Component {
             "Activités sur le temps de midi",
             "Déplacements professionnels fréquents",
             "Autre :"
-          ]
+          ],
+          index: "elements"
         },
         {
-          id: "parking",
+          id: "parkingPlace",
           type: "option",
           label:
             "Si vous vous rendez en voiture sur votre lieu de travail, y-trouvez-vous facilement une place de parking ?",
@@ -219,10 +243,11 @@ class Sondage extends Component {
             "Oui",
             "Non",
             "Je ne me rends pas sur mon lieu de travail en voiture"
-          ]
+          ],
+          index: "parkingPlace"
         },
         {
-          id: "breakfast",
+          id: "midday",
           type: "option",
           label: "Où déjeunez–vous le plus souvent le midi ?",
           possibilities: [
@@ -230,10 +255,11 @@ class Sondage extends Component {
             "Sur mon lieu de travail avec mon propre repas",
             "A mon domicile",
             "A l’extérieur"
-          ]
+          ],
+          index: "midday"
         },
         {
-          id: "frequency",
+          id: "frequencyMidday",
           type: "option",
           label:
             "En moyenne, à quelle fréquence effectuez–vous des déplacements le midi ?",
@@ -243,10 +269,11 @@ class Sondage extends Component {
             "1 fois par semaine",
             "2 à 4 fois par semaine",
             "Tous les jours"
-          ]
+          ],
+          index: "frequencyMidday"
         },
         {
-          id: "transportBreakfast",
+          id: "transportMidday",
           type: "option",
           label:
             "Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?",
@@ -262,7 +289,8 @@ class Sondage extends Component {
             "Gyropode",
             "Deux-roues motorisés",
             "Marche à pied"
-          ]
+          ],
+          index: "transportMidday"
         },
         {
           id: "frequencyPro",
@@ -276,7 +304,8 @@ class Sondage extends Component {
             "1 à 2 fois par mois",
             "1 à 2 fois par semaine",
             "Plus de 2 fois par semaine"
-          ]
+          ],
+          index: "frequencyPro"
         },
         {
           id: "distancePro",
@@ -290,7 +319,8 @@ class Sondage extends Component {
             "Entre 10 et 30 km",
             "Entre 30 et 50 km",
             "Plus de 50 km"
-          ]
+          ],
+          index: "distancePro"
         },
         {
           id: "deplacementPro",
@@ -308,10 +338,11 @@ class Sondage extends Component {
             "Gyropode",
             "Deux-roues motorisés",
             "Marche à pied"
-          ]
+          ],
+          index: "deplacementPro"
         },
         {
-          id: "carPro",
+          id: "reasonPersoCar",
           type: "option",
           label:
             "Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?",
@@ -322,7 +353,8 @@ class Sondage extends Component {
             "Flexibilité (si déplacement tôt ou tard)",
             "Aucune raison particulière",
             "Je n’utilise pas ma voiture personnelle pour les déplacements professionnels"
-          ]
+          ],
+          index: "reasonPersoCar"
         },
         {
           id: "deplacementMethodPro",
@@ -336,7 +368,8 @@ class Sondage extends Component {
             "Je ne connais pas suffisamment les différentes possibilités de me rendre au travail sans voiture",
             "Mes contraintes (logement, obligations familiales…) ne me permettent pas d’utiliser un autre mode de déplacement que la voiture",
             "Je n’ai pas envie de changer mes habitudes de déplacements"
-          ]
+          ],
+          index: "deplacementMethodPro"
         },
         {
           id: "communTransport",
@@ -349,7 +382,8 @@ class Sondage extends Component {
             "Un meilleur sentiment de sécurité",
             "Un abonnement à une offre de transports en commun moins onéreuse",
             "Autre :"
-          ]
+          ],
+          index: "communTransport"
         },
         {
           id: "bike",
@@ -367,10 +401,11 @@ class Sondage extends Component {
             "Des douches et des vestiaires",
             "Autre :",
             "Rien, je ne souhaite pas pédaler"
-          ]
+          ],
+          index: "bike"
         },
         {
-          id: "sharingCar",
+          id: "carpooling",
           type: "multipleOption",
           label:
             "Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?",
@@ -381,31 +416,140 @@ class Sondage extends Component {
             "Un retour assuré en cas de désistement du covoitureur ou circonstances imprévues",
             "Autre :",
             "Rien, je ne souhaite pas covoiturer "
-          ]
+          ],
+          index: "carpooling"
         },
         {
           id: "otherThanCar",
           type: "text",
           label:
             "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
-          possibilities: []
+          possibilities: [],
+          index: "otherThanCar"
         },
         {
           id: "commentary",
           type: "text",
           label:
             "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
-          possibilities: []
+          possibilities: [],
+          index: "commentary"
         }
-      ]
+      ],
+      statesForm: {
+        genre: "Un homme",
+        age: "25 ans ou moins",
+        principalTransport: ["Voiture personnelle", "------", "------"],
+        ocasionalyTransport: ["Voiture personnelle", "------", "------"],
+        reasonTransport: "Rapidité",
+        distanceKlm: null,
+        distanceMin: null,
+        distanceMoney: null,
+        elements: ["Pas d’obligation particulière", "------", "------"],
+        parkingPlace: "Oui",
+        midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
+        frequencyMidday: "Jamais",
+        transportMidday: "Voiture personnelle",
+        frequencyPro: "Je ne fais jamais de déplacements professionnels",
+        distancePro: "Je ne fais jamais de déplacements professionnels",
+        deplacementPro: "Voiture personnelle",
+        reasonPersoCar: "Pas d’autres solutions identifiées",
+        deplacementMethodPro:
+          "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
+        communTransport: [
+          "J’utilise déjà souvent les transports en commun",
+          "------",
+          "------"
+        ],
+        bike: ["Je me déplace déjà souvent à vélo", "------", "------"],
+        carpooling: ["Je covoiture déjà souvent", "------", "------"],
+        otherThanCar: "",
+        commentary: ""
+      }
     };
   }
 
-  changeFormState(event) {
-    console.log(
-      "the value of the input selected is '" + event.target.value + "'"
-    );
-  }
+  changeFormState = (event, index, col) => {
+    let statesForm = this.state.statesForm;
+    switch (index) {
+      case "genre":
+        statesForm.genre = event.target.value;
+        break;
+      case "age":
+        statesForm.age = event.target.value;
+        break;
+      case "principalTransport":
+        statesForm.principalTransport[col] = event.target.value;
+        break;
+      case "ocasionalyTransport":
+        statesForm.ocasionalyTransport[col] = event.target.value;
+        break;
+      case "reasonTransport":
+        statesForm.reasonTransport = event.target.value;
+        break;
+      case "distanceKlm":
+        statesForm.distanceKlm = event.target.value;
+        break;
+      case "distanceMin":
+        statesForm.distanceMin = event.target.value;
+        break;
+      case "distanceMoney":
+        statesForm.distanceMoney = event.target.value;
+        break;
+      case "elements":
+        statesForm.elements[col] = event.target.value;
+        break;
+      case "parkingPlace":
+        statesForm.parkingPlace = event.target.value;
+        break;
+      case "midday":
+        statesForm.midday = event.target.value;
+        break;
+      case "frequencyMidday":
+        statesForm.frequencyMidday = event.target.value;
+        break;
+      case "transportMidday":
+        statesForm.transportMidday = event.target.value;
+        break;
+      case "frequencyPro":
+        statesForm.frequencyPro = event.target.value;
+        break;
+      case "distancePro":
+        statesForm.distancePro = event.target.value;
+        break;
+      case "deplacementPro":
+        statesForm.deplacementPro = event.target.value;
+        break;
+      case "reasonPersoCar":
+        statesForm.reasonPersoCar = event.target.value;
+        break;
+      case "deplacementMethodPro":
+        statesForm.deplacementMethodPro = event.target.value;
+        break;
+      case "communTransport":
+        statesForm.communTransport[col] = event.target.value;
+        break;
+      case "bike":
+        statesForm.bike[col] = event.target.value;
+        break;
+      case "carpooling":
+        statesForm.carpooling[col] = event.target.value;
+        break;
+      case "otherThanCar":
+        statesForm.otherThanCar = event.target.value;
+        break;
+      case "commentary":
+        statesForm.commentary = event.target.value;
+        break;
+      default:
+        return false;
+    }
+
+    console.log(statesForm);
+    this.setState({
+      statesForm: statesForm
+    });
+  };
 
   render() {
     return (
@@ -424,7 +568,7 @@ class Sondage extends Component {
                       <Option
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "number":
@@ -432,7 +576,7 @@ class Sondage extends Component {
                       <Number
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "multipleOption":
@@ -440,7 +584,7 @@ class Sondage extends Component {
                       <MultipleOption
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   case "text":
@@ -448,7 +592,7 @@ class Sondage extends Component {
                       <Text
                         key={data.id}
                         data={data}
-                        function={event => this.changeFormState(event)}
+                        changeFormState={this.changeFormState}
                       />
                     );
                   default:

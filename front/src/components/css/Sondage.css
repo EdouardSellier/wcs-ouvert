@@ -5,7 +5,7 @@
 
 .commentary {
   width: 33%;
-  height: 600px;
+  height: 400px;
 }
 
 .threeInput {
@@ -15,4 +15,5 @@
 
 .textAlignLeft {
   text-align: left;
+  margin-left: 33%;
 }
