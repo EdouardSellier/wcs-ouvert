@@ -461,7 +461,8 @@ class Sondage extends Component {
           "J’utilise déjà souvent les transports en commun",
           "------",
           "------"
-        ]
+        ],
+        bike: ["Je me déplace déjà souvent à vélo", "------", "------"]
       }
     };
   }
@@ -494,7 +495,7 @@ class Sondage extends Component {
         statesForm.distanceMoney = event.target.value;
         break;
       case "elements":
-        statesForm.elements = event.target.value;
+        statesForm.elements[col] = event.target.value;
         break;
       case "parkingPlace":
         statesForm.parkingPlace = event.target.value;
@@ -525,6 +526,9 @@ class Sondage extends Component {
         break;
       case "communTransport":
         statesForm.communTransport[col] = event.target.value;
+        break;
+      case "bike":
+        statesForm.bike[col] = event.target.value;
         break;
       default:
         return false;
