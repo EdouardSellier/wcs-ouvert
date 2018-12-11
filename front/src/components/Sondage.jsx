@@ -17,7 +17,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.changeFormState(event, props.data.index)}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 0)
+              }
             >
               {props.data.possibilities.map(content => {
                 return <option key={content}>{content}</option>;
@@ -29,7 +31,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.changeFormState(event, props.data.index)}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 1)
+              }
             >
               <option>------</option>
               {props.data.possibilities.map(content => {
@@ -42,7 +46,9 @@ const MultipleOption = props => {
             <select
               id={props.data.id}
               className="w-100"
-              onChange={event => props.changeFormState(event, props.data.index)}
+              onChange={event =>
+                props.changeFormState(event, props.data.index, 2)
+              }
             >
               <option>------</option>
               {props.data.possibilities.map(content => {
@@ -432,14 +438,16 @@ class Sondage extends Component {
         }
       ],
       statesForm: {
-        genre: undefined,
-        age: undefined,
-        principalTransport: []
+        genre: "Un homme",
+        age: "25 ans ou moins",
+        principalTransport: ["Voiture personnelle", "------", "------"],
+        ocasionalyTransport: ["Voiture personnelle", "------", "------"],
+        reasonTransport: ""
       }
     };
   }
 
-  changeFormState = (event, index) => {
+  changeFormState = (event, index, col) => {
     let statesForm = this.state.statesForm;
     switch (index) {
       case "genre":
@@ -449,7 +457,13 @@ class Sondage extends Component {
         statesForm.age = event.target.value;
         break;
       case "principalTransport":
-        alert("dty");
+        statesForm.principalTransport[col] = event.target.value;
+        break;
+      case "ocasionalyTransport":
+        statesForm.ocasionalyTransport[col] = event.target.value;
+        break;
+      case "reasonTransport":
+        statesForm.reasonTransport = event.target.value;
         break;
       default:
         return <p>Une erreur a été rencontrée.</p>;
