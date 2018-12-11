@@ -25,6 +25,14 @@ const errorMsg = {
   autoDismiss: 4
 };
 
+const problemMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de l'enregistrement de votre adresse, nous vous remercions de bien vouloir recommencer",
+  type: "danger",
+  autoDismiss: 4
+};
+
 class Geolocalisation extends Component {
   constructor(props) {
     super(props);
@@ -47,6 +55,10 @@ class Geolocalisation extends Component {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
   };
 
+  alertFunctionProblem = () => {
+    this.refs.notificationAlertError.notificationAlert(problemMsg);
+  };
+
   handleChange = e => {
     this.setState({
       [e.target.name]: e.target.value
@@ -60,12 +72,25 @@ class Geolocalisation extends Component {
 
   handleSubmitSocietyAddress = event => {
     event.preventDefault();
-    /*let body = {                        ===> To KEEP to send to server
+    let body = {
       nbSociety: this.state.nbSociety,
       streetSociety: this.state.streetSociety,
       zipCodeSociety: this.state.zipCodeSociety,
       citySociety: this.state.citySociety
-    };*/
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/societyAddress",
+      data: body
+    })
+      .then(res => {
+        if (res.status !== 200) {
+          this.alertFunctionProblem();
+        }
+      })
+      .catch(error => {
+        console.log("Fail: " + error);
+      });
     let addressSocietyToArray = [
       this.state.nbSociety,
       this.state.streetSociety,
@@ -76,23 +101,25 @@ class Geolocalisation extends Component {
     axios
       .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
       .then(result => {
+        let validateAddress = result.data.features[0].properties.city.toLowerCase();
+        let query = result.data.query.toLowerCase();
         let newData = result.data.features[0].geometry.coordinates;
-        newData.reverse();
-        this.setState({
-          addressSocietyToLatLng: newData
-        });
-        this.alertFunctionSuccess();
+        if (query.includes(validateAddress)) {
+          this.setState({
+            addressSocietyToLatLng: newData,
+            nbSociety: "",
+            streetSociety: "",
+            zipCodeSociety: "",
+            citySociety: ""
+          });
+          this.alertFunctionSuccess();
+        } else {
+          this.alertFunctionError();
+        }
       })
       .catch(err => {
-        console.log(err);
         this.alertFunctionError();
       });
-    this.setState({
-      nbSociety: "",
-      streetSociety: "",
-      zipCodeSociety: "",
-      citySociety: ""
-    });
   };
 
   handleFiles = files => {
@@ -139,6 +166,7 @@ class Geolocalisation extends Component {
             <Row>
               <NotificationAlert ref="notificationAlertSuccess" />
               <NotificationAlert ref="notificationAlertError" />
+              <NotificationAlert ref="notificationAlertProblem" />
               <p className="text-justify m-4">
                 Lorem ipsum sit amet dolor lorem ipsum sit amet dolor, lorem
                 ipsum sit amet dolor Lorem ipsum sit amet dolor lorem ipsum sit
@@ -159,7 +187,6 @@ class Geolocalisation extends Component {
                     id="inputNbSociety"
                     onChange={this.handleChange}
                     value={this.state.nbSociety}
-                    ref={ref => (this.inputNbSociety = ref)}
                     placeholder="N° de rue"
                   />
                 </Col>
@@ -171,7 +198,6 @@ class Geolocalisation extends Component {
                     id="inputStreetSociety"
                     onChange={this.handleChange}
                     value={this.state.streetSociety}
-                    ref={ref => (this.inputStreetSociety = ref)}
                     placeholder="Nom de rue"
                   />
                 </Col>
@@ -183,7 +209,6 @@ class Geolocalisation extends Component {
                     id="inputZipCodeSociety"
                     onChange={this.handleChange}
                     value={this.state.zipCodeSociety}
-                    ref={ref => (this.inputZipCodeSociety = ref)}
                     placeholder="Code postal"
                   />
                 </Col>
@@ -195,14 +220,12 @@ class Geolocalisation extends Component {
                     id="inputCitySociety"
                     onChange={this.handleChange}
                     value={this.state.citySociety}
-                    ref={ref => (this.inputCitySociety = ref)}
                     placeholder="Ville"
                   />
                 </Col>
               </Row>
-              <button className="btn text-white mt-3">Envoyer</button>
+              <button className="btn text-white mt-3 mb-3">Enregistrer</button>
             </form>
-            <hr />
             <ReactFileReader
               fileTypes={[".csv"]}
               handleFiles={this.handleFiles}
@@ -244,9 +267,27 @@ class Geolocalisation extends Component {
               )}
             </div>
           </Container>
+          <hr />
           <APIGeoloc
             addressEmployee={addressEmployee}
             addressSociety={addressSociety}
+            profile="driving-car"
+            rangeType="distance"
+            range="5000,10000,20000"
+            parameter="en voiture"
+            distance="Distance"
+            measure="km"
+          />
+          <hr />
+          <APIGeoloc
+            addressEmployee={addressEmployee.reverse()}
+            addressSociety={addressSociety.reverse()}
+            profile="cycling-regular"
+            rangeType="time"
+            range="300,600,900"
+            parameter="à vélo"
+            distance="Durée du trajet"
+            measure=" minutes "
           />
         </div>
         <Footer />
