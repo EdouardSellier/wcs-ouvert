@@ -6,8 +6,6 @@ import axios from "axios";
 import GeoStatistics from "./GeoStatistics";
 import L from "leaflet";
 
-const defaultPosition = [50.62925, 3.057256];
-
 class APIGeoloc extends Component {
   constructor(props) {
     super(props);
@@ -38,15 +36,20 @@ class APIGeoloc extends Component {
           console.log(err);
         });
     });
-    this.getIsochrone();
   };
 
   getIsochrone = () => {
-    //let center = this.props.addressSociety.reverse();
-    let center = defaultPosition.reverse();
+    let center = undefined;
+    if (this.props.profile === "cycling-regular") {
+      center = this.props.addressSociety;
+    } else {
+      center = this.props.addressSociety.reverse();
+    }
     axios
       .get(
-        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${center}&profile=driving-car&range_type=distance&range=5000,10000,20000`
+        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${center}&profile=${
+          this.props.profile
+        }&range_type=${this.props.rangeType}&range=${this.props.range}`
       )
       .then(result => {
         let firstRes = result.data.features[0].geometry.coordinates;
@@ -88,21 +91,28 @@ class APIGeoloc extends Component {
   };
 
   render() {
-    const firstPolygon = [this.state.firstPolygon];
-    const secondPolygon = [this.state.secondPolygon];
-    const thirdPolygon = [this.state.thirdPolygon];
+    const zoom = 11.4;
+    const defaultPosition = [50.62925, 3.057256];
+    const societyPosition = this.props.addressSociety;
     const myIcon = L.icon({
       iconUrl: "https://img.icons8.com/metro/1600/marker.png",
       iconSize: [38, 38]
     });
-    const societyPosition = this.props.addressSociety;
-    const societyPositionReverse = this.props.addressSociety.reverse();
-    const zoom = 11.4;
+    const firstPolygon = [this.state.firstPolygon];
+    const secondPolygon = [this.state.secondPolygon];
+    const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
         <Container className="mt-3">
+          <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             Géolocaliser mes salariés
+          </button>
+          <button
+            className="btn text-white mt-4 mb-3 ml-3"
+            onClick={this.getIsochrone}
+          >
+            Afficher la cartographie isochrone <em>(cf. légende)</em>
           </button>
           {societyPosition.length === 0 ? (
             <Map center={defaultPosition} zoom={zoom}>
@@ -112,15 +122,12 @@ class APIGeoloc extends Component {
               />
             </Map>
           ) : (
-            <Map center={defaultPosition} zoom={zoom}>
+            <Map center={societyPosition} zoom={zoom}>
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
               />
-              <Polygon positions={firstPolygon} color="blue" />
-              <Polygon positions={secondPolygon} color="red" />
-              <Polygon positions={thirdPolygon} color="yellow" />
-              <Marker position={defaultPosition} icon={myIcon}>
+              <Marker position={societyPosition} icon={myIcon}>
                 <Popup>
                   <span>Société</span>
                 </Popup>
@@ -128,6 +135,9 @@ class APIGeoloc extends Component {
               {this.state.mapData.map(data => {
                 return <Marker position={data.marker} key={data.marker} />;
               })}
+              <Polygon positions={firstPolygon} color="blue" />
+              <Polygon positions={secondPolygon} color="red" />
+              <Polygon positions={thirdPolygon} color="yellow" />
             </Map>
           )}
         </Container>
@@ -145,7 +155,7 @@ class APIGeoloc extends Component {
                       height="30"
                       className="mb-2"
                     />
-                    Société
+                    Entreprise
                   </li>
                   <li>
                     <img
@@ -155,32 +165,49 @@ class APIGeoloc extends Component {
                       height="28"
                       className="ml-2 mr-2"
                     />
-                    Employés
+                    Salariés
                   </li>
                 </ul>
-                <b>Temps de trajet en voiture :</b>
+                <b>
+                  {this.props.distance} {this.props.parameter} :
+                </b>
                 <ul className="list-unstyled">
                   <li>
-                    <span className="bluePolygon mr-3">=====</span>Inférieur à
-                    10km
+                    <span className="bluePolygon mr-3">=====</span>Inférieur à 5{" "}
+                    {this.props.measure}
                   </li>
                   <li>
-                    <span className="redPolygon mr-3">=====</span>Entre 10 et
-                    20km
+                    <span className="redPolygon mr-3">=====</span>Entre 5 et 10
+                    {this.props.measure === "km" ? " km " : " minutes"}
                   </li>
                   <li>
-                    <span className="yellowPolygon mr-3">=====</span>Supérieur à
-                    20km
+                    <span className="yellowPolygon mr-3">=====</span>Entre 10 et
+                    {this.props.measure === "km" ? " 20 km " : " 15 minutes"}
                   </li>
                 </ul>
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
               <div className="card">
-                <GeoStatistics
-                  employeePositions={this.state.mapData}
-                  societyPosition={societyPositionReverse}
-                />
+                {this.props.measure === "km" ? (
+                  <GeoStatistics
+                    employeePositions={this.state.mapData}
+                    societyPosition={societyPosition}
+                    measure="km"
+                    profile="driving-car"
+                    parameter="voiture"
+                    title="Distance"
+                  />
+                ) : (
+                  <GeoStatistics
+                    employeePositions={this.state.mapData}
+                    societyPosition={societyPosition}
+                    measure="minutes"
+                    profile="cycling-regular"
+                    parameter="vélo"
+                    title="Temps de trajet"
+                  />
+                )}
               </div>
             </Col>
           </Row>
