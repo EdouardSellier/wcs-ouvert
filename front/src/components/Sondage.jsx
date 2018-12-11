@@ -452,7 +452,11 @@ class Sondage extends Component {
         frequencyMidday: "Jamais",
         transportMidday: "Voiture personnelle",
         frequencyPro: "Je ne fais jamais de déplacements professionnels",
-        distancePro: "Je ne fais jamais de déplacements professionnels"
+        distancePro: "Je ne fais jamais de déplacements professionnels",
+        deplacementPro: "Voiture personnelle",
+        reasonPersoCar: "Pas d’autres solutions identifiées",
+        deplacementMethodPro:
+          "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle"
       }
     };
   }
@@ -504,6 +508,15 @@ class Sondage extends Component {
         break;
       case "distancePro":
         statesForm.distancePro = event.target.value;
+        break;
+      case "deplacementPro":
+        statesForm.deplacementPro = event.target.value;
+        break;
+      case "reasonPersoCar":
+        statesForm.reasonPersoCar = event.target.value;
+        break;
+      case "deplacementMethodPro":
+        statesForm.deplacementMethodPro = event.target.value;
         break;
       default:
         return false;
