@@ -442,7 +442,7 @@ class Sondage extends Component {
         age: "25 ans ou moins",
         principalTransport: ["Voiture personnelle", "------", "------"],
         ocasionalyTransport: ["Voiture personnelle", "------", "------"],
-        reasonTransport: ""
+        reasonTransport: "Rapidité"
       }
     };
   }
