@@ -445,7 +445,8 @@ class Sondage extends Component {
         reasonTransport: "Rapidité",
         distanceKlm: null,
         distanceMin: null,
-        distanceMoney: null
+        distanceMoney: null,
+        elements: ["Pas d’obligation particulière", "------", "------"]
       }
     };
   }
@@ -476,6 +477,9 @@ class Sondage extends Component {
         break;
       case "distanceMoney":
         statesForm.distanceMoney = event.target.value;
+        break;
+      case "elements":
+        statesForm.elements = event.target.value;
         break;
       default:
         return console.log("Une erreur a été rencontrée");
