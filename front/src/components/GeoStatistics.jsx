@@ -103,17 +103,17 @@ class GeoStatistics extends Component {
             <p>
               Distance domicile-lieu de travail en moyenne :
               <br />
-              <span>{this.state.average} km</span>
+              <span className="stats">{this.state.average} km</span>
             </p>
             <p>
               Distance domicile-lieu de travail minimale :
               <br />
-              <span>{this.state.min} km</span>
+              <span className="stats">{this.state.min} km</span>
             </p>
             <p>
               Distance domicile-lieu de travail maximale :
               <br />
-              <span>{this.state.max} km</span>
+              <span className="stats">{this.state.max} km</span>
             </p>
             <br />
             <p>
