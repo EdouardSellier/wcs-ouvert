@@ -6,9 +6,7 @@ import axios from "axios";
 import GeoStatistics from "./GeoStatistics";
 import L from "leaflet";
 
-const societyPosition = [50.62925, 3.057256];
-const societyPositionReverse = [3.057256, 50.62925];
-const zoom = 11.4;
+const defaultPosition = [50.62925, 3.057256];
 
 class APIGeoloc extends Component {
   constructor(props) {
@@ -22,7 +20,7 @@ class APIGeoloc extends Component {
   }
 
   getLatLng = () => {
-    this.props.addressData.map(data => {
+    this.props.addressEmployee.map(data => {
       let dataStr = data.join("+").replace(" ", "+");
       return axios
         .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
@@ -44,7 +42,8 @@ class APIGeoloc extends Component {
   };
 
   getIsochrone = () => {
-    let center = societyPosition.reverse();
+    //let center = this.props.addressSociety.reverse();
+    let center = defaultPosition.reverse();
     axios
       .get(
         `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${center}&profile=driving-car&range_type=distance&range=5000,10000,20000`
@@ -96,30 +95,41 @@ class APIGeoloc extends Component {
       iconUrl: "https://img.icons8.com/metro/1600/marker.png",
       iconSize: [38, 38]
     });
+    const societyPosition = this.props.addressSociety;
+    const societyPositionReverse = this.props.addressSociety.reverse();
+    const zoom = 11.4;
     return (
       <div>
         <Container className="mt-3">
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             Géolocaliser mes salariés
           </button>
-
-          <Map center={societyPosition} zoom={zoom}>
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-            />
-            <Polygon positions={firstPolygon} color="blue" />
-            <Polygon positions={secondPolygon} color="red" />
-            <Polygon positions={thirdPolygon} color="yellow" />
-            <Marker position={societyPosition} icon={myIcon}>
-              <Popup>
-                <span>Société</span>
-              </Popup>
-            </Marker>
-            {this.state.mapData.map(data => {
-              return <Marker position={data.marker} key={data.marker} />;
-            })}
-          </Map>
+          {societyPosition.length === 0 ? (
+            <Map center={defaultPosition} zoom={zoom}>
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+              />
+            </Map>
+          ) : (
+            <Map center={defaultPosition} zoom={zoom}>
+              <TileLayer
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+              />
+              <Polygon positions={firstPolygon} color="blue" />
+              <Polygon positions={secondPolygon} color="red" />
+              <Polygon positions={thirdPolygon} color="yellow" />
+              <Marker position={defaultPosition} icon={myIcon}>
+                <Popup>
+                  <span>Société</span>
+                </Popup>
+              </Marker>
+              {this.state.mapData.map(data => {
+                return <Marker position={data.marker} key={data.marker} />;
+              })}
+            </Map>
+          )}
         </Container>
         <Container className="mt-3">
           <Row>
