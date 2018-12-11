@@ -446,7 +446,8 @@ class Sondage extends Component {
         distanceKlm: null,
         distanceMin: null,
         distanceMoney: null,
-        elements: ["Pas d’obligation particulière", "------", "------"]
+        elements: ["Pas d’obligation particulière", "------", "------"],
+        parkingPlace: "Oui"
       }
     };
   }
@@ -481,6 +482,10 @@ class Sondage extends Component {
       case "elements":
         statesForm.elements = event.target.value;
         break;
+      case "parkingPlace":
+        statesForm.parkingPlace = event.target.value;
+        break;
+
       default:
         return console.log("Une erreur a été rencontrée");
     }
