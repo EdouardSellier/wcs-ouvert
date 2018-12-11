@@ -462,7 +462,10 @@ class Sondage extends Component {
           "------",
           "------"
         ],
-        bike: ["Je me déplace déjà souvent à vélo", "------", "------"]
+        bike: ["Je me déplace déjà souvent à vélo", "------", "------"],
+        carpooling: ["Je covoiture déjà souvent", "------", "------"],
+        otherThanCar: "",
+        commentary: ""
       }
     };
   }
@@ -529,6 +532,15 @@ class Sondage extends Component {
         break;
       case "bike":
         statesForm.bike[col] = event.target.value;
+        break;
+      case "carpooling":
+        statesForm.carpooling[col] = event.target.value;
+        break;
+      case "otherThanCar":
+        statesForm.otherThanCar = event.target.value;
+        break;
+      case "commentary":
+        statesForm.commentary = event.target.value;
         break;
       default:
         return false;
