@@ -456,7 +456,12 @@ class Sondage extends Component {
         deplacementPro: "Voiture personnelle",
         reasonPersoCar: "Pas d’autres solutions identifiées",
         deplacementMethodPro:
-          "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle"
+          "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
+        communTransport: [
+          "J’utilise déjà souvent les transports en commun",
+          "------",
+          "------"
+        ]
       }
     };
   }
@@ -517,6 +522,9 @@ class Sondage extends Component {
         break;
       case "deplacementMethodPro":
         statesForm.deplacementMethodPro = event.target.value;
+        break;
+      case "communTransport":
+        statesForm.communTransport[col] = event.target.value;
         break;
       default:
         return false;
