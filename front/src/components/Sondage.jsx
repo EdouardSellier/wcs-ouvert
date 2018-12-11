@@ -444,7 +444,8 @@ class Sondage extends Component {
         ocasionalyTransport: ["Voiture personnelle", "------", "------"],
         reasonTransport: "Rapidité",
         distanceKlm: null,
-        distanceMin: null
+        distanceMin: null,
+        distanceMoney: null
       }
     };
   }
