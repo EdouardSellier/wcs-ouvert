@@ -451,7 +451,8 @@ class Sondage extends Component {
         midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
         frequencyMidday: "Jamais",
         transportMidday: "Voiture personnelle",
-        frequencyPro: "Je ne fais jamais de déplacements professionnels"
+        frequencyPro: "Je ne fais jamais de déplacements professionnels",
+        distancePro: "Je ne fais jamais de déplacements professionnels"
       }
     };
   }
@@ -500,6 +501,9 @@ class Sondage extends Component {
         break;
       case "frequencyPro":
         statesForm.frequencyPro = event.target.value;
+        break;
+      case "distancePro":
+        statesForm.distancePro = event.target.value;
         break;
       default:
         return false;
