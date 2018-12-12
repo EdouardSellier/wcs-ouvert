@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import Footer from "./Footer";
 import APIGeoloc from "./APIGeoloc";
 import "./css/Geolocalisation.css";
+import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
-import { Container, Row, Col } from "reactstrap";
 import axios from "axios";
 import csv from "csv";
 import NotificationAlert from "react-notification-alert";
@@ -168,10 +168,10 @@ class Geolocalisation extends Component {
               <NotificationAlert ref="notificationAlertError" />
               <NotificationAlert ref="notificationAlertProblem" />
               <p className="text-justify m-4">
-                Lorem ipsum sit amet dolor lorem ipsum sit amet dolor, lorem
-                ipsum sit amet dolor Lorem ipsum sit amet dolor lorem ipsum sit
-                amet dolor, lorem ipsum sit amet dolor Lorem ipsum sit amet
-                dolor lorem ipsum sit amet dolor.
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
+                optio ex non. Atque aspernatur laudantium totam hic? Dolorem
+                sapiente laboriosam ab consequatur repellat vel. Amet in
+                assumenda ad rerum molestiae!
               </p>
             </Row>
             <form onSubmit={this.handleSubmitSocietyAddress}>
@@ -187,7 +187,7 @@ class Geolocalisation extends Component {
                     id="inputNbSociety"
                     onChange={this.handleChange}
                     value={this.state.nbSociety}
-                    placeholder="N° de rue"
+                    placeholder="N°"
                   />
                 </Col>
                 <Col md={{ size: 4 }}>
@@ -243,9 +243,22 @@ class Geolocalisation extends Component {
                   hasHeader={false}
                 />
               ) : (
-                <div className="csvExample">
-                  Exemple de fichier .csv
-                  <table className=" mt-3 table table-striped ">
+                <div>
+                  <span className="titleExample">
+                    Merci de suivre l'exemple ci-dessous pour l'import de votre
+                    fichier CSV :
+                  </span>
+                  <img
+                    src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
+                    alt="infoIcon"
+                    width="30"
+                    height="30"
+                    className="ml-2"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+                  />
+                  <table className=" mt-3 table table-striped csvExample">
                     <tbody>
                       <tr>
                         <td>50</td>

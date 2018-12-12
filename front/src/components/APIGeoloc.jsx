@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import GeoStatistics from "./GeoStatistics";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import axios from "axios";
-import GeoStatistics from "./GeoStatistics";
 import L from "leaflet";
 
 class APIGeoloc extends Component {

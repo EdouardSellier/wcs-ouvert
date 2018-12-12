@@ -35,8 +35,8 @@ class GeoStatistics extends Component {
           let distances = this.state.statsKm;
           let durations = this.state.statsMin;
           let distanceKm = res.data.routes[0].summary.distance;
-          let distance = res.data.routes[0].summary.duration;
-          let distanceMin = distance / 60;
+          let distanceSec = res.data.routes[0].summary.duration;
+          let distanceMin = distanceSec / 60;
           distances.push(distanceKm);
           durations.push(Math.round(distanceMin));
           if (this.props.parameter === "voiture") {
