@@ -106,13 +106,14 @@ class APIGeoloc extends Component {
         <Container className="mt-3">
           <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
-            Géolocaliser mes salariés
+            <i class="fa fa-paper-plane-o" /> Géolocaliser mes salariés
           </button>
           <button
             className="btn text-white mt-4 mb-3 ml-3"
             onClick={this.getIsochrone}
           >
-            Afficher la cartographie isochrone <em>(cf. légende)</em>
+            <i class="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
+            <em>(cf. légende)</em>
           </button>
           {societyPosition.length === 0 ? (
             <Map center={defaultPosition} zoom={zoom}>

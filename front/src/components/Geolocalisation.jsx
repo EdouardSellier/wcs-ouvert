@@ -11,8 +11,12 @@ import NotificationAlert from "react-notification-alert";
 
 const successMsg = {
   place: "tr",
-  message:
-    "L'adresse postale a bien été prise en compte pour la géolocalisation",
+  message: (
+    <p>
+      L'adresse postale a bien été prise en compte pour la géolocalisation{" "}
+      <i class="fa fa-check-circle-o" />
+    </p>
+  ),
   type: "success",
   autoDismiss: 4
 };
@@ -154,7 +158,7 @@ class Geolocalisation extends Component {
                   className="mt-2 btn text-white"
                   onClick={this.handleSubmit}
                 >
-                  Revenir à l'accueil
+                  <i class="fa fa-home" /> Revenir à l'accueil
                 </button>
               </Col>
               <Col lg={{ size: 8 }}>
@@ -171,8 +175,7 @@ class Geolocalisation extends Component {
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
                 optio ex non. Atque aspernatur laudantium totam hic? Dolorem
                 sapiente laboriosam ab consequatur repellat vel. Amet in
-                assumenda ad rerum molestiae!{" "}
-                <span className="glyphicon glyphicon-ok-circle" />
+                assumenda ad rerum molestiae!
               </p>
             </Row>
             <form onSubmit={this.handleSubmitSocietyAddress}>
@@ -225,14 +228,17 @@ class Geolocalisation extends Component {
                   />
                 </Col>
               </Row>
-              <button className="btn text-white mt-3 mb-3">Enregistrer</button>
+              <button className="btn text-white mt-3 mb-3">
+                Enregistrer <i class="fa fa-check-circle" />
+              </button>
             </form>
             <ReactFileReader
               fileTypes={[".csv"]}
               handleFiles={this.handleFiles}
             >
               <button className="btn text-white mb-3 mt-3">
-                Importer un fichier CSV d'adresses postales
+                <i class="fa fa-upload" /> Importer un fichier CSV d'adresses
+                postales{" "}
               </button>
             </ReactFileReader>
             <div className="importAddress">
