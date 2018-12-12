@@ -9,7 +9,11 @@
 
 .csvExample {
   font-style: italic;
-  color: grey;
+  color: rgb(78, 76, 76);
+}
+
+.titleExample {
+  color: rgb(87, 88, 95);
 }
 
 .leaflet-container {
