@@ -111,6 +111,15 @@ app.post("/connexion", (req, res) => {
   });
 });
 
+app.post("/societyAddress", (req, res) => {
+  console.log(req.body);
+  if (req.body) {
+    res.status(200).send("Success");
+  } else {
+    res.status(500).send("Something went wrong");
+  }
+});
+
 app.listen(port, err => {
   if (err) {
     throw new Error("Something bad happened...");
