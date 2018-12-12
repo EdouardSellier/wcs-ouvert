@@ -171,7 +171,8 @@ class Geolocalisation extends Component {
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
                 optio ex non. Atque aspernatur laudantium totam hic? Dolorem
                 sapiente laboriosam ab consequatur repellat vel. Amet in
-                assumenda ad rerum molestiae!
+                assumenda ad rerum molestiae!{" "}
+                <span className="glyphicon glyphicon-ok-circle" />
               </p>
             </Row>
             <form onSubmit={this.handleSubmitSocietyAddress}>
