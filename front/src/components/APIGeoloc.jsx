@@ -40,7 +40,10 @@ class APIGeoloc extends Component {
 
   getIsochrone = () => {
     let center = undefined;
-    if (this.props.profile === "cycling-regular") {
+    if (
+      this.props.profile === "cycling-regular" ||
+      this.props.profile === "foot-walking"
+    ) {
       center = this.props.addressSociety;
     } else {
       center = this.props.addressSociety.reverse();
@@ -91,7 +94,7 @@ class APIGeoloc extends Component {
   };
 
   render() {
-    const zoom = 11.4;
+    const defaultZoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
     const societyPosition = this.props.addressSociety;
     const myIcon = L.icon({
@@ -104,26 +107,26 @@ class APIGeoloc extends Component {
     return (
       <div>
         <Container className="mt-3">
-          <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
+          <h4>Analyse du temps de trajet {this.props.parameter} :</h4>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
-            <i class="fa fa-paper-plane-o" /> Géolocaliser mes salariés
+            <i className="fa fa-map-marker" /> Géolocaliser mes salariés
           </button>
           <button
             className="btn text-white mt-4 mb-3 ml-3"
             onClick={this.getIsochrone}
           >
-            <i class="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
+            <i className="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
             <em>(cf. légende)</em>
           </button>
           {societyPosition.length === 0 ? (
-            <Map center={defaultPosition} zoom={zoom}>
+            <Map center={defaultPosition} zoom={defaultZoom}>
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
               />
             </Map>
           ) : (
-            <Map center={societyPosition} zoom={zoom}>
+            <Map center={societyPosition} zoom={this.props.zoom}>
               <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
@@ -196,18 +199,38 @@ class APIGeoloc extends Component {
                     societyPosition={societyPosition}
                     measure="km"
                     profile="driving-car"
-                    parameter="voiture"
+                    parameter="en voiture"
                     title="Distance"
+                    glyphicon="fa fa-car"
                   />
                 ) : (
+                  ""
+                )}
+                {this.props.parameter === "à vélo" ? (
                   <GeoStatistics
                     employeePositions={this.state.mapData}
                     societyPosition={societyPosition}
                     measure="minutes"
                     profile="cycling-regular"
-                    parameter="vélo"
+                    parameter="à vélo"
                     title="Temps de trajet"
+                    glyphicon="fa fa-bicycle"
                   />
+                ) : (
+                  ""
+                )}
+                {this.props.parameter === "à pieds" ? (
+                  <GeoStatistics
+                    employeePositions={this.state.mapData}
+                    societyPosition={societyPosition}
+                    measure="minutes"
+                    profile="foot-walking"
+                    parameter="à pieds"
+                    title="Temps de trajet"
+                    glyphicon="fa fa-street-view"
+                  />
+                ) : (
+                  ""
                 )}
               </div>
             </Col>
