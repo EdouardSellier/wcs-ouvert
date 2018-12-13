@@ -7,8 +7,8 @@ const connection = mysql.createConnection({
 });
 
 const userTransporter = {
-  user: "user", // e-mail address
-  pass: "pass" // e-mail password
+  user: "user", // e-mail address for NodeMailer
+  pass: "pass" // e-mail password for NodeMailer
 };
 
 module.exports = { connection, userTransporter };
