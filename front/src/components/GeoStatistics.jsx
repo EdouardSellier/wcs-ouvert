@@ -142,7 +142,8 @@ class GeoStatistics extends Component {
             className="btn text-white m-3"
             onClick={this.componentDidMount}
           >
-            Analyser les trajets en {this.props.parameter}
+            <i className={this.props.glyphicon} /> Analyser les trajets{" "}
+            {this.props.parameter}{" "}
           </button>
           <Container className="statistics ml-lg-5">
             <p>
@@ -176,15 +177,15 @@ class GeoStatistics extends Component {
                 {this.state.nbPersUnder5} salarié
                 {this.state.nbPersUnder5 > 1 ? "s" : ""} habite
                 {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
-                {this.props.measure === "km" ? " km " : " minutes à vélo "}
-                de l'entreprise.
+                {this.props.measure === "km" ? " km " : " minutes "}
+                {this.props.parameter} de l'entreprise.
               </li>
               <li>
                 {this.state.nbPers5To10} salarié
                 {this.state.nbPers5To10 > 1 ? "s" : ""} habite
                 {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
-                {this.props.measure === "km" ? " km " : " minutes à vélo "} de
-                l'entreprise.
+                {this.props.measure === "km" ? " km " : " minutes "}
+                {this.props.parameter} de l'entreprise.
               </li>
               <li>
                 {this.props.parameter === "voiture"
@@ -199,10 +200,8 @@ class GeoStatistics extends Component {
                   ? "nt"
                   : ""}{" "}
                 entre 10 et
-                {this.props.measure === "km"
-                  ? " 20 km "
-                  : " 15 minutes à vélo "}
-                de l'entreprise.
+                {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
+                {this.props.parameter} de l'entreprise.
               </li>
               <li>
                 {this.props.parameter === "voiture"
@@ -217,10 +216,8 @@ class GeoStatistics extends Component {
                   ? "nt"
                   : ""}{" "}
                 à plus de
-                {this.props.measure === "km"
-                  ? " 20 km "
-                  : " 15 minutes à vélo "}{" "}
-                de l'entreprise.
+                {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
+                {this.props.parameter} de l'entreprise.
               </li>
             </ul>
           </Container>
