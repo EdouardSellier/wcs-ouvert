@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import "./css/GeoStatistics.css";
 import { Container } from "reactstrap";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class GeoStatistics extends Component {
   constructor(props) {
@@ -19,6 +28,10 @@ class GeoStatistics extends Component {
       nbPersOver20: 0
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getDistance = () => {
     const latLng = this.props.employeePositions;
@@ -64,7 +77,7 @@ class GeoStatistics extends Component {
           }
         })
         .catch(err => {
-          console.log(err);
+          this.alertFunctionError();
         });
     });
   };
@@ -100,7 +113,7 @@ class GeoStatistics extends Component {
         nbPersOver20: countPersOver20
       });
     } else {
-      allDurations.forEach(data => {
+      allDurations.map(data => {
         if (data <= 5) {
           countPersUnder5 = countPersUnder5 + 1;
         }
@@ -123,24 +136,21 @@ class GeoStatistics extends Component {
     }
   };
 
-  componentDidMount = () => {
+  displayAllStatistics = () => {
     this.getDistance();
-    setInterval(() => {
+    setTimeout(() => {
       this.getStatistics();
     }, 1000);
   };
-
-  componentWillMount() {
-    clearInterval();
-  }
 
   render() {
     return (
       <div>
         <div className="cardBody">
+          <NotificationAlert ref="notificationAlertError" />
           <button
             className="btn text-white m-3"
-            onClick={this.componentDidMount}
+            onClick={this.displayAllStatistics}
           >
             Analyser les trajets en {this.props.parameter}
           </button>

@@ -5,6 +5,15 @@ import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
+import NotificationAlert from "react-notification-alert"; // ====> Supp tous les clg :):):) ajouter notif alert
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class APIGeoloc extends Component {
   constructor(props) {
@@ -16,6 +25,10 @@ class APIGeoloc extends Component {
       thirdPolygon: []
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getLatLng = () => {
     this.props.addressEmployee.map(data => {
@@ -33,7 +46,7 @@ class APIGeoloc extends Component {
           });
         })
         .catch(err => {
-          console.log(err);
+          this.alertFunctionError();
         });
     });
   };
@@ -86,7 +99,7 @@ class APIGeoloc extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
 
@@ -104,6 +117,7 @@ class APIGeoloc extends Component {
     return (
       <div>
         <Container className="mt-3">
+          <NotificationAlert ref="notificationAlertError" />
           <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             Géolocaliser mes salariés
