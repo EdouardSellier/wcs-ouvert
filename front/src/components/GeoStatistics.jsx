@@ -57,23 +57,33 @@ class GeoStatistics extends Component {
             let averageKm = sum / distances.length;
             let min = Math.min(...distances);
             let max = Math.max(...distances);
-            this.setState({
-              statsKm: distances,
-              average: averageKm.toFixed(1),
-              min: min.toFixed(1),
-              max: max.toFixed(1)
-            });
+            this.setState(
+              {
+                statsKm: distances,
+                average: averageKm.toFixed(1),
+                min: min.toFixed(1),
+                max: max.toFixed(1)
+              },
+              () => {
+                this.getStatistics();
+              }
+            );
           } else {
             let sum = durations.reduce((a, b) => a + b, 0);
             let average = Math.round(sum / durations.length);
             let min = Math.min(...durations);
             let max = Math.max(...durations);
-            this.setState({
-              statsMin: durations,
-              average: average,
-              min: min,
-              max: max
-            });
+            this.setState(
+              {
+                statsMin: durations,
+                average: average,
+                min: min,
+                max: max
+              },
+              () => {
+                this.getStatistics();
+              }
+            );
           }
         })
         .catch(err => {
@@ -136,22 +146,12 @@ class GeoStatistics extends Component {
     }
   };
 
-  displayAllStatistics = () => {
-    this.getDistance();
-    setTimeout(() => {
-      this.getStatistics();
-    }, 1000);
-  };
-
   render() {
     return (
       <div>
         <div className="cardBody">
           <NotificationAlert ref="notificationAlertError" />
-          <button
-            className="btn text-white m-3"
-            onClick={this.displayAllStatistics}
-          >
+          <button className="btn text-white m-3" onClick={this.getDistance}>
             Analyser les trajets en {this.props.parameter}
           </button>
           <Container className="statistics ml-lg-5">
