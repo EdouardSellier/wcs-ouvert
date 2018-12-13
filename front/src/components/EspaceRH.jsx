@@ -24,7 +24,7 @@ class EspaceRH extends Component {
                 className="mt-2 btn btn-danger"
                 onClick={this.handleSubmit}
               >
-                Déconnexion
+                <i className="fa fa-power-off" /> Déconnexion
               </button>
             </Col>
           </Row>
