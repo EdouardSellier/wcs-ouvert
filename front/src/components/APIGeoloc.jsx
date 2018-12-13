@@ -5,7 +5,7 @@ import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
-import NotificationAlert from "react-notification-alert"; // ====> Supp tous les clg :):):) ajouter notif alert
+import NotificationAlert from "react-notification-alert";
 
 const errorMsg = {
   place: "tr",
