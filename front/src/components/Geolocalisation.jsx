@@ -8,13 +8,15 @@ import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
 import NotificationAlert from "react-notification-alert";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 const successMsg = {
   place: "tr",
   message: (
     <p>
       L'adresse postale a bien été prise en compte pour la géolocalisation{" "}
-      <i class="fa fa-check-circle-o" />
+      <i className="fa fa-check-circle-o" />
     </p>
   ),
   type: "success",
@@ -47,7 +49,9 @@ class Geolocalisation extends Component {
       nbSociety: "",
       streetSociety: "",
       zipCodeSociety: "",
-      citySociety: ""
+      citySociety: "",
+      imgData1: undefined,
+      imgData2: undefined
     };
   }
 
@@ -141,6 +145,24 @@ class Geolocalisation extends Component {
     reader.readAsText(files[0]);
   };
 
+  /*handleImg = () => {
+    let capture1 = document.querySelector("#capture1");
+    let capture2 = document.querySelector("#capture2");
+    html2canvas(capture1, capture2, { useCORS: true }).then(
+      (canvas, canvas2) => {
+        let imgData = canvas.toDataURL("image/png");
+        let imgData2 = canvas2.toDataURL("image/png");
+        let newPdf = new jsPDF("portrait", "mm", "a4");
+        newPdf.text(35, 25, "Compte-rendu");
+        newPdf.setFontSize(40);
+        newPdf.addImage(imgData, "JPEG", 15, 30, 180, 180);
+        newPdf.addPage("a4", "portrait");
+        newPdf.addImage(imgData2, "JPEG", 15, 30, 180, 180);
+        newPdf.save("monDocument.pdf");
+      }
+    });
+  };*/
+
   render() {
     const addressEmployee = this.state.addressEmployeeToArray;
     const addressSociety = this.state.addressSocietyToLatLng;
@@ -158,7 +180,7 @@ class Geolocalisation extends Component {
                   className="mt-2 btn text-white"
                   onClick={this.handleSubmit}
                 >
-                  <i class="fa fa-home" /> Revenir à l'accueil
+                  <i className="fa fa-home" /> Revenir à l'accueil
                 </button>
               </Col>
               <Col lg={{ size: 8 }}>
@@ -229,7 +251,7 @@ class Geolocalisation extends Component {
                 </Col>
               </Row>
               <button className="btn text-white mt-3 mb-3">
-                Enregistrer <i class="fa fa-check-circle" />
+                Enregistrer <i className="fa fa-check-circle" />
               </button>
             </form>
             <ReactFileReader
@@ -237,8 +259,8 @@ class Geolocalisation extends Component {
               handleFiles={this.handleFiles}
             >
               <button className="btn text-white mb-3 mt-3">
-                <i class="fa fa-upload" /> Importer un fichier CSV d'adresses
-                postales{" "}
+                <i className="fa fa-upload" /> Importer un fichier CSV
+                d'adresses postales{" "}
               </button>
             </ReactFileReader>
             <div className="importAddress">
@@ -288,28 +310,49 @@ class Geolocalisation extends Component {
             </div>
           </Container>
           <hr />
+          <div id="capture1">
+            <APIGeoloc
+              addressEmployee={addressEmployee}
+              addressSociety={addressSociety}
+              profile="driving-car"
+              rangeType="distance"
+              range="5000,10000,20000"
+              parameter="en voiture"
+              distance="Distance"
+              measure="km"
+              zoom={11.4}
+            />
+          </div>
+          <hr />
+          <div id="capture2">
+            <APIGeoloc
+              addressEmployee={addressEmployee.reverse()}
+              addressSociety={addressSociety.reverse()}
+              profile="cycling-regular"
+              rangeType="time"
+              range="300,600,900"
+              parameter="à vélo"
+              distance="Durée du trajet"
+              measure=" minutes "
+              zoom={11.4}
+            />
+          </div>
+          <hr />
           <APIGeoloc
             addressEmployee={addressEmployee}
             addressSociety={addressSociety}
-            profile="driving-car"
-            rangeType="distance"
-            range="5000,10000,20000"
-            parameter="en voiture"
-            distance="Distance"
-            measure="km"
-          />
-          <hr />
-          <APIGeoloc
-            addressEmployee={addressEmployee.reverse()}
-            addressSociety={addressSociety.reverse()}
-            profile="cycling-regular"
+            profile="foot-walking"
             rangeType="time"
             range="300,600,900"
-            parameter="à vélo"
+            parameter="à pieds"
             distance="Durée du trajet"
             measure=" minutes "
+            zoom={13}
           />
         </div>
+        <button onClick={this.handlePDF} className="btn text-white mb-2">
+          Générer un PDF
+        </button>
         <Footer />
       </div>
     );
