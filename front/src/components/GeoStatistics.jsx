@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import "./css/GeoStatistics.css";
 import { Container } from "reactstrap";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class GeoStatistics extends Component {
   constructor(props) {
@@ -19,6 +28,10 @@ class GeoStatistics extends Component {
       nbPersOver20: 0
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getDistance = () => {
     const latLng = this.props.employeePositions;
@@ -44,27 +57,37 @@ class GeoStatistics extends Component {
             let averageKm = sum / distances.length;
             let min = Math.min(...distances);
             let max = Math.max(...distances);
-            this.setState({
-              statsKm: distances,
-              average: averageKm.toFixed(1),
-              min: min.toFixed(1),
-              max: max.toFixed(1)
-            });
+            this.setState(
+              {
+                statsKm: distances,
+                average: averageKm.toFixed(1),
+                min: min.toFixed(1),
+                max: max.toFixed(1)
+              },
+              () => {
+                this.getStatistics();
+              }
+            );
           } else {
             let sum = durations.reduce((a, b) => a + b, 0);
             let average = Math.round(sum / durations.length);
             let min = Math.min(...durations);
             let max = Math.max(...durations);
-            this.setState({
-              statsMin: durations,
-              average: average,
-              min: min,
-              max: max
-            });
+            this.setState(
+              {
+                statsMin: durations,
+                average: average,
+                min: min,
+                max: max
+              },
+              () => {
+                this.getStatistics();
+              }
+            );
           }
         })
         .catch(err => {
-          console.log(err);
+          this.alertFunctionError();
         });
     });
   };
@@ -100,7 +123,7 @@ class GeoStatistics extends Component {
         nbPersOver20: countPersOver20
       });
     } else {
-      allDurations.forEach(data => {
+      allDurations.map(data => {
         if (data <= 5) {
           countPersUnder5 = countPersUnder5 + 1;
         }
@@ -123,25 +146,12 @@ class GeoStatistics extends Component {
     }
   };
 
-  componentDidMount = () => {
-    this.getDistance();
-    setInterval(() => {
-      this.getStatistics();
-    }, 1000);
-  };
-
-  componentWillMount() {
-    clearInterval();
-  }
-
   render() {
     return (
       <div>
         <div className="cardBody">
-          <button
-            className="btn text-white m-3"
-            onClick={this.componentDidMount}
-          >
+          <NotificationAlert ref="notificationAlertError" />
+          <button className="btn text-white m-3" onClick={this.getDistance}>
             Analyser les trajets en {this.props.parameter}
           </button>
           <Container className="statistics ml-lg-5">
