@@ -50,8 +50,7 @@ class Geolocalisation extends Component {
       streetSociety: "",
       zipCodeSociety: "",
       citySociety: "",
-      imgData1: undefined,
-      imgData2: undefined
+      imgData: undefined
     };
   }
 
@@ -145,23 +144,42 @@ class Geolocalisation extends Component {
     reader.readAsText(files[0]);
   };
 
-  /*handleImg = () => {
+  handleImg = () => {
     let capture1 = document.querySelector("#capture1");
     let capture2 = document.querySelector("#capture2");
-    html2canvas(capture1, capture2, { useCORS: true }).then(
-      (canvas, canvas2) => {
+    let capture3 = document.querySelector("#capture3");
+    let allCaptures = [];
+    allCaptures.push(capture1);
+    allCaptures.push(capture2);
+    allCaptures.push(capture3);
+    let allImagesData = [];
+    allCaptures.map(capture => {
+      return html2canvas(capture, { useCORS: true }).then(canvas => {
         let imgData = canvas.toDataURL("image/png");
-        let imgData2 = canvas2.toDataURL("image/png");
-        let newPdf = new jsPDF("portrait", "mm", "a4");
-        newPdf.text(35, 25, "Compte-rendu");
-        newPdf.setFontSize(40);
-        newPdf.addImage(imgData, "JPEG", 15, 30, 180, 180);
-        newPdf.addPage("a4", "portrait");
-        newPdf.addImage(imgData2, "JPEG", 15, 30, 180, 180);
-        newPdf.save("monDocument.pdf");
-      }
+        allImagesData.push(imgData);
+        this.setState(
+          {
+            imgData: allImagesData
+          },
+          () => {
+            this.handlePdf();
+          }
+        );
+      });
     });
-  };*/
+  };
+
+  handlePdf = () => {
+    let newPdf = new jsPDF("portrait", "mm", "a4");
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés");
+    newPdf.setFontSize(40);
+    let allImages = this.state.imgData;
+    allImages.map(data => {
+      newPdf.addImage(data, "JPEG", 5, 20, 200, 200);
+      return newPdf.addPage("a4", "portrait");
+    });
+    newPdf.save("monDocument.pdf");
+  };
 
   render() {
     const addressEmployee = this.state.addressEmployeeToArray;
@@ -338,19 +356,26 @@ class Geolocalisation extends Component {
             />
           </div>
           <hr />
-          <APIGeoloc
-            addressEmployee={addressEmployee}
-            addressSociety={addressSociety}
-            profile="foot-walking"
-            rangeType="time"
-            range="300,600,900"
-            parameter="à pieds"
-            distance="Durée du trajet"
-            measure=" minutes "
-            zoom={13}
-          />
+          <div id="capture3">
+            <APIGeoloc
+              addressEmployee={addressEmployee}
+              addressSociety={addressSociety}
+              profile="foot-walking"
+              rangeType="time"
+              range="300,600,900"
+              parameter="à pieds"
+              distance="Durée du trajet"
+              measure=" minutes "
+              zoom={13}
+            />
+          </div>
         </div>
-        <button onClick={this.handlePDF} className="btn text-white mb-2">
+        <button
+          onClick={() => {
+            this.handleImg();
+          }}
+          className="btn text-white mb-2"
+        >
           Générer un PDF
         </button>
         <Footer />
