@@ -96,7 +96,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionError();
       });
     let addressSocietyToArray = [
       this.state.nbSociety,

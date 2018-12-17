@@ -4,8 +4,8 @@
 }
 
 .commentary {
-  width: 33%;
-  height: 400px;
+  width: 50%;
+  height: 30vh;
 }
 
 .threeInput {
@@ -15,5 +15,17 @@
 
 .textAlignLeft {
   text-align: left;
-  margin-left: 33%;
+}
+
+.buttonSubmit {
+  margin-bottom: 13vh;
+}
+
+.marginMultipleOption {
+  margin-bottom: 4vh;
+}
+
+.marginNumber,
+.marginOption {
+  margin-bottom: 2vh;
 }
