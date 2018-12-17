@@ -52,7 +52,7 @@ class GeoStatistics extends Component {
           let distanceMin = distanceSec / 60;
           distances.push(distanceKm);
           durations.push(Math.round(distanceMin));
-          if (this.props.parameter === "voiture") {
+          if (this.props.parameter === "en voiture") {
             let sum = distances.reduce((a, b) => a + b, 0);
             let averageKm = sum / distances.length;
             let min = Math.min(...distances);
@@ -101,8 +101,8 @@ class GeoStatistics extends Component {
     let countPers10To20 = 0;
     let countPersOver15 = 0;
     let countPersOver20 = 0;
-    if (this.props.parameter === "voiture") {
-      allDistances.forEach(data => {
+    if (this.props.parameter === "en voiture") {
+      allDistances.map(data => {
         if (data <= 5) {
           countPersUnder5 = countPersUnder5 + 1;
         }
@@ -116,7 +116,7 @@ class GeoStatistics extends Component {
           countPersOver20 = countPersOver20 + 1;
         }
       });
-      this.setState({
+      return this.setState({
         nbPersUnder5: countPersUnder5,
         nbPers5To10: countPers5To10,
         nbPers10To20: countPers10To20,
@@ -137,7 +137,7 @@ class GeoStatistics extends Component {
           countPersOver15 = countPersOver15 + 1;
         }
       });
-      this.setState({
+      return this.setState({
         nbPersUnder5: countPersUnder5,
         nbPers5To10: countPers5To10,
         nbPers10To15: countPers10To15,
@@ -152,7 +152,7 @@ class GeoStatistics extends Component {
         <div className="cardBody">
           <NotificationAlert ref="notificationAlertError" />
           <button className="btn text-white m-3" onClick={this.getDistance}>
-            <i className={this.props.glyphicon} /> Analyser les trajets en{" "}
+            <i className={this.props.glyphicon} /> Analyser les trajets{" "}
             {this.props.parameter}
           </button>
           <Container className="statistics ml-lg-5">
@@ -198,7 +198,7 @@ class GeoStatistics extends Component {
                 {this.props.parameter} de l'entreprise.
               </li>
               <li>
-                {this.props.parameter === "voiture"
+                {this.props.parameter === "en voiture"
                   ? this.state.nbPers10To20
                   : this.state.nbPers10To15}{" "}
                 salarié
@@ -214,7 +214,7 @@ class GeoStatistics extends Component {
                 {this.props.parameter} de l'entreprise.
               </li>
               <li>
-                {this.props.parameter === "voiture"
+                {this.props.parameter === "en voiture"
                   ? this.state.nbPersOver20
                   : this.state.nbPersOver15}{" "}
                 salarié

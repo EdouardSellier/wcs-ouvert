@@ -338,7 +338,7 @@ class Geolocalisation extends Component {
               profile="driving-car"
               rangeType="distance"
               range="5000,10000,15000"
-              parameter="en voiture"
+              parameter=" voiture"
               distance="Distance"
               measure="km"
               zoom={11.4}
