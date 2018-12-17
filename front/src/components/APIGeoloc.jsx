@@ -97,16 +97,20 @@ class APIGeoloc extends Component {
     const defaultZoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
     const societyPosition = this.props.addressSociety;
-    const myIcon = L.icon({
-      iconUrl: "https://img.icons8.com/metro/1600/marker.png",
-      iconSize: [38, 38]
+    const societyIcon = L.icon({
+      iconUrl: "./img/marker.png",
+      iconSize: [30, 30]
+    });
+    const employeeIcon = L.icon({
+      iconUrl: "./img/marker-icon-red.png",
+      iconSize: [30, 30]
     });
     const firstPolygon = [this.state.firstPolygon];
     const secondPolygon = [this.state.secondPolygon];
     const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
-        <Container className="mt-3">
+        <Container className="m-3">
           <h4>Analyse du temps de trajet {this.props.parameter} :</h4>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             <i className="fa fa-map-marker" /> Géolocaliser mes salariés
@@ -131,13 +135,19 @@ class APIGeoloc extends Component {
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
               />
-              <Marker position={societyPosition} icon={myIcon}>
+              <Marker position={societyPosition} icon={societyIcon}>
                 <Popup>
                   <span>Société</span>
                 </Popup>
               </Marker>
               {this.state.mapData.map(data => {
-                return <Marker position={data.marker} key={data.marker} />;
+                return (
+                  <Marker
+                    position={data.marker}
+                    key={data.marker}
+                    icon={employeeIcon}
+                  />
+                );
               })}
               <Polygon positions={firstPolygon} color="blue" />
               <Polygon positions={secondPolygon} color="red" />
@@ -153,9 +163,9 @@ class APIGeoloc extends Component {
                 <ul className="list-unstyled">
                   <li>
                     <img
-                      src="https://img.icons8.com/metro/1600/marker.png"
+                      src="./img/marker.png"
                       alt="societyMarker"
-                      width="38"
+                      width="30"
                       height="30"
                       className="mb-2"
                     />
@@ -163,11 +173,10 @@ class APIGeoloc extends Component {
                   </li>
                   <li>
                     <img
-                      src="http://www.association-sauvy.fr/leaflet/marker-icon-bluec.png"
+                      src="./img/marker-icon-red.png"
                       alt="employeeMarker"
-                      width="22"
-                      height="28"
-                      className="ml-2 mr-2"
+                      width="30"
+                      height="30"
                     />
                     Salariés
                   </li>

@@ -8,8 +8,8 @@ import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
 import NotificationAlert from "react-notification-alert";
+import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
 
 const successMsg = {
   place: "tr",
@@ -50,7 +50,7 @@ class Geolocalisation extends Component {
       streetSociety: "",
       zipCodeSociety: "",
       citySociety: "",
-      imgData: undefined
+      allImagesToPdf: []
     };
   }
 
@@ -149,13 +149,12 @@ class Geolocalisation extends Component {
     let capture2 = document.querySelector("#capture2");
     let capture3 = document.querySelector("#capture3");
     let allCaptures = [];
-    allCaptures.push(capture1);
-    allCaptures.push(capture2);
-    allCaptures.push(capture3);
+    allCaptures.push(capture1, capture2, capture3);
     let allImagesData = [];
     allCaptures.map(capture => {
-      return html2canvas(capture, { useCORS: true }).then(canvas => {
-        let imgData = canvas.toDataURL("image/png");
+      return domtoimage.toPng(capture).then(dataUrl => {
+        let imgData = new Image();
+        imgData.src = dataUrl;
         allImagesData.push(imgData);
         this.setState(
           {
@@ -171,14 +170,18 @@ class Geolocalisation extends Component {
 
   handlePdf = () => {
     let newPdf = new jsPDF("portrait", "mm", "a4");
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés");
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
     newPdf.setFontSize(40);
     let allImages = this.state.imgData;
     allImages.map(data => {
       newPdf.addImage(data, "JPEG", 5, 20, 200, 200);
       return newPdf.addPage("a4", "portrait");
     });
-    newPdf.save("monDocument.pdf");
+    let lastPage = newPdf.internal.getNumberOfPages();
+    newPdf.deletePage(lastPage);
+    if (allImages.length > 2) {
+      newPdf.save("compte-rendu.pdf");
+    }
   };
 
   render() {
@@ -334,11 +337,12 @@ class Geolocalisation extends Component {
               addressSociety={addressSociety}
               profile="driving-car"
               rangeType="distance"
-              range="5000,10000,20000"
+              range="5000,10000,15000"
               parameter="en voiture"
               distance="Distance"
               measure="km"
               zoom={11.4}
+              id="capture1"
             />
           </div>
           <hr />
@@ -353,6 +357,7 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={11.4}
+              id="capture2"
             />
           </div>
           <hr />
@@ -367,6 +372,7 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={13}
+              id="capture3"
             />
           </div>
         </div>
@@ -374,9 +380,9 @@ class Geolocalisation extends Component {
           onClick={() => {
             this.handleImg();
           }}
-          className="btn text-white mb-2"
+          className="m-3 btn text-white"
         >
-          Générer un PDF
+          <i className="fa fa-file-pdf-o" /> Télécharger le compte-rendu
         </button>
         <Footer />
       </div>
