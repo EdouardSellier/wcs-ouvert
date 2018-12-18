@@ -22,10 +22,17 @@ class GeoStatistics extends Component {
       min: 0,
       max: 0,
       nbPersUnder5: 0,
+      percentUnder5: 0,
       nbPers5To10: 0,
+      percent5To10: 0,
+      nbPers10To15: 0,
+      percent10To15: 0,
       nbPers10To20: 0,
+      percent10To20: 0,
       nbPersOver15: 0,
-      nbPersOver20: 0
+      percentOver15: 0,
+      nbPersOver20: 0,
+      percentOver20: 0
     };
   }
 
@@ -34,7 +41,7 @@ class GeoStatistics extends Component {
   };
 
   getDistance = () => {
-    const latLng = this.props.employeePositions;
+    let latLng = this.props.employeePositions;
     const societyPosition = this.props.societyPosition;
     latLng.map(data => {
       let employeeLatLng = data.marker.reverse();
@@ -115,12 +122,21 @@ class GeoStatistics extends Component {
         if (data > 20) {
           countPersOver20 = countPersOver20 + 1;
         }
+        return data;
       });
-      return this.setState({
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To20 = (countPers10To20 * 100) / allDistances.length;
+      let percentOver20 = (countPersOver20 * 100) / allDistances.length;
+      this.setState({
         nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
         nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
         nbPers10To20: countPers10To20,
-        nbPersOver20: countPersOver20
+        percent10To20: Math.round(percent10To20),
+        nbPersOver20: countPersOver20,
+        percentOver20: Math.round(percentOver20)
       });
     } else {
       allDurations.map(data => {
@@ -136,12 +152,21 @@ class GeoStatistics extends Component {
         if (data > 15) {
           countPersOver15 = countPersOver15 + 1;
         }
+        return data;
       });
-      return this.setState({
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To15 = (countPers10To15 * 100) / allDistances.length;
+      let percentOver15 = (countPersOver15 * 100) / allDistances.length;
+      this.setState({
         nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
         nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
         nbPers10To15: countPers10To15,
-        nbPersOver15: countPersOver15
+        percent10To15: Math.round(percent10To15),
+        nbPersOver15: countPersOver15,
+        percentOver15: Math.round(percentOver15)
       });
     }
   };
@@ -185,14 +210,16 @@ class GeoStatistics extends Component {
             <ul>
               <li>
                 {this.state.nbPersUnder5} salarié
-                {this.state.nbPersUnder5 > 1 ? "s" : ""} habite
+                {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                {this.state.percentUnder5}%) habite
                 {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
                 {this.props.measure === "km" ? " km " : " minutes "}
                 {this.props.parameter} de l'entreprise.
               </li>
               <li>
                 {this.state.nbPers5To10} salarié
-                {this.state.nbPers5To10 > 1 ? "s" : ""} habite
+                {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                {this.state.percent5To10}%) habite
                 {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
                 {this.props.measure === "km" ? " km " : " minutes "}
                 {this.props.parameter} de l'entreprise.
@@ -205,6 +232,9 @@ class GeoStatistics extends Component {
                 {this.state.nbPers10To20 > 1 || this.state.nbPers10To15 > 1
                   ? "s"
                   : ""}{" "}
+                {this.props.parameter === "en voiture"
+                  ? `(${this.state.percent10To20}%)`
+                  : `(${this.state.percent10To15}%)`}{" "}
                 habite
                 {this.state.nbPers10To20 > 1 || this.state.nbPers10To15 > 1
                   ? "nt"
@@ -221,6 +251,9 @@ class GeoStatistics extends Component {
                 {this.state.nbPersOver20 > 1 || this.state.nbPersOver15 > 1
                   ? "s"
                   : ""}{" "}
+                {this.props.parameter === "en voiture"
+                  ? `(${this.state.percentOver20}%)`
+                  : `(${this.state.percentOver15}%)`}{" "}
                 habite
                 {this.state.nbPersOver20 > 1 || this.state.nbPersOver15 > 1
                   ? "nt"
