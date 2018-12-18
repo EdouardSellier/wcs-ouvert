@@ -51,7 +51,8 @@ class Geolocalisation extends Component {
       zipCodeSociety: "",
       citySociety: "",
       allImagesToPdf: [],
-      isChecked: false
+      isChecked: false,
+      pdfIsLoading: false
     };
   }
 
@@ -97,7 +98,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionError();
       });
     let addressSocietyToArray = [
       this.state.nbSociety,
@@ -171,6 +172,14 @@ class Geolocalisation extends Component {
   };
 
   handlePdf = () => {
+    this.setState({
+      pdfIsLoading: true
+    });
+    setTimeout(() => {
+      this.setState({
+        pdfIsLoading: false
+      });
+    }, 4000);
     let newPdf = new jsPDF("portrait", "mm", "a4");
     newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
     newPdf.setFontSize(40);
@@ -229,18 +238,16 @@ class Geolocalisation extends Component {
               <Container className="">
                 <form onSubmit={this.handleSubmitSocietyAddress}>
                   <Row>
-                    <label>
+                    <h5 className="mt-4">
                       <img
                         alt="step 1"
                         src="https://img.icons8.com/metro/1600/1-circle.png"
                         className="mr-2"
-                        width="60"
-                        height="60"
+                        width="50"
+                        height="50"
                       />
-                      <b className="mt-5">
-                        Renseigner l'adresse postale de l'entreprise :
-                      </b>
-                    </label>
+                      Renseigner l'adresse de l'entreprise :
+                    </h5>
                   </Row>
                   <Row>
                     <Col md={{ size: 8, offset: 1 }}>
@@ -312,18 +319,16 @@ class Geolocalisation extends Component {
             <div className="separator" />
             <Col md={{ size: 5 }}>
               <Container className="ml-4 mt-4">
-                <label>
+                <h5>
                   <img
                     alt="step 2"
                     src="https://img.icons8.com/metro/1600/2-circle.png"
                     className="mr-2"
-                    width="60"
-                    height="60"
+                    width="50"
+                    height="50"
                   />
-                  <b className="mt-5">
-                    Importer les adresses postales de vos salariés :
-                  </b>
-                </label>
+                  Importer les adresses de vos salariés :
+                </h5>
                 <ReactFileReader
                   fileTypes={[".csv"]}
                   handleFiles={this.handleFiles}
@@ -349,8 +354,8 @@ class Geolocalisation extends Component {
                       <img
                         src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
                         alt="infoIcon"
-                        width="30"
-                        height="30"
+                        width="25"
+                        height="25"
                         className="ml-2"
                         data-toggle="tooltip"
                         data-placement="top"
@@ -398,7 +403,7 @@ class Geolocalisation extends Component {
           <hr />
           <div id="capture2">
             <APIGeoloc
-              addressEmployee={addressEmployee.reverse()}
+              addressEmployee={addressEmployee}
               addressSociety={addressSociety.reverse()}
               profile="cycling-regular"
               rangeType="time"
@@ -426,14 +431,31 @@ class Geolocalisation extends Component {
             />
           </div>
         </div>
-        <button
-          onClick={() => {
-            this.handleImg();
-          }}
-          className="m-3 btn text-white"
-        >
-          <i className="fa fa-file-pdf-o" /> Télécharger le compte-rendu
+        <hr />
+        <h5>
+          <img
+            alt="step 1"
+            src="https://img.icons8.com/metro/1600/4-circle.png"
+            className="mr-2"
+            width="50"
+            height="50"
+          />
+          Télécharger votre compte-rendu :
+        </h5>
+        <button onClick={this.handleImg} className="mb-4 btn text-white">
+          <i className="fa fa-file-pdf-o" /> Télécharger
         </button>
+        {this.state.pdfIsLoading === true ? (
+          <img
+            src="./img/Spinner.gif"
+            alt="Chargement..."
+            width="60"
+            height="60"
+            className="mb-3"
+          />
+        ) : (
+          ""
+        )}
         <Footer />
       </div>
     );

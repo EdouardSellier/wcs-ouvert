@@ -8,12 +8,14 @@
 }
 
 .csvExample {
-  font-style: italic;
   color: rgb(78, 76, 76);
+  font-size: 0.9em;
 }
 
 .titleExample {
   color: rgb(87, 88, 95);
+  font-size: 0.9em;
+  font-style: italic;
 }
 
 .leaflet-container {

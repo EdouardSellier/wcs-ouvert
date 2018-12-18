@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import "./css/GeoStatistics.css";
 import { Container } from "reactstrap";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class GeoStatistics extends Component {
   constructor(props) {
@@ -26,6 +35,10 @@ class GeoStatistics extends Component {
       percentOver20: 0
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getDistance = () => {
     const latLng = this.props.employeePositions;
@@ -76,7 +89,7 @@ class GeoStatistics extends Component {
           }
         })
         .catch(err => {
-          console.log(err);
+          this.alertFunctionError();
         });
     });
   };
@@ -156,6 +169,7 @@ class GeoStatistics extends Component {
   render() {
     return (
       <div>
+        <NotificationAlert ref="notificationAlertError" />
         <div className="cardBody">
           <button className="btn text-white m-3" onClick={this.getDistance}>
             <i className={this.props.glyphicon} /> Analyser les trajets{" "}

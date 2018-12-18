@@ -5,6 +5,15 @@ import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class APIGeoloc extends Component {
   constructor(props) {
@@ -16,6 +25,10 @@ class APIGeoloc extends Component {
       thirdPolygon: []
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getLatLng = () => {
     this.props.addressEmployee.map(data => {
@@ -33,7 +46,7 @@ class APIGeoloc extends Component {
           });
         })
         .catch(err => {
-          console.log(err);
+          this.alertFunctionError();
         });
     });
   };
@@ -89,7 +102,7 @@ class APIGeoloc extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
 
@@ -111,7 +124,17 @@ class APIGeoloc extends Component {
     return (
       <div>
         <Container className="m-3">
-          <h4>Analyse du temps de trajet {this.props.parameter} :</h4>
+          <NotificationAlert ref="notificationAlertError" />
+          <h5>
+            <img
+              alt="step 1"
+              src="https://img.icons8.com/metro/1600/3-circle.png"
+              className="mr-2"
+              width="50"
+              height="50"
+            />
+            Analyse du temps de trajet {this.props.parameter} :
+          </h5>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             <i className="fa fa-map-marker" /> Géolocaliser mes salariés
           </button>
