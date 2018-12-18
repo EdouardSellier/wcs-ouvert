@@ -133,7 +133,7 @@ class APIGeoloc extends Component {
               width="50"
               height="50"
             />
-            Analyse du temps de trajet {this.props.parameter} :
+            Analyse {this.props.title} {this.props.parameter} :
           </h5>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             <i className="fa fa-map-marker" /> Géolocaliser mes salariés

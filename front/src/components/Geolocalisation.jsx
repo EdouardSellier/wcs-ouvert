@@ -397,7 +397,7 @@ class Geolocalisation extends Component {
               distance="Distance"
               measure="km"
               zoom={11.4}
-              id="capture1"
+              title="de la distance"
             />
           </div>
           <hr />
@@ -412,7 +412,7 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={11.4}
-              id="capture2"
+              title="du temps de trajet"
             />
           </div>
           <hr />
@@ -427,7 +427,7 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={13}
-              id="capture3"
+              title="du temps de trajet"
             />
           </div>
         </div>
