@@ -19,10 +19,10 @@ class APIGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapData: [],
       firstPolygon: [],
       secondPolygon: [],
-      thirdPolygon: []
+      thirdPolygon: [],
+      mapData: []
     };
   }
 
@@ -125,7 +125,16 @@ class APIGeoloc extends Component {
       <div>
         <Container className="mt-3">
           <NotificationAlert ref="notificationAlertError" />
-          <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
+          <h3>
+            <img
+              alt="step 3"
+              src="https://img.icons8.com/metro/1600/3-circle.png"
+              className="mr-2"
+              width="60"
+              height="60"
+            />
+            Analyse du temps de trajet {this.props.parameter} :
+          </h3>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             <i className="fa fa-map-marker" /> Géolocaliser mes salariés
           </button>
@@ -154,6 +163,9 @@ class APIGeoloc extends Component {
                   <span>Société</span>
                 </Popup>
               </Marker>
+              <Polygon positions={firstPolygon} color="blue" />
+              <Polygon positions={secondPolygon} color="red" />
+              <Polygon positions={thirdPolygon} color="yellow" />
               {this.state.mapData.map(data => {
                 return (
                   <Marker
@@ -163,9 +175,6 @@ class APIGeoloc extends Component {
                   />
                 );
               })}
-              <Polygon positions={firstPolygon} color="blue" />
-              <Polygon positions={secondPolygon} color="red" />
-              <Polygon positions={thirdPolygon} color="yellow" />
             </Map>
           )}
         </Container>
@@ -216,7 +225,7 @@ class APIGeoloc extends Component {
             </Col>
             <Col lg={{ size: 8 }}>
               <div className="card">
-                {this.props.measure === "km" ? (
+                {this.props.parameter === "en voiture" ? (
                   <GeoStatistics
                     employeePositions={this.state.mapData}
                     societyPosition={societyPosition}
