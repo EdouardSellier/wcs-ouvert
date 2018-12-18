@@ -5,30 +5,17 @@ import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
 import axios from "axios";
 import L from "leaflet";
-import NotificationAlert from "react-notification-alert";
-
-const errorMsg = {
-  place: "tr",
-  message:
-    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
-  type: "danger",
-  autoDismiss: 4
-};
 
 class APIGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapData: [],
       firstPolygon: [],
       secondPolygon: [],
-      thirdPolygon: [],
-      mapData: []
+      thirdPolygon: []
     };
   }
-
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
-  };
 
   getLatLng = () => {
     this.props.addressEmployee.map(data => {
@@ -46,7 +33,7 @@ class APIGeoloc extends Component {
           });
         })
         .catch(err => {
-          this.alertFunctionError();
+          console.log(err);
         });
     });
   };
@@ -102,7 +89,7 @@ class APIGeoloc extends Component {
         });
       })
       .catch(err => {
-        this.alertFunctionError();
+        console.log(err);
       });
   };
 
@@ -123,18 +110,8 @@ class APIGeoloc extends Component {
     const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
-        <Container className="mt-3">
-          <NotificationAlert ref="notificationAlertError" />
-          <h3>
-            <img
-              alt="step 3"
-              src="https://img.icons8.com/metro/1600/3-circle.png"
-              className="mr-2"
-              width="60"
-              height="60"
-            />
-            Analyse du temps de trajet {this.props.parameter} :
-          </h3>
+        <Container className="m-3">
+          <h4>Analyse du temps de trajet {this.props.parameter} :</h4>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
             <i className="fa fa-map-marker" /> Géolocaliser mes salariés
           </button>
@@ -145,38 +122,42 @@ class APIGeoloc extends Component {
             <i className="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
             <em>(cf. légende)</em>
           </button>
-          {societyPosition.length === 0 ? (
-            <Map center={defaultPosition} zoom={defaultZoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-            </Map>
-          ) : (
-            <Map center={societyPosition} zoom={this.props.zoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={societyPosition} icon={societyIcon}>
-                <Popup>
-                  <span>Société</span>
-                </Popup>
-              </Marker>
-              <Polygon positions={firstPolygon} color="blue" />
-              <Polygon positions={secondPolygon} color="red" />
-              <Polygon positions={thirdPolygon} color="yellow" />
-              {this.state.mapData.map(data => {
-                return (
-                  <Marker
-                    position={data.marker}
-                    key={data.marker}
-                    icon={employeeIcon}
+          <Row>
+            <Col md={{ size: 12 }} className="ml-5">
+              {societyPosition.length === 0 ? (
+                <Map center={defaultPosition} zoom={defaultZoom}>
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                   />
-                );
-              })}
-            </Map>
-          )}
+                </Map>
+              ) : (
+                <Map center={societyPosition} zoom={this.props.zoom}>
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={societyPosition} icon={societyIcon}>
+                    <Popup>
+                      <span>Société</span>
+                    </Popup>
+                  </Marker>
+                  {this.state.mapData.map(data => {
+                    return (
+                      <Marker
+                        position={data.marker}
+                        key={data.marker}
+                        icon={employeeIcon}
+                      />
+                    );
+                  })}
+                  <Polygon positions={firstPolygon} color="blue" />
+                  <Polygon positions={secondPolygon} color="red" />
+                  <Polygon positions={thirdPolygon} color="yellow" />
+                </Map>
+              )}
+            </Col>
+          </Row>
         </Container>
         <Container className="mt-3">
           <Row>
@@ -224,7 +205,7 @@ class APIGeoloc extends Component {
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
-              <div className="card">
+              <div className="card mb-3">
                 {this.props.parameter === "en voiture" ? (
                   <GeoStatistics
                     employeePositions={this.state.mapData}

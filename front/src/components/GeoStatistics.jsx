@@ -2,15 +2,6 @@ import React, { Component } from "react";
 import "./css/GeoStatistics.css";
 import { Container } from "reactstrap";
 import axios from "axios";
-import NotificationAlert from "react-notification-alert";
-
-const errorMsg = {
-  place: "tr",
-  message:
-    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
-  type: "danger",
-  autoDismiss: 4
-};
 
 class GeoStatistics extends Component {
   constructor(props) {
@@ -36,12 +27,8 @@ class GeoStatistics extends Component {
     };
   }
 
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
-  };
-
   getDistance = () => {
-    let latLng = this.props.employeePositions;
+    const latLng = this.props.employeePositions;
     const societyPosition = this.props.societyPosition;
     latLng.map(data => {
       let employeeLatLng = data.marker.reverse();
@@ -59,22 +46,17 @@ class GeoStatistics extends Component {
           let distanceMin = distanceSec / 60;
           distances.push(distanceKm);
           durations.push(Math.round(distanceMin));
-          if (this.props.parameter === "en voiture") {
+          if (this.props.parameter === "voiture") {
             let sum = distances.reduce((a, b) => a + b, 0);
             let averageKm = sum / distances.length;
             let min = Math.min(...distances);
             let max = Math.max(...distances);
-            this.setState(
-              {
-                statsKm: distances,
-                average: averageKm.toFixed(1),
-                min: min.toFixed(1),
-                max: max.toFixed(1)
-              },
-              () => {
-                this.getStatistics();
-              }
-            );
+            this.setState({
+              statsKm: distances,
+              average: averageKm.toFixed(1),
+              min: min.toFixed(1),
+              max: max.toFixed(1)
+            });
           } else {
             let sum = durations.reduce((a, b) => a + b, 0);
             let average = Math.round(sum / durations.length);
@@ -94,7 +76,7 @@ class GeoStatistics extends Component {
           }
         })
         .catch(err => {
-          this.alertFunctionError();
+          console.log(err);
         });
     });
   };
@@ -175,10 +157,9 @@ class GeoStatistics extends Component {
     return (
       <div>
         <div className="cardBody">
-          <NotificationAlert ref="notificationAlertError" />
           <button className="btn text-white m-3" onClick={this.getDistance}>
             <i className={this.props.glyphicon} /> Analyser les trajets{" "}
-            {this.props.parameter}
+            {this.props.parameter}{" "}
           </button>
           <Container className="statistics ml-lg-5">
             <p>

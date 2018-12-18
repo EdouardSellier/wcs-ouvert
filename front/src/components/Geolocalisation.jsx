@@ -97,7 +97,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        this.alertFunctionError();
+        console.log("Fail: " + error);
       });
     let addressSocietyToArray = [
       this.state.nbSociety,
@@ -106,7 +106,7 @@ class Geolocalisation extends Component {
       this.state.citySociety
     ];
     let dataStr = addressSocietyToArray.join("+").replace(" ", "+");
-    axios
+    return axios
       .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
       .then(result => {
         let validateAddress = result.data.features[0].properties.city.toLowerCase();
@@ -392,12 +392,13 @@ class Geolocalisation extends Component {
               distance="Distance"
               measure="km"
               zoom={11.4}
+              id="capture1"
             />
           </div>
           <hr />
           <div id="capture2">
             <APIGeoloc
-              addressEmployee={addressEmployee}
+              addressEmployee={addressEmployee.reverse()}
               addressSociety={addressSociety.reverse()}
               profile="cycling-regular"
               rangeType="time"
@@ -406,6 +407,7 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={11.4}
+              id="capture2"
             />
           </div>
           <hr />
@@ -420,27 +422,17 @@ class Geolocalisation extends Component {
               distance="Durée du trajet"
               measure=" minutes "
               zoom={13}
+              id="capture3"
             />
           </div>
         </div>
-        <hr />
-        <p>
-          <img
-            alt="step 4"
-            src="https://img.icons8.com/metro/1600/4-circle.png"
-            className="mr-2"
-            width="60"
-            height="60"
-          />{" "}
-          Télécharger votre compte-rendu de géolocalisation sous format PDF :
-        </p>
         <button
           onClick={() => {
             this.handleImg();
           }}
-          className="mb-4 btn text-white"
+          className="m-3 btn text-white"
         >
-          <i className="fa fa-file-pdf-o" /> Télécharger
+          <i className="fa fa-file-pdf-o" /> Télécharger le compte-rendu
         </button>
         <Footer />
       </div>
