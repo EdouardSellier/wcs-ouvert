@@ -2,7 +2,16 @@ import React, { Component } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import "./css/Connexion.css";
+import { Row, Col } from "reactstrap";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const dangerMsg = {
+  place: "tr",
+  message: "Votre email et/ou votre mot de passe sont incorrects",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class Connexion extends Component {
   constructor(props) {
@@ -12,6 +21,16 @@ class Connexion extends Component {
       password: ""
     };
   }
+
+  alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
+  };
+
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  };
 
   isLoggedIn = event => {
     event.preventDefault();
@@ -26,28 +45,12 @@ class Connexion extends Component {
     })
       .then(res => {
         if (res.data === "SUCCESS") {
-          this.setState({
-            mail: "",
-            password: ""
-          });
           this.props.history.push("/monespace");
         }
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionDanger();
       });
-  };
-
-  handleChangeEmail = event => {
-    this.setState({
-      mail: event.target.value
-    });
-  };
-
-  handleChangePassword = event => {
-    this.setState({
-      password: event.target.value
-    });
   };
 
   render() {
@@ -58,36 +61,51 @@ class Connexion extends Component {
         </p>
         <Header />
         <div className="connexion mt-3">
+          <NotificationAlert ref="notificationAlert" />
           <h2>Connexion à mon espace</h2>
-          <form className="mt-5" onSubmit={this.isLoggedIn}>
-            <div className="form-group offset-3 col-md-6">
-              <label>Adresse e-mail *</label>
-              <input
-                type="email"
-                name="mail"
-                className="form-control"
-                id="inputEmailConnexion"
-                placeholder="Adresse e-mail"
-                onChange={this.handleChangeEmail}
-                value={this.state.mail}
-              />
-            </div>
-            <div className="form-group offset-3 col-md-6">
-              <label>Mot de passe *</label>
-              <input
-                type="password"
-                name="password"
-                className="form-control"
-                id="inputPasswordConnexion"
-                placeholder="Mot de passe"
-                onChange={this.handleChangePassword}
-                value={this.state.password}
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">
-              Me connecter
-            </button>
-          </form>
+          <Row>
+            <Col
+              lg={{ size: 6, offset: 3 }}
+              md={{ size: 8, offset: 2 }}
+              sm={{ size: 10, offset: 1 }}
+              xs={{ size: 10, offset: 1 }}
+            >
+              <form
+                className="mt-5 formContainer shadow"
+                onSubmit={this.isLoggedIn}
+              >
+                <div className="form-group">
+                  <label>Adresse e-mail</label>
+                  <input
+                    type="email"
+                    name="mail"
+                    className="form-control"
+                    id="inputMailConnexion"
+                    ref={ref => (this.inputMailConnexion = ref)}
+                    placeholder="Adresse e-mail"
+                    onChange={this.handleChange}
+                    value={this.state.mail}
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Mot de passe</label>
+                  <input
+                    type="password"
+                    name="password"
+                    className="form-control"
+                    id="inputPasswordConnexion"
+                    ref={ref => (this.inputPasswordConnexion = ref)}
+                    placeholder="Mot de passe"
+                    onChange={this.handleChange}
+                    value={this.state.password}
+                  />
+                </div>
+                <button type="submit" className="btn text-white mt-3">
+                  Me connecter
+                </button>
+              </form>
+            </Col>
+          </Row>
         </div>
         <Footer />
       </div>

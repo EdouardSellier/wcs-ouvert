@@ -1,3 +1,31 @@
 .sondage {
   min-height: 85vh;
+  overflow: hidden;
+}
+
+.commentary {
+  width: 50%;
+  height: 30vh;
+}
+
+.threeInput {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.textAlignLeft {
+  text-align: left;
+}
+
+.buttonSubmit {
+  margin-bottom: 13vh;
+}
+
+.marginMultipleOption {
+  margin-bottom: 4vh;
+}
+
+.marginNumber,
+.marginOption {
+  margin-bottom: 2vh;
 }

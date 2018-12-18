@@ -2,8 +2,11 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const port = 8080;
-const connection = require("./conf");
+const { connection, userTransporter } = require("./conf");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcryptjs");
+const uuidv4 = require("uuid/v4");
+const nodemailer = require("nodemailer");
 
 app.use(bodyParser.json());
 app.use(
@@ -20,73 +23,100 @@ app.use(function(req, res, next) {
   );
   next();
 });
+app.post("/inscription", (req, res) => {
+  if (req.body) {
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+      req.body.password = hash;
+      const formData = req.body;
+      connection.query("INSERT INTO user SET ?", formData, (err, results) => {
+        if (err) {
+          res.status(500).send("The database crashed ! The reason is " + err);
+        } else {
+          nodemailer.createTestAccount((err, account) => {
+            let transporter = nodemailer.createTransport({
+              host: "smtp.gmail.com",
+              port: 587,
+              secure: false,
+              auth: {
+                user: userTransporter.user,
+                pass: userTransporter.pass
+              }
+            });
 
+            let mailOptions = {
+              from: "no-reply@ouvert.com",
+              to: req.body.mail,
+              subject: "Hello ✔",
+              text: "Hello world?",
+              html: "<b>Hello world?</b>"
+            };
 
-let nbSession = 1;
+            transporter.sendMail(mailOptions, (error, info) => {
+              if (error) {
+                res
+                  .status(500)
+                  .send(
+                    "An error occured with confirmation e-mail after sign up."
+                  );
+              }
+            });
+          });
+          res.status(201).send("SUCCESS");
+        }
+      });
+    });
+  } else {
+    res.status(403).send("You must provide all informations !");
+  }
+});
 
 app.use(
   session({
-    secret: "password",
-    saveUninitialized: false,
-    resave: false
+    genid: req => {
+      return uuidv4();
+    },
+    secret: "this is a random string",
+    resave: false,
+    saveUninitialized: true
   })
 );
 
-app.get("/auth", (req, res) => {
-  sess = req.session;
-  if (sess.admin) {
-    res.send(String(sess.admin));
-  } else {
-    sess.admin = nbSession;
-    res.send("Initialize new session");
-  }
-  nbSession++;
-  console.log(nbSession);
-});
-
-
-app.post("/inscription", (req, res) => {
-  if (req.body) {
-    const formData = req.body;
-    connection.query("INSERT INTO user SET ?", formData, (err, results) => {
-      if (err) {
-        console.log(err);
-        res.status(500).send("The database crashed BOUM !");
-      } else {
-        res.status(201).send("SUCCESS");
-      }
-    });
-  } else {
-    console.log("Wrong use of POST /answer !");
-    res.status(403).send("You must provide all informations !");
-  }
-});
-
-
 app.post("/connexion", (req, res) => {
-  if (req.body) {
-    console.log(req.body);
-    const formData = req.body;
-    connection.query(
-      `SELECT * FROM user WHERE mail = "${req.body.mail}"`,
-      formData,
-      (err, results) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send("The database crashed BOUM !");
-        } else {
-          console.log(results);
-          if (results.length === 0) {
-            res.status(500).send("This mail doesn't exist");
+  let mail = req.body.mail;
+  let password = req.body.password;
+  connection.query("SELECT * FROM user WHERE mail = ?", [mail], function(
+    error,
+    results,
+    fields
+  ) {
+    if (error) {
+      res.json({
+        status: false,
+        message: "There are some error with this query"
+      });
+    } else {
+      if (results.length > 0) {
+        bcrypt.compare(password, results[0].password, function(err, ress) {
+          if (!ress) {
+            res.status(500).send("WRONG");
           } else {
-            res.status(201).send("SUCCESS");
+            let session = uuidv4();
+            res.status(200).send("SUCCESS");
           }
-        }
+        });
+      } else {
+        res.status(404).send("USER DON'T EXIST");
       }
-    );
+    }
+  });
+});
+
+app.post("/societyAddress", (req, res) => {
+  console.log(req.body);
+  if (req.body) {
+    res.status(200).send("Success");
   } else {
-    console.log("Wrong use of POST /answer !");
-    res.status(403).send("You must provide all informations !");
+    res.status(500).send("Something went wrong");
   }
 });
 

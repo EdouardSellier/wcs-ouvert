@@ -9,8 +9,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
+    "express": "^4.16.4",
     "express-session": "^1.15.6",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "nodemailer": "^4.7.0",
+    "uuid": "^3.3.2"
   }
 }
