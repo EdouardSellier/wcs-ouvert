@@ -8,11 +8,17 @@ import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
 import NotificationAlert from "react-notification-alert";
+import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
 
 const successMsg = {
   place: "tr",
-  message:
-    "L'adresse postale a bien été prise en compte pour la géolocalisation",
+  message: (
+    <p>
+      L'adresse postale a bien été prise en compte pour la géolocalisation{" "}
+      <i className="fa fa-check-circle-o" />
+    </p>
+  ),
   type: "success",
   autoDismiss: 4
 };
@@ -43,7 +49,10 @@ class Geolocalisation extends Component {
       nbSociety: "",
       streetSociety: "",
       zipCodeSociety: "",
-      citySociety: ""
+      citySociety: "",
+      allImagesToPdf: [],
+      isChecked: false,
+      pdfIsLoading: false
     };
   }
 
@@ -98,7 +107,7 @@ class Geolocalisation extends Component {
       this.state.citySociety
     ];
     let dataStr = addressSocietyToArray.join("+").replace(" ", "+");
-    axios
+    return axios
       .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
       .then(result => {
         let validateAddress = result.data.features[0].properties.city.toLowerCase();
@@ -110,7 +119,8 @@ class Geolocalisation extends Component {
             nbSociety: "",
             streetSociety: "",
             zipCodeSociety: "",
-            citySociety: ""
+            citySociety: "",
+            isChecked: true
           });
           this.alertFunctionSuccess();
         } else {
@@ -137,6 +147,54 @@ class Geolocalisation extends Component {
     reader.readAsText(files[0]);
   };
 
+  handleImg = () => {
+    let capture1 = document.querySelector("#capture1");
+    let capture2 = document.querySelector("#capture2");
+    let capture3 = document.querySelector("#capture3");
+    let allCaptures = [];
+    allCaptures.push(capture1, capture2, capture3);
+    let allImagesData = [];
+    allCaptures.map(capture => {
+      return domtoimage.toPng(capture).then(dataUrl => {
+        let imgData = new Image();
+        imgData.src = dataUrl;
+        allImagesData.push(imgData);
+        this.setState(
+          {
+            imgData: allImagesData
+          },
+          () => {
+            this.handlePdf();
+          }
+        );
+      });
+    });
+  };
+
+  handlePdf = () => {
+    this.setState({
+      pdfIsLoading: true
+    });
+    setTimeout(() => {
+      this.setState({
+        pdfIsLoading: false
+      });
+    }, 4000);
+    let newPdf = new jsPDF("portrait", "mm", "a4");
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.setFontSize(40);
+    let allImages = this.state.imgData;
+    allImages.map(data => {
+      newPdf.addImage(data, "JPEG", 5, 20, 200, 200);
+      return newPdf.addPage("a4", "portrait");
+    });
+    let lastPage = newPdf.internal.getNumberOfPages();
+    newPdf.deletePage(lastPage);
+    if (allImages.length > 2) {
+      newPdf.save("compte-rendu.pdf");
+    }
+  };
+
   render() {
     const addressEmployee = this.state.addressEmployeeToArray;
     const addressSociety = this.state.addressSocietyToLatLng;
@@ -154,7 +212,7 @@ class Geolocalisation extends Component {
                   className="mt-2 btn text-white"
                   onClick={this.handleSubmit}
                 >
-                  Revenir à l'accueil
+                  <i className="fa fa-home" /> Revenir à l'accueil
                 </button>
               </Col>
               <Col lg={{ size: 8 }}>
@@ -174,135 +232,230 @@ class Geolocalisation extends Component {
                 assumenda ad rerum molestiae!
               </p>
             </Row>
-            <form onSubmit={this.handleSubmitSocietyAddress}>
-              <label>
-                Merci de renseigner l'adresse postale de l'entreprise :
-              </label>
-              <Row>
-                <Col md={{ size: 2 }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="nbSociety"
-                    id="inputNbSociety"
-                    onChange={this.handleChange}
-                    value={this.state.nbSociety}
-                    placeholder="N°"
-                  />
-                </Col>
-                <Col md={{ size: 4 }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="streetSociety"
-                    id="inputStreetSociety"
-                    onChange={this.handleChange}
-                    value={this.state.streetSociety}
-                    placeholder="Nom de rue"
-                  />
-                </Col>
-                <Col md={{ size: 3 }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="zipCodeSociety"
-                    id="inputZipCodeSociety"
-                    onChange={this.handleChange}
-                    value={this.state.zipCodeSociety}
-                    placeholder="Code postal"
-                  />
-                </Col>
-                <Col md={{ size: 3 }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="citySociety"
-                    id="inputCitySociety"
-                    onChange={this.handleChange}
-                    value={this.state.citySociety}
-                    placeholder="Ville"
-                  />
-                </Col>
-              </Row>
-              <button className="btn text-white mt-3 mb-3">Enregistrer</button>
-            </form>
-            <ReactFileReader
-              fileTypes={[".csv"]}
-              handleFiles={this.handleFiles}
-            >
-              <button className="btn text-white mb-3 mt-3">
-                Importer un fichier CSV d'adresses postales
-              </button>
-            </ReactFileReader>
-            <div className="importAddress">
-              {this.state.addressEmployeeToTable !== undefined ? (
-                <CsvToHtmlTable
-                  data={this.state.addressEmployeeToTable}
-                  csvDelimiter=","
-                  tableClassName="table table-striped table-hover"
-                  hasHeader={false}
-                />
-              ) : (
-                <div>
-                  <span className="titleExample">
-                    Merci de suivre l'exemple ci-dessous pour l'import de votre
-                    fichier CSV :
-                  </span>
-                  <img
-                    src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
-                    alt="infoIcon"
-                    width="30"
-                    height="30"
-                    className="ml-2"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title="Fichier informatique de type tableur (Excel) avec une extension .csv"
-                  />
-                  <table className=" mt-3 table table-striped csvExample">
-                    <tbody>
-                      <tr>
-                        <td>50</td>
-                        <td>rue</td>
-                        <td>de Provence</td>
-                        <td>59000</td>
-                        <td>Lille</td>
-                      </tr>
-                      <tr>
-                        <td>3 B</td>
-                        <td>boulevard</td>
-                        <td>Vauban</td>
-                        <td>59000</td>
-                        <td>Lille</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              )}
-            </div>
           </Container>
+          <Row>
+            <Col md={{ size: 5, offset: 1 }}>
+              <Container className="">
+                <form onSubmit={this.handleSubmitSocietyAddress}>
+                  <Row>
+                    <h5 className="mt-4">
+                      <img
+                        alt="step 1"
+                        src="https://img.icons8.com/metro/1600/1-circle.png"
+                        className="mr-2"
+                        width="50"
+                        height="50"
+                      />
+                      Renseigner l'adresse de l'entreprise :
+                    </h5>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="nbSociety"
+                        id="inputNbSociety"
+                        onChange={this.handleChange}
+                        value={this.state.nbSociety}
+                        placeholder="N°"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="streetSociety"
+                        id="inputStreetSociety"
+                        onChange={this.handleChange}
+                        value={this.state.streetSociety}
+                        placeholder="Nom de rue"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="zipCodeSociety"
+                        id="inputZipCodeSociety"
+                        onChange={this.handleChange}
+                        value={this.state.zipCodeSociety}
+                        placeholder="Code postal"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="citySociety"
+                        id="inputCitySociety"
+                        onChange={this.handleChange}
+                        value={this.state.citySociety}
+                        placeholder="Ville"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 6, offset: 2 }}>
+                      <button className="btn text-white saveButton mt-3 mb-3">
+                        Enregistr{this.state.isChecked === true ? "é" : "er"}{" "}
+                        {this.state.isChecked === true ? (
+                          <i className="fa fa-check-circle" />
+                        ) : (
+                          ""
+                        )}
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
+              </Container>
+            </Col>
+            <div className="separator" />
+            <Col md={{ size: 5 }}>
+              <Container className="ml-4 mt-4">
+                <h5>
+                  <img
+                    alt="step 2"
+                    src="https://img.icons8.com/metro/1600/2-circle.png"
+                    className="mr-2"
+                    width="50"
+                    height="50"
+                  />
+                  Importer les adresses de vos salariés :
+                </h5>
+                <ReactFileReader
+                  fileTypes={[".csv"]}
+                  handleFiles={this.handleFiles}
+                >
+                  <button className="btn text-white importButton mb-3 mt-3">
+                    <i className="fa fa-upload" /> Importer un fichier CSV{" "}
+                  </button>
+                </ReactFileReader>
+                <div className="importAddress">
+                  {this.state.addressEmployeeToTable !== undefined ? (
+                    <CsvToHtmlTable
+                      data={this.state.addressEmployeeToTable}
+                      csvDelimiter=","
+                      tableClassName="table table-striped table-hover"
+                      hasHeader={false}
+                    />
+                  ) : (
+                    <div>
+                      <span className="titleExample">
+                        Merci de suivre cet exemple pour l'import de votre
+                        fichier CSV
+                      </span>
+                      <img
+                        src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
+                        alt="infoIcon"
+                        width="25"
+                        height="25"
+                        className="ml-2"
+                        data-toggle="tooltip"
+                        data-placement="top"
+                        title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+                      />
+                      <table className=" mt-3 table table-striped csvExample">
+                        <tbody>
+                          <tr>
+                            <td>50</td>
+                            <td>rue</td>
+                            <td>de Provence</td>
+                            <td>59000</td>
+                            <td>Lille</td>
+                          </tr>
+                          <tr>
+                            <td>3 B</td>
+                            <td>boulevard</td>
+                            <td>Vauban</td>
+                            <td>59000</td>
+                            <td>Lille</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              </Container>
+            </Col>
+          </Row>
           <hr />
-          <APIGeoloc
-            addressEmployee={addressEmployee}
-            addressSociety={addressSociety}
-            profile="driving-car"
-            rangeType="distance"
-            range="5000,10000,20000"
-            parameter="en voiture"
-            distance="Distance"
-            measure="km"
-          />
+          <div id="capture1">
+            <APIGeoloc
+              addressEmployee={addressEmployee}
+              addressSociety={addressSociety}
+              profile="driving-car"
+              rangeType="distance"
+              range="5000,10000,15000"
+              parameter="en voiture"
+              distance="Distance"
+              measure="km"
+              zoom={11.4}
+              title="de la distance"
+            />
+          </div>
           <hr />
-          <APIGeoloc
-            addressEmployee={addressEmployee.reverse()}
-            addressSociety={addressSociety.reverse()}
-            profile="cycling-regular"
-            rangeType="time"
-            range="300,600,900"
-            parameter="à vélo"
-            distance="Durée du trajet"
-            measure=" minutes "
-          />
+          <div id="capture2">
+            <APIGeoloc
+              addressEmployee={addressEmployee}
+              addressSociety={addressSociety.reverse()}
+              profile="cycling-regular"
+              rangeType="time"
+              range="300,600,900"
+              parameter="à vélo"
+              distance="Durée du trajet"
+              measure=" minutes "
+              zoom={11.4}
+              title="du temps de trajet"
+            />
+          </div>
+          <hr />
+          <div id="capture3">
+            <APIGeoloc
+              addressEmployee={addressEmployee}
+              addressSociety={addressSociety}
+              profile="foot-walking"
+              rangeType="time"
+              range="300,600,900"
+              parameter="à pieds"
+              distance="Durée du trajet"
+              measure=" minutes "
+              zoom={13}
+              title="du temps de trajet"
+            />
+          </div>
         </div>
+        <hr />
+        <h5>
+          <img
+            alt="step 1"
+            src="https://img.icons8.com/metro/1600/4-circle.png"
+            className="mr-2"
+            width="50"
+            height="50"
+          />
+          Télécharger votre compte-rendu :
+        </h5>
+        <button onClick={this.handleImg} className="mb-4 btn text-white">
+          <i className="fa fa-file-pdf-o" /> Télécharger
+        </button>
+        {this.state.pdfIsLoading === true ? (
+          <img
+            src="./img/Spinner.gif"
+            alt="Chargement..."
+            width="60"
+            height="60"
+            className="mb-3"
+          />
+        ) : (
+          ""
+        )}
         <Footer />
       </div>
     );

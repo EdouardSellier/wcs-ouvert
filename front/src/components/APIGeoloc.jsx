@@ -53,7 +53,10 @@ class APIGeoloc extends Component {
 
   getIsochrone = () => {
     let center = undefined;
-    if (this.props.profile === "cycling-regular") {
+    if (
+      this.props.profile === "cycling-regular" ||
+      this.props.profile === "foot-walking"
+    ) {
       center = this.props.addressSociety;
     } else {
       center = this.props.addressSociety.reverse();
@@ -104,56 +107,80 @@ class APIGeoloc extends Component {
   };
 
   render() {
-    const zoom = 11.4;
+    const defaultZoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
     const societyPosition = this.props.addressSociety;
-    const myIcon = L.icon({
-      iconUrl: "https://img.icons8.com/metro/1600/marker.png",
-      iconSize: [38, 38]
+    const societyIcon = L.icon({
+      iconUrl: "./img/marker.png",
+      iconSize: [30, 30]
+    });
+    const employeeIcon = L.icon({
+      iconUrl: "./img/marker-icon-red.png",
+      iconSize: [30, 30]
     });
     const firstPolygon = [this.state.firstPolygon];
     const secondPolygon = [this.state.secondPolygon];
     const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
-        <Container className="mt-3">
+        <Container className="m-3">
           <NotificationAlert ref="notificationAlertError" />
-          <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
+          <h5>
+            <img
+              alt="step 1"
+              src="https://img.icons8.com/metro/1600/3-circle.png"
+              className="mr-2"
+              width="50"
+              height="50"
+            />
+            Analyse {this.props.title} {this.props.parameter} :
+          </h5>
           <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
-            Géolocaliser mes salariés
+            <i className="fa fa-map-marker" /> Géolocaliser mes salariés
           </button>
           <button
             className="btn text-white mt-4 mb-3 ml-3"
             onClick={this.getIsochrone}
           >
-            Afficher la cartographie isochrone <em>(cf. légende)</em>
+            <i className="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
+            <em>(cf. légende)</em>
           </button>
-          {societyPosition.length === 0 ? (
-            <Map center={defaultPosition} zoom={zoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-            </Map>
-          ) : (
-            <Map center={societyPosition} zoom={zoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={societyPosition} icon={myIcon}>
-                <Popup>
-                  <span>Société</span>
-                </Popup>
-              </Marker>
-              {this.state.mapData.map(data => {
-                return <Marker position={data.marker} key={data.marker} />;
-              })}
-              <Polygon positions={firstPolygon} color="blue" />
-              <Polygon positions={secondPolygon} color="red" />
-              <Polygon positions={thirdPolygon} color="yellow" />
-            </Map>
-          )}
+          <Row>
+            <Col md={{ size: 12 }} className="ml-5">
+              {societyPosition.length === 0 ? (
+                <Map center={defaultPosition} zoom={defaultZoom}>
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                  />
+                </Map>
+              ) : (
+                <Map center={societyPosition} zoom={this.props.zoom}>
+                  <TileLayer
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker position={societyPosition} icon={societyIcon}>
+                    <Popup>
+                      <span>Société</span>
+                    </Popup>
+                  </Marker>
+                  {this.state.mapData.map(data => {
+                    return (
+                      <Marker
+                        position={data.marker}
+                        key={data.marker}
+                        icon={employeeIcon}
+                      />
+                    );
+                  })}
+                  <Polygon positions={firstPolygon} color="blue" />
+                  <Polygon positions={secondPolygon} color="red" />
+                  <Polygon positions={thirdPolygon} color="yellow" />
+                </Map>
+              )}
+            </Col>
+          </Row>
         </Container>
         <Container className="mt-3">
           <Row>
@@ -163,9 +190,9 @@ class APIGeoloc extends Component {
                 <ul className="list-unstyled">
                   <li>
                     <img
-                      src="https://img.icons8.com/metro/1600/marker.png"
+                      src="./img/marker.png"
                       alt="societyMarker"
-                      width="38"
+                      width="30"
                       height="30"
                       className="mb-2"
                     />
@@ -173,11 +200,10 @@ class APIGeoloc extends Component {
                   </li>
                   <li>
                     <img
-                      src="http://www.association-sauvy.fr/leaflet/marker-icon-bluec.png"
+                      src="./img/marker-icon-red.png"
                       alt="employeeMarker"
-                      width="22"
-                      height="28"
-                      className="ml-2 mr-2"
+                      width="30"
+                      height="30"
                     />
                     Salariés
                   </li>
@@ -202,25 +228,45 @@ class APIGeoloc extends Component {
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
-              <div className="card">
-                {this.props.measure === "km" ? (
+              <div className="card mb-3">
+                {this.props.parameter === "en voiture" ? (
                   <GeoStatistics
                     employeePositions={this.state.mapData}
                     societyPosition={societyPosition}
                     measure="km"
                     profile="driving-car"
-                    parameter="voiture"
+                    parameter="en voiture"
                     title="Distance"
+                    glyphicon="fa fa-car"
                   />
                 ) : (
+                  ""
+                )}
+                {this.props.parameter === "à vélo" ? (
                   <GeoStatistics
                     employeePositions={this.state.mapData}
                     societyPosition={societyPosition}
                     measure="minutes"
                     profile="cycling-regular"
-                    parameter="vélo"
+                    parameter="à vélo"
                     title="Temps de trajet"
+                    glyphicon="fa fa-bicycle"
                   />
+                ) : (
+                  ""
+                )}
+                {this.props.parameter === "à pieds" ? (
+                  <GeoStatistics
+                    employeePositions={this.state.mapData}
+                    societyPosition={societyPosition}
+                    measure="minutes"
+                    profile="foot-walking"
+                    parameter="à pieds"
+                    title="Temps de trajet"
+                    glyphicon="fa fa-street-view"
+                  />
+                ) : (
+                  ""
                 )}
               </div>
             </Col>

@@ -8,23 +8,25 @@
 }
 
 .csvExample {
-  font-style: italic;
   color: rgb(78, 76, 76);
+  font-size: 0.9em;
 }
 
 .titleExample {
   color: rgb(87, 88, 95);
+  font-size: 0.9em;
+  font-style: italic;
 }
 
 .leaflet-container {
-  height: 500px;
+  height: 400px;
   width: 100%;
 }
 
 .legend {
   text-align: left;
   font-size: 0.8em;
-  border: 1px solid #cfcfcf;
+  border: 1px solid #dfdcdc;
   padding-left: 35px;
   padding-top: 10px;
   border-radius: 3%;
@@ -49,4 +51,28 @@
   background-color: yellow;
   font-size: 0.5em;
   line-height: 0.5px;
+}
+
+/*.saveButton {
+  background-color: #5e9d38;
+}*/
+
+/*.importButton {
+  background-color: #9d4438;
+}*/
+
+.geolocButton {
+  background-color: #e23131;
+}
+
+.separator {
+  border: none;
+  border-left: 1px solid rgb(202, 195, 195);
+  width: 1px;
+  height: 350px;
+}
+
+.form-control {
+  border: none;
+  border-bottom: 1px solid rgb(202, 195, 195);
 }
