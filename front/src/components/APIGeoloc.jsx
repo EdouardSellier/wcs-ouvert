@@ -142,7 +142,7 @@ class APIGeoloc extends Component {
             className="btn text-white mt-4 mb-3 ml-3"
             onClick={this.getIsochrone}
           >
-            <i className="fa fa-map-o" /> Afficher la cartographie isochrone{" "}
+            <i className="fa fa-map-o" /> Afficher la cartographie isochrone
             <em>(cf. légende)</em>
           </button>
           <Row>
