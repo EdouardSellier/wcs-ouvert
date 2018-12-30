@@ -78,25 +78,6 @@ class Geolocalisation extends Component {
 
   handleSubmitSocietyAddress = event => {
     event.preventDefault();
-    let body = {
-      nbSociety: this.state.nbSociety,
-      streetSociety: this.state.streetSociety,
-      zipCodeSociety: this.state.zipCodeSociety,
-      citySociety: this.state.citySociety
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/societyAddress",
-      data: body
-    })
-      .then(res => {
-        if (res.status !== 200) {
-          this.alertFunctionProblem();
-        }
-      })
-      .catch(error => {
-        this.alertFunctionError();
-      });
     let addressSocietyToArray = [
       this.state.nbSociety,
       this.state.streetSociety,
@@ -148,13 +129,17 @@ class Geolocalisation extends Component {
   handleImg = () => {
     let capture1 = document.querySelector("#capture1");
     let capture2 = document.querySelector("#capture2");
-    let capture3 = document.querySelector("#capture3");
     let allCaptures = [];
-    allCaptures.push(capture1, capture2, capture3);
+    allCaptures.push(capture1, capture2);
     let allImagesData = [];
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
-        let imgData = new Image(150, 150);
+        let imgData = new Image();
+        if (capture.clientHeight > 800) {
+          imgData = new Image(180, 180);
+        } else {
+          imgData = new Image(180, 110);
+        }
         imgData.src = dataUrl;
         allImagesData.push(imgData);
         this.setState(
@@ -179,11 +164,15 @@ class Geolocalisation extends Component {
       });
     }, 3000);
     let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(40);
+    newPdf.text(10, 10, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.setFontSize(30);
     let allImages = this.state.imgData;
     allImages.map(image => {
-      newPdf.addImage(image, "JPEG", 5, 20, 200, 160);
+      if (image.height >= 180) {
+        newPdf.addImage(image, "JPEG", 15, 15, 180, 180);
+      } else if (image.height < 180) {
+        newPdf.addImage(image, "JPEG", 15, 15, 180, 110);
+      }
       return newPdf.addPage();
     });
     let lastPage = newPdf.internal.getNumberOfPages();
@@ -245,7 +234,7 @@ class Geolocalisation extends Component {
                       width="50"
                       height="50"
                     />
-                    Renseigner l'adresse de l'entreprise :
+                    Renseigner l'adresse du lieu de travail :
                   </h5>
                 </Row>
                 {this.state.isChecked === false ? (
@@ -304,7 +293,7 @@ class Geolocalisation extends Component {
                     </Row>
                     <Row>
                       <Col md={{ size: 6, offset: 2 }}>
-                        <button className="btn text-white saveButton mt-3 mb-3">
+                        <button className="btn saveButton mt-3 mb-3">
                           Enregistrer <i className="fa fa-map-marker" />
                         </button>
                       </Col>
@@ -347,7 +336,7 @@ class Geolocalisation extends Component {
                         fileTypes={[".csv"]}
                         handleFiles={this.handleFiles}
                       >
-                        <button className="btn text-white importButton mb-3 mt-3">
+                        <button className="btn importButton mb-3 mt-3">
                           <i className="fa fa-upload" /> Importer mon fichier{" "}
                         </button>
                       </ReactFileReader>
@@ -439,13 +428,13 @@ class Geolocalisation extends Component {
             width="50"
             height="50"
           />
-          Télécharger votre compte-rendu :
+          Enregistrer votre compte-rendu :
         </h5>
         <button
           onClick={this.handleImg}
           className="mb-4 mt-3 btn text-white pdfButton"
         >
-          <i className="fa fa-file-pdf-o" /> Enregistrer
+          <i className="fa fa-file-pdf-o" /> Télécharger PDF
         </button>
         {this.state.pdfIsLoading === true ? (
           <img

@@ -37,7 +37,7 @@
 .legend {
   text-align: left;
   font-size: 0.8em;
-  border: 1px solid #dfdcdc;
+
   padding-left: 35px;
   padding-top: 10px;
   border-radius: 3%;
@@ -87,4 +87,15 @@
 
 .pdfButton {
   background-color: rgb(177, 53, 53);
+}
+
+.importButton,
+.saveButton,
+.geolocButton {
+  background-color: #dbddf0;
+  color: rgb(41, 39, 39);
+}
+
+body {
+  font-family: "Oswald", sans-serif;
 }
