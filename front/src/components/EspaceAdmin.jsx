@@ -2,14 +2,86 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./css/EspaceAdmin.css";
+import axios from "axios";
 
 class AccueilAdmin extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      societyList: 0,
+      societyPaid: 0,
+      societyNotPaid: 0,
+      surveyList: 0,
+      surveyFinished: 0,
+      surveyNotFinished: 0,
+      surveyArray: []
+    };
+  }
+
+  getSocietyStat = () => {
+    axios
+      .get("http://localhost:8080/admin/list/society")
+      .then(result => {
+        let nbSociety = result.data.length;
+        let societyList = result.data;
+        let societyOk = societyList.filter(society => {
+          return society.has_paid === 1;
+        });
+        let societyNotPaid = societyList.filter(society => {
+          return society.has_paid === 0;
+        });
+        this.setState({
+          societyList: nbSociety,
+          societyPaid: societyOk.length,
+          societyNotPaid: societyNotPaid.length,
+          surveyArray: societyList
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  getSurveyStat = () => {
+    axios
+      .get("http://localhost:8080/admin/list/survey")
+      .then(result => {
+        let nbSurvey = result.data.length;
+        let surveyList = result.data;
+        let today = new Date();
+        let surveyFinished = surveyList.filter(survey => {
+          let endingSurvey = new Date(survey.ending_date);
+          return today >= endingSurvey;
+        });
+        let surveyNotFinished = surveyList.filter(survey => {
+          let endingSurvey = new Date(survey.ending_date);
+          return today <= endingSurvey;
+        });
+        this.setState({
+          surveyList: nbSurvey,
+          surveyFinished: surveyFinished.length,
+          surveyNotFinished: surveyNotFinished.length
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+  componentDidMount = () => {
+    this.getSocietyStat();
+    this.getSurveyStat();
+  };
+
   render() {
     return (
       <div>
-        <Container>
+        <hr />
+        <Container className="mb-5">
           <Row>
-            <Col lg={{ size: 2, offset: 10 }}>
+            <Col lg={{ size: 8, offset: 2 }}>
+              <h2>Mon espace administrateur</h2>
+            </Col>
+            <Col lg={{ size: 2 }}>
               <button
                 className="mt-2 btn btn-danger"
                 onClick={this.handleSubmit}
@@ -19,41 +91,75 @@ class AccueilAdmin extends Component {
             </Col>
           </Row>
         </Container>
-        <hr />
-        <Container className="espaceAdmin">
-          <h3 className="m-3">Mon espace administrateur</h3>
+        <Container className="espaceAdmin mb-4">
           <Row>
-            <Col lg={{ size: 4, offset: 2 }} className="mt-5">
+            <Col lg={{ size: 5, offset: 1 }} className="mt-5">
               <div className="card">
                 <div className="card-header">
-                  Consulter la liste des entreprises inscrites
+                  <h4>
+                    <i className="fa fa-users" /> Inscriptions :{" "}
+                    {this.state.societyList}
+                  </h4>
                 </div>
-                <div className="card-body">
-                  <Link to="/listeentreprises">
-                    <img
-                      src="https://static.thenounproject.com/png/580745-200.png"
-                      alt="icon"
-                      width="170"
-                      height="170"
-                    />
-                  </Link>
+                <div className="card-body p-5 adminStat">
+                  <p>
+                    <span className="nbSociety">{this.state.societyPaid}</span>{" "}
+                    entreprise
+                    {this.state.societyPaid > 1
+                      ? "s ont accès aux services du site."
+                      : " a accès aux services du site"}
+                    <br />
+                    <span className="nbSociety">
+                      {this.state.societyNotPaid}
+                    </span>{" "}
+                    entreprise
+                    {this.state.societyNotPaid > 1
+                      ? "s sont en attente de confirmation."
+                      : " est en attente de confirmation."}
+                  </p>
+                  <Col lg={{ size: 10, offset: 1 }}>
+                    <Link to="/listeentreprises">
+                      <button className="btn text-white m-3">
+                        Consulter la liste des entreprises
+                      </button>
+                    </Link>
+                  </Col>
                 </div>
               </div>
             </Col>
-            <Col lg={{ size: 4 }} className="mt-5">
+            <Col lg={{ size: 5 }} className="mt-5">
               <div className="card">
                 <div className="card-header">
-                  Consulter le nombre d'enquêtes en cours
+                  <h4>
+                    <i className="fa fa-bar-chart" /> Enquêtes de mobilité :{" "}
+                    {this.state.surveyList}{" "}
+                  </h4>
                 </div>
-                <div className="card-body">
-                  <Link to="/listeenquetes">
-                    <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/3/39/Simpleicons_Places_map-with-placeholder.svg"
-                      alt="icon"
-                      width="180"
-                      height="180"
-                    />
-                  </Link>
+                <div className="card-body p-5 adminStat">
+                  <p>
+                    <span className="nbSociety">
+                      {this.state.surveyFinished}
+                    </span>{" "}
+                    enquête
+                    {this.state.surveyFinished > 1
+                      ? "s terminées."
+                      : " terminée."}{" "}
+                    <br />
+                    <span className="nbSociety">
+                      {this.state.surveyNotFinished}
+                    </span>{" "}
+                    enquête
+                    {this.state.surveyNotFinished > 1
+                      ? "s en cours."
+                      : " en cours."}{" "}
+                  </p>
+                  <Col lg={{ size: 10, offset: 1 }}>
+                    <Link to="/listeenquetes">
+                      <button className="btn text-white m-3">
+                        Consulter la liste des enquêtes
+                      </button>
+                    </Link>
+                  </Col>
                 </div>
               </div>
             </Col>
