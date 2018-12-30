@@ -9,12 +9,7 @@ class AccueilAdmin extends Component {
       <div>
         <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }}>
-              <p className="homeSlogan">
-                MOUV'R : Enquête de mobilité pour vos salariés
-              </p>
-            </Col>
-            <Col lg={{ size: 2 }}>
+            <Col lg={{ size: 2, offset: 10 }}>
               <button
                 className="mt-2 btn btn-danger"
                 onClick={this.handleSubmit}

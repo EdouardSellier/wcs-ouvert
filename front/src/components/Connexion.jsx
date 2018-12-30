@@ -55,9 +55,6 @@ class Connexion extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <Header />
         <div className="connexion mt-3">
           <NotificationAlert ref="notificationAlert" />

@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 import "./css/ListeEntreprises.css";
+import { Container, Row, Col } from "reactstrap";
 
 class ListeEntreprises extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
-        <div className="listeEntreprises mt-2">
-          <h3>Liste des entreprises</h3>
-        </div>
+        <Container>
+          <Row>
+            <Col lg={{ size: 2 }}>
+              <button
+                className="mt-2 btn btn-danger"
+                onClick={this.handleSubmit}
+              >
+                <i className="fa fa-power-off" /> Déconnexion
+              </button>
+            </Col>
+          </Row>
+        </Container>
+        <hr />
       </div>
     );
   }

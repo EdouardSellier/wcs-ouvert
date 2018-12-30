@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { Container, Row, Col } from "reactstrap";
 import "./App.css";
 import Accueil from "./components/Accueil";
 import Inscription from "./components/Inscription";
@@ -21,6 +22,11 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <Col lg={{ size: 8, offset: 2 }}>
+          <p className="homeSlogan">
+            MOUV'R : Enquête de mobilité pour vos salariés
+          </p>
+        </Col>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />

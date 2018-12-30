@@ -6,9 +6,6 @@ class Contact extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <Header />
         <div className="contact mt-3">
           <h2>Nous contacter</h2>

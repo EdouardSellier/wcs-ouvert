@@ -11,9 +11,6 @@ class Assistance extends Component {
     return (
       <div>
         <div className="assistance">
-          <p className="homeSlogan">
-            MOUV'R : Enquête de mobilité pour vos salariés
-          </p>
           <hr />
           <Container className="mt-2">
             <Row>

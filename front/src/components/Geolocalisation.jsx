@@ -186,9 +186,6 @@ class Geolocalisation extends Component {
     const addressSociety = this.state.addressSocietyToLatLng;
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <hr />
         <div className="listAddress mt-2">
           <Container>

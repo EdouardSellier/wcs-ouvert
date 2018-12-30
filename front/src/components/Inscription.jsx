@@ -144,9 +144,6 @@ class Inscription extends React.Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <Header />
         <div
           id="main-registration-container"

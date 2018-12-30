@@ -6,9 +6,6 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <Header />
         <div className="home">
           <img
