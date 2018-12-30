@@ -97,19 +97,42 @@ class APIGeoloc extends Component {
   };
 
   getLatLng = () => {
-    this.props.addressEmployees.map(address => {
+    this.props.addressEmployees.map((address, id) => {
       let addressQuery = address.join("+").replace(" ", "+");
       return axios
         .get(`https://api-adresse.data.gouv.fr/search/?q=${addressQuery}`)
         .then(result => {
-          let employeesMarkers = result.data.features[0].geometry.coordinates;
-          employeesMarkers.reverse();
-          let latLng = { marker: employeesMarkers };
+          let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
+          let latLng = { id: id + 1, position: employeesMarkers };
           let allMapData = this.state.employeesPositions;
           allMapData.push(latLng);
           this.setState({
             employeesPositions: allMapData
           });
+          if (
+            this.props.parameter === "à vélo" &&
+            allMapData.length === this.props.addressEmployees.length
+          ) {
+            let societyPosition = this.props.addressSociety;
+            let employeesPositions = JSON.stringify(allMapData);
+            let body = {
+              society_position: societyPosition,
+              employees_positions: employeesPositions
+            };
+            axios({
+              method: "post",
+              url: "http://localhost:8080/geolocation",
+              data: body
+            })
+              .then(res => {
+                if (res.status !== 200) {
+                  this.alertFunctionProblem();
+                }
+              })
+              .catch(error => {
+                this.alertFunctionError();
+              });
+          }
         })
         .catch(err => {
           this.alertFunctionError();
@@ -120,8 +143,8 @@ class APIGeoloc extends Component {
   getDistance = () => {
     const employeesPositions = this.state.employeesPositions;
     const societyPosition = this.props.addressSociety;
-    employeesPositions.map(position => {
-      let employeeLatLng = position.marker.reverse();
+    employeesPositions.map(marker => {
+      let employeeLatLng = marker.position.reverse();
       let query = `${societyPosition}|${employeeLatLng}`;
       return axios({
         method: "get",
@@ -142,8 +165,8 @@ class APIGeoloc extends Component {
           let min = Math.min(...distances);
           let max = Math.max(...distances);
           let mapData = this.state.employeesMarkers;
-          let newData = { marker: position.marker.reverse() };
-          mapData.push(newData);
+          let newMarkers = { position: marker.position.reverse() };
+          mapData.push(newMarkers);
           this.setState(
             {
               statsMin: durations,
@@ -265,10 +288,10 @@ class APIGeoloc extends Component {
         <NotificationAlert ref="notificationAlertError" />
         {this.state.isClicked === false ? (
           <button
-            className="btn text-white mt-4 mb-4 ml-3 geolocButton"
+            className="btn mt-4 mb-4 ml-3 geolocButton"
             onClick={this.startAnalysis}
           >
-            Lancer l'analyse <i className="fa fa-map-o" />
+            Découvrir le résultat <i className={this.props.icon} />
           </button>
         ) : (
           ""
@@ -294,11 +317,11 @@ class APIGeoloc extends Component {
                     <span>Société</span>
                   </Popup>
                 </Marker>
-                {this.state.employeesMarkers.map(position => {
+                {this.state.employeesMarkers.map(marker => {
                   return (
                     <Marker
-                      position={position.marker}
-                      key={position.marker}
+                      position={marker.position}
+                      key={marker.position}
                       icon={employeeIcon}
                     />
                   );
@@ -390,9 +413,11 @@ class APIGeoloc extends Component {
                     ""
                   )}
                   <p>
-                    Sur les {this.props.addressEmployees.length} salariés
-                    enregistrés, {this.state.employeesMarkers.length} ont été
-                    géolocalisés :
+                    <b>
+                      Sur les {this.props.addressEmployees.length} salariés
+                      enregistrés, {this.state.employeesMarkers.length} ont été
+                      géolocalisés :
+                    </b>
                   </p>
                   <ul>
                     <li>
