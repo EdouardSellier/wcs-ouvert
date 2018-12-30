@@ -15,6 +15,7 @@ import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
+import Footer from "./components/Footer";
 
 class App extends Component {
   render() {
@@ -38,6 +39,7 @@ class App extends Component {
             <Route path="/listeenquetes" component={ListeEnquetes} />
           </Switch>
         </BrowserRouter>
+        <Footer />
       </div>
     );
   }

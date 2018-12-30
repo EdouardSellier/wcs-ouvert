@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import HeaderAdmin from "./HeaderAdmin";
-import Footer from "./Footer";
 import "./css/ListeEntreprises.css";
 
 class ListeEntreprises extends Component {
@@ -10,11 +8,9 @@ class ListeEntreprises extends Component {
         <p className="homeSlogan">
           MOUV'R : Enquête de mobilité pour vos salariés
         </p>
-        <HeaderAdmin />
         <div className="listeEntreprises mt-2">
           <h3>Liste des entreprises</h3>
         </div>
-        <Footer />
       </div>
     );
   }

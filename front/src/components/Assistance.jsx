@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import { Container, Row, Col } from "reactstrap";
 import "./css/Assistance.css";
 
@@ -61,7 +60,6 @@ class Assistance extends Component {
             </button>
           </form>
         </div>
-        <Footer />
       </div>
     );
   }

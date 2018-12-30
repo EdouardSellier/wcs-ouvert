@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import APIGeoloc from "./APIGeoloc";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
@@ -447,7 +446,6 @@ class Geolocalisation extends Component {
         ) : (
           ""
         )}
-        <Footer />
       </div>
     );
   }

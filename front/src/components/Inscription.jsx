@@ -1,7 +1,6 @@
 import React from "react";
 import "./css/Inscription.css";
 import Header from "./Header";
-import Footer from "./Footer";
 import { Row, Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
@@ -331,7 +330,6 @@ class Inscription extends React.Component {
             </form>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import "./css/NouvelleEnquete.css";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
@@ -163,7 +162,6 @@ class Home extends Component {
             </button>
           </form>
         </Container>
-        <Footer />
       </div>
     );
   }

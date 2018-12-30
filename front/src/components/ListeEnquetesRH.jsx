@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -100,7 +99,6 @@ class ListeEnquetesRH extends Component {
             </Col>
           </Row>
         </Container>
-        <Footer />
       </div>
     );
   }

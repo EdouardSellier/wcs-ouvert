@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Header from "./Header";
-import Footer from "./Footer";
 import "./css/Contact.css";
 
 class Contact extends Component {
@@ -40,7 +39,6 @@ class Contact extends Component {
             </button>
           </form>
         </div>
-        <Footer />
       </div>
     );
   }

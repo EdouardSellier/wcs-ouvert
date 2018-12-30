@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import "./css/EspaceRH.css";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
@@ -106,7 +105,6 @@ class EspaceRH extends Component {
             </Col>
           </Row>
         </Container>
-        <Footer />
       </div>
     );
   }

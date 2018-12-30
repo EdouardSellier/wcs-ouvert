@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Header from "./Header";
-import Footer from "./Footer";
 import "./css/Connexion.css";
 import { Row, Col } from "reactstrap";
 import axios from "axios";
@@ -107,7 +106,6 @@ class Connexion extends Component {
             </Col>
           </Row>
         </div>
-        <Footer />
       </div>
     );
   }
