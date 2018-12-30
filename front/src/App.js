@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
-import { Container, Row, Col } from "reactstrap";
+import { Col } from "reactstrap";
 import "./App.css";
 import Accueil from "./components/Accueil";
 import Inscription from "./components/Inscription";
