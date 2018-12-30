@@ -11,8 +11,12 @@ class EspaceRH extends Component {
   render() {
     return (
       <div>
+        <hr />
         <Container>
           <Row>
+            <Col lg={{ size: 8, offset: 2 }}>
+              <h3>Mon Espace</h3>
+            </Col>
             <Col lg={{ size: 2 }}>
               <button
                 className="mt-2 btn btn-danger"
@@ -23,8 +27,6 @@ class EspaceRH extends Component {
             </Col>
           </Row>
         </Container>
-        <hr />
-        <h3>Mon Espace</h3>
         <Container className="espaceRH mt-5">
           <Row>
             <p className="text-justify ml-5 mr-5">

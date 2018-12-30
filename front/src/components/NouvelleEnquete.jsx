@@ -3,11 +3,19 @@ import "./css/NouvelleEnquete.css";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
+import axios from "axios";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      survey_name: "",
+      addressNb: "",
+      addressStreet: "",
+      addressZipCode: "",
+      addressCity: "",
+      ending_date: "",
+      company_name: "",
       mailsData: undefined
     };
   }
@@ -17,13 +25,43 @@ class Home extends Component {
     this.props.history.push("/monespace");
   };
 
-  handleForm = event => {
-    event.preventDefault();
+  handleChange = event => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   };
 
-  creatingSurvey = event => {
+  handleForm = event => {
     event.preventDefault();
-    this.props.history.push("/listeenquetesrh");
+    let allAddress = [
+      this.state.addressNb,
+      this.state.addressStreet,
+      this.state.addressZipCode,
+      this.state.addressCity
+    ];
+    let body = {
+      survey_name: this.state.survey_name,
+      survey_address: allAddress.join(" "),
+      ending_date: this.state.ending_date
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/rh/survey",
+      data: body
+    })
+      .then(res => {
+        console.log(res);
+        if (res.data === "SUCCESS") {
+          this.props.history.push("/listeenquetesrh");
+        }
+      })
+      .catch(error => {
+        console.log("Fail: " + error);
+      });
+  };
+
+  mailImport = event => {
+    event.preventDefault();
   };
 
   handleFiles = files => {
@@ -66,13 +104,25 @@ class Home extends Component {
           </Row>
           <form onSubmit={this.handleForm}>
             <Row>
-              <Col md={{ size: 6, offset: 3 }}>
+              <Col md={{ size: 6 }}>
                 <label>Nom de l'enquête</label>
                 <input
                   type="text"
-                  className="form-control"
-                  id="inputNomEnquete"
+                  name="survey_name"
+                  onChange={this.handleChange}
+                  value={this.state.survey_name}
                   placeholder="Société X Lille"
+                  className="form-control"
+                />
+              </Col>
+              <Col md={{ size: 4, offset: 1 }}>
+                <label>Date de fin</label>
+                <input
+                  type="date"
+                  className="form-control"
+                  name="ending_date"
+                  onChange={this.handleChange}
+                  value={this.state.ending_date}
                 />
               </Col>
             </Row>
@@ -81,9 +131,11 @@ class Home extends Component {
               <Col md={{ size: 4 }}>
                 <input
                   type="text"
-                  className="form-control"
-                  id="inputNom"
+                  name="addressNb"
                   placeholder="N° de rue"
+                  className="form-control"
+                  onChange={this.handleChange}
+                  value={this.state.addressNb || ""}
                 />
               </Col>
               <Col md={{ size: 2 }}>
@@ -97,8 +149,10 @@ class Home extends Component {
                 <input
                   type="text"
                   className="form-control"
-                  id="inputPrenom"
+                  name="addressStreet"
                   placeholder="Nom de rue"
+                  onChange={this.handleChange}
+                  value={this.state.addressStreet || ""}
                 />
               </Col>
             </Row>
@@ -107,8 +161,10 @@ class Home extends Component {
                 <input
                   type="text"
                   className="form-control mt-2"
-                  id="inputCodePostal"
+                  name="addressZipCode"
                   placeholder="Code postal"
+                  onChange={this.handleChange}
+                  value={this.state.addressZipCode || ""}
                 />
               </Col>
               <Col md={{ size: 6 }}>
@@ -116,18 +172,24 @@ class Home extends Component {
                   type="text"
                   className="form-control mt-2"
                   id="inputVille"
+                  name="addressCity"
                   placeholder="Ville"
+                  onChange={this.handleChange}
+                  value={this.state.addressCity || ""}
                 />
               </Col>
             </Row>
             <Row>
-              <Col md={{ size: 8, offset: 2 }}>
+              <Col md={{ size: 10, offset: 1 }}>
                 <label>Importer les adresses e-mail de mes salariés</label>
                 <ReactFileReader
                   fileTypes={[".csv"]}
                   handleFiles={this.handleFiles}
                 >
-                  <button className="btn newSurveyButton text-white mb-3">
+                  <button
+                    className="btn newSurveyButton text-white mb-3"
+                    onClick={this.mailImport}
+                  >
                     Importer un fichier csv
                   </button>
                 </ReactFileReader>
@@ -141,20 +203,7 @@ class Home extends Component {
                 </div>
               </Col>
             </Row>
-            <Row>
-              <Col md={{ size: 4, offset: 4 }}>
-                <label>Date butoir pour l'enquête</label>
-                <input
-                  type="date"
-                  className="form-control"
-                  id="inputNomEnquete"
-                />
-              </Col>
-            </Row>
-            <button
-              className="btn newSurveyButton text-white mt-4 mb-3"
-              onClick={this.creatingSurvey}
-            >
+            <button className="btn newSurveyButton text-white mt-4 mb-3">
               Créer mon enquête
             </button>
           </form>
