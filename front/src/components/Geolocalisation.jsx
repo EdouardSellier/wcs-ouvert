@@ -127,8 +127,8 @@ class Geolocalisation extends Component {
   };
 
   handleImg = () => {
-    let capture1 = document.querySelector("#capture1");
-    let capture2 = document.querySelector("#capture2");
+    const capture1 = document.querySelector("#capture1");
+    const capture2 = document.querySelector("#capture2");
     let allCaptures = [];
     allCaptures.push(capture1, capture2);
     let allImagesData = [];
@@ -164,14 +164,14 @@ class Geolocalisation extends Component {
       });
     }, 3000);
     let newPdf = new jsPDF();
-    newPdf.text(10, 10, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
     newPdf.setFontSize(30);
-    let allImages = this.state.imgData;
+    const allImages = this.state.imgData;
     allImages.map(image => {
       if (image.height >= 180) {
-        newPdf.addImage(image, "JPEG", 15, 15, 180, 180);
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 180);
       } else if (image.height < 180) {
-        newPdf.addImage(image, "JPEG", 15, 15, 180, 110);
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 130);
       }
       return newPdf.addPage();
     });
@@ -322,13 +322,24 @@ class Geolocalisation extends Component {
                 </h5>
                 <div>
                   {this.state.addressEmployeeToTable !== undefined ? (
-                    <div className="importAddress mt-3">
-                      <CsvToHtmlTable
-                        data={this.state.addressEmployeeToTable}
-                        csvDelimiter=","
-                        tableClassName="table table-striped table-hover"
-                        hasHeader={false}
-                      />
+                    <div>
+                      <div className="importAddress mt-3">
+                        <CsvToHtmlTable
+                          data={this.state.addressEmployeeToTable}
+                          csvDelimiter=","
+                          tableClassName="table table-striped table-hover"
+                          hasHeader={false}
+                        />
+                      </div>
+                      <Col lg={{ size: 6, offset: 6 }}>
+                        <p className="totalAddresses">
+                          <b>{this.state.addressEmployeeToArray.length}</b>{" "}
+                          adresse
+                          {this.state.addressEmployeeToArray.length <= 1
+                            ? " importée"
+                            : "s importées"}
+                        </p>
+                      </Col>
                     </div>
                   ) : (
                     <div>
@@ -358,15 +369,13 @@ class Geolocalisation extends Component {
                         <tbody>
                           <tr>
                             <td>50</td>
-                            <td>rue</td>
-                            <td>de Provence</td>
+                            <td>rue de Provence</td>
                             <td>59000</td>
                             <td>Lille</td>
                           </tr>
                           <tr>
                             <td>3 B</td>
-                            <td>boulevard</td>
-                            <td>Vauban</td>
+                            <td>boulevard Vauban</td>
                             <td>59000</td>
                             <td>Lille</td>
                           </tr>
