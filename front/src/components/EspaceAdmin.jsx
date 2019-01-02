@@ -3,6 +3,14 @@ import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./css/EspaceAdmin.css";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message: "Nous ne pouvons pas afficher les statistiques.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class AccueilAdmin extends Component {
   constructor(props) {
@@ -17,6 +25,10 @@ class AccueilAdmin extends Component {
       surveyArray: []
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   getSocietyStat = () => {
     axios
@@ -38,7 +50,7 @@ class AccueilAdmin extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
 
@@ -64,7 +76,7 @@ class AccueilAdmin extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
   componentDidMount = () => {
@@ -76,10 +88,11 @@ class AccueilAdmin extends Component {
     return (
       <div>
         <hr />
+        <NotificationAlert ref="notificationAlertError" />
         <Container className="mb-5">
           <Row>
             <Col lg={{ size: 8, offset: 2 }}>
-              <h2>Mon espace administrateur</h2>
+              <h2>Bienvenue sur votre espace administrateur</h2>
             </Col>
             <Col lg={{ size: 2 }}>
               <button

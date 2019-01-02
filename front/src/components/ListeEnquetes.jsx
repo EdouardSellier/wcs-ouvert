@@ -3,6 +3,14 @@ import "./css/ListeEnquetes.css";
 import { Container, Row, Col } from "reactstrap";
 import axios from "axios";
 import JsonTable from "ts-react-json-table";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message: "La liste ne peut pas être affichée.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class ListeEnquetes extends Component {
   constructor(props) {
@@ -11,13 +19,29 @@ class ListeEnquetes extends Component {
       surveyList: [],
       currentPage: 1,
       nbPages: 1,
-      changePage: false
+      changePage: false,
+      isSelected: 5
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   backToHome = event => {
     event.preventDefault();
     this.props.history.push("/admin");
+  };
+
+  handleChange = e => {
+    this.setState(
+      {
+        isSelected: e.target.value
+      },
+      () => {
+        this.getList();
+      }
+    );
   };
 
   getList = () => {
@@ -25,25 +49,34 @@ class ListeEnquetes extends Component {
       .get("http://localhost:8080/admin/list/survey")
       .then(result => {
         let arrayShown = result.data;
-        let nbPages = Math.ceil(arrayShown.length / 5);
+        let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
         switch (this.state.currentPage) {
           case 1:
-            arrayShown = arrayShown.slice(0, 5);
+            arrayShown = arrayShown.slice(0, this.state.isSelected);
             break;
           case 2:
-            arrayShown = arrayShown.slice(5, 10);
+            arrayShown = arrayShown.slice(
+              this.state.isSelected,
+              this.state.isSelected * 2
+            );
             break;
           case 3:
-            arrayShown = arrayShown.slice(10, 15);
+            arrayShown = arrayShown.slice(
+              this.state.isSelected * 2,
+              this.state.isSelected + this.state.isSelected * 2
+            );
             break;
           case 4:
-            arrayShown = arrayShown.slice(15, 20);
+            arrayShown = arrayShown.slice(
+              this.state.isSelected * 2,
+              this.state.isSelected + this.state.isSelected * 2
+            );
             break;
           case 5:
-            arrayShown = arrayShown.slice(20);
+            arrayShown = arrayShown.slice(this.state.isSelected);
             break;
           default:
-            arrayShown = arrayShown.slice(0, 5);
+            arrayShown = arrayShown.slice(0, this.state.isSelected);
         }
         this.setState({
           surveyList: arrayShown,
@@ -51,7 +84,7 @@ class ListeEnquetes extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
 
@@ -67,6 +100,10 @@ class ListeEnquetes extends Component {
     }
   };
 
+  isDisabledUpButton = () => {
+    return this.state.currentPage !== 1;
+  };
+
   changePageDown = () => {
     if (this.state.currentPage >= 2 && this.state.currentPage <= 5) {
       this.setState({
@@ -76,8 +113,16 @@ class ListeEnquetes extends Component {
     }
   };
 
+  isDisabledDownButton = () => {
+    return this.state.currentPage !== this.state.nbPages;
+  };
+
   componentDidMount = () => {
     this.getList();
+  };
+
+  getSocietyListPage = () => {
+    this.props.history.push("/listeentreprises");
   };
 
   render() {
@@ -91,7 +136,10 @@ class ListeEnquetes extends Component {
         cell: columnKey => {
           let pattern = /[A-Z][0-9].:..:..\.[0-9]{3}[A-Z]/;
           let date = columnKey.starting_date.replace(pattern, "");
-          return <p>{date}</p>;
+          let year = date[0] + date[1] + date[2] + date[3];
+          let month = date[5] + date[6];
+          let day = date[8] + date[9];
+          return <p>{day + "/" + month + "/" + year}</p>;
         }
       },
       {
@@ -100,13 +148,17 @@ class ListeEnquetes extends Component {
         cell: columnKey => {
           let pattern = /[A-Z][0-9].:..:..\.[0-9]{3}[A-Z]/;
           let date = columnKey.ending_date.replace(pattern, "");
-          return <p>{date}</p>;
+          let year = date[0] + date[1] + date[2] + date[3];
+          let month = date[5] + date[6];
+          let day = date[8] + date[9];
+          return <p>{day + "/" + month + "/" + year}</p>;
         }
       }
     ];
     return (
       <div className="surveyList">
         <hr />
+        <NotificationAlert ref="notificationAlertError" />
         <Container>
           <Row>
             <Col lg={{ size: 2 }}>
@@ -123,30 +175,57 @@ class ListeEnquetes extends Component {
               </button>
             </Col>
           </Row>
-          <Row className="m-4">
+          <Row className="mt-5 mb-2">
+            <Col lg={{ size: 2, offset: 10 }}>
+              <label className="mt-3 mr-3">Afficher :</label>
+              <select
+                onChange={this.handleChange}
+                value={this.state.isSelected}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={15}>15</option>
+              </select>
+            </Col>
+          </Row>
+          <Row>
             <Col lg={{ size: 12 }}>
               <JsonTable
                 rows={this.state.surveyList}
                 columns={columns}
-                className="table table-striped mt-5"
+                className="table table-striped"
               />
               <div className="row justify-content-around pb-3 mb-5 mt-3">
                 <button
-                  className="btn text-white"
+                  className="btn arrowLeft"
                   onClick={this.changePageDown}
+                  disabled={!this.isDisabledUpButton()}
                 >
                   <i className="fa fa-chevron-left" />
                 </button>
                 <span>
                   Page {this.state.currentPage} / {this.state.nbPages}
                 </span>
-                <button className="btn text-white" onClick={this.changePageUp}>
+                <button
+                  className="btn arrowRight"
+                  onClick={this.changePageUp}
+                  disabled={!this.isDisabledDownButton()}
+                >
                   <i className="fa fa-chevron-right" />
                 </button>
               </div>
             </Col>
           </Row>
         </Container>
+        <Col lg={{ size: 3 }}>
+          <button
+            className="btn getSocietyPage mb-3"
+            onClick={this.getSocietyListPage}
+          >
+            <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
+            Consulter les entreprises
+          </button>
+        </Col>
       </div>
     );
   }

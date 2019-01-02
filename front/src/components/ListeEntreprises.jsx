@@ -1,9 +1,33 @@
 import React, { Component } from "react";
 import "./css/ListeEntreprises.css";
-import { Container, Row, Col } from "reactstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "reactstrap";
 import axios from "axios";
 import JsonTable from "ts-react-json-table";
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message: "La liste ne peut pas être affichée.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorPaymentMsg = {
+  place: "tr",
+  message:
+    "Nous n'avons pas pu confirmer le paiement, il y a peut-être un problème avec la base de données.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class ListeEntreprises extends Component {
   constructor(props) {
@@ -17,10 +41,12 @@ class ListeEntreprises extends Component {
     };
   }
 
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
+
+  alertFunctionErrorPayment = () => {
+    this.refs.notificationAlertError.notificationAlert(errorPaymentMsg);
   };
 
   backToHome = event => {
@@ -79,12 +105,18 @@ class ListeEntreprises extends Component {
         });
       })
       .catch(err => {
-        console.log(err);
+        this.alertFunctionError();
       });
   };
 
   componentDidMount = () => {
     this.getList();
+  };
+
+  toggle = () => {
+    this.setState({
+      modal: !this.state.modal
+    });
   };
 
   hasPaid = columnKey => {
@@ -102,11 +134,11 @@ class ListeEntreprises extends Component {
         })
           .then(res => {
             if (res.data === "SUCCESS") {
-              window.location.reload();
+              this.getList();
             }
           })
           .catch(error => {
-            console.log("Fail: " + error);
+            this.alertFunctionErrorPayment();
           });
       }
       return society;
@@ -125,6 +157,10 @@ class ListeEntreprises extends Component {
     }
   };
 
+  isDisabledUpButton = () => {
+    return this.state.currentPage !== 1;
+  };
+
   changePageDown = () => {
     if (this.state.currentPage >= 2 && this.state.currentPage <= 5) {
       this.setState({
@@ -132,6 +168,14 @@ class ListeEntreprises extends Component {
       });
       this.getList();
     }
+  };
+
+  isDisabledDownButton = () => {
+    return this.state.currentPage !== this.state.nbPages;
+  };
+
+  getSurveyListPage = () => {
+    this.props.history.push("/listeenquetes");
   };
 
   render() {
@@ -226,6 +270,8 @@ class ListeEntreprises extends Component {
     return (
       <div>
         <hr />
+        <NotificationAlert ref="notificationAlertError" />
+        <NotificationAlert ref="notificationAlertErrorPayment" />
         <Container>
           <Row>
             <Col lg={{ size: 2 }}>
@@ -237,9 +283,9 @@ class ListeEntreprises extends Component {
               <h2>Liste des entreprises inscrites</h2>
             </Col>
             <Col lg={{ size: 2 }}>
-              <button className="btn btn-danger" onClick={this.handleSubmit}>
+              <Button className="btn-danger" onClick={this.handleSubmit}>
                 <i className="fa fa-power-off" /> Déconnexion
-              </button>
+              </Button>
             </Col>
           </Row>
           <Row>
@@ -250,7 +296,7 @@ class ListeEntreprises extends Component {
               </p>
             </Col>
           </Row>
-          <Row>
+          <Row className="mt-4 mb-2">
             <Col lg={{ size: 2, offset: 10 }}>
               <label className="mt-3 mr-3">Afficher :</label>
               <select
@@ -263,27 +309,43 @@ class ListeEntreprises extends Component {
               </select>
             </Col>
           </Row>
-          <Row className="mt-2">
+          <Row>
             <Col lg={{ size: 12 }}>
               <JsonTable
                 rows={this.state.societyList}
                 columns={columns}
-                className="table table-striped mt-3"
+                className="table table-striped"
               />
               <div className="row justify-content-around pb-3 mb-5 mt-3">
                 <button
-                  className="btn text-white"
+                  className="btn arrowLeft"
                   onClick={this.changePageDown}
+                  disabled={!this.isDisabledUpButton()}
                 >
                   <i className="fa fa-chevron-left" />
                 </button>
                 <span>
                   Page {this.state.currentPage} / {this.state.nbPages}
                 </span>
-                <button className="btn text-white" onClick={this.changePageUp}>
+                <button
+                  className="btn arrowRight"
+                  onClick={this.changePageUp}
+                  disabled={!this.isDisabledDownButton()}
+                >
                   <i className="fa fa-chevron-right" />
                 </button>
               </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={{ size: 2, offset: 10 }}>
+              <button
+                className="btn getSurveyPage mb-3"
+                onClick={this.getSurveyListPage}
+              >
+                Consulter les enquêtes <i className="fa fa-bar-chart" />{" "}
+                <i className="fa fa-arrow-right" />
+              </button>
             </Col>
           </Row>
         </Container>
