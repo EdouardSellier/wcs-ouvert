@@ -9,7 +9,7 @@ import NotificationAlert from "react-notification-alert";
 const errorMsg = {
   place: "tr",
   message:
-    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+    "Nous avons rencontré un problème, merci de retenter dans quelques minutes ou de contacter l'assistance",
   type: "danger",
   autoDismiss: 4
 };
@@ -58,9 +58,9 @@ class APIGeoloc extends Component {
         }&range=${this.props.range}`
       )
       .then(result => {
-        let firstResult = result.data.features[0].geometry.coordinates;
-        let secondResult = result.data.features[1].geometry.coordinates;
-        let thirdResult = result.data.features[2].geometry.coordinates;
+        const firstResult = result.data.features[0].geometry.coordinates;
+        const secondResult = result.data.features[1].geometry.coordinates;
+        const thirdResult = result.data.features[2].geometry.coordinates;
         let firstPolygon = [];
         let secondPolygon = [];
         let thirdPolygon = [];
@@ -85,11 +85,14 @@ class APIGeoloc extends Component {
             return thirdPolygon.push(realLatLng);
           });
         });
-        this.setState({
-          firstPolygon: firstPolygon,
-          secondPolygon: secondPolygon,
-          thirdPolygon: thirdPolygon
-        });
+        this.setState(
+          {
+            firstPolygon: firstPolygon,
+            secondPolygon: secondPolygon,
+            thirdPolygon: thirdPolygon
+          },
+          this.getLatLng()
+        );
       })
       .catch(err => {
         this.alertFunctionError();
@@ -97,6 +100,7 @@ class APIGeoloc extends Component {
   };
 
   getLatLng = () => {
+    let allMapData = this.state.employeesPositions;
     this.props.addressEmployees.map((address, id) => {
       let addressQuery = address.join("+").replace(" ", "+");
       return axios
@@ -104,11 +108,15 @@ class APIGeoloc extends Component {
         .then(result => {
           let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
           let latLng = { id: id + 1, position: employeesMarkers };
-          let allMapData = this.state.employeesPositions;
           allMapData.push(latLng);
-          this.setState({
-            employeesPositions: allMapData
-          });
+          if (allMapData.length === this.props.addressEmployees.length) {
+            this.setState(
+              {
+                employeesPositions: allMapData
+              },
+              this.getDistance()
+            );
+          }
           if (
             this.props.parameter === "à vélo" &&
             allMapData.length === this.props.addressEmployees.length
@@ -124,8 +132,8 @@ class APIGeoloc extends Component {
               url: "http://localhost:8080/geolocation",
               data: body
             })
-              .then(res => {
-                if (res.status !== 200) {
+              .then(result => {
+                if (result.status !== 200) {
                   this.alertFunctionProblem();
                 }
               })
@@ -134,7 +142,7 @@ class APIGeoloc extends Component {
               });
           }
         })
-        .catch(err => {
+        .catch(error => {
           this.alertFunctionError();
         });
     });
@@ -153,10 +161,10 @@ class APIGeoloc extends Component {
         }&units=km&language=fr`
       })
         .then(res => {
-          let distances = this.state.statsKm;
-          let durations = this.state.statsMin;
-          let distanceKm = res.data.routes[0].summary.distance;
-          let distanceSec = res.data.routes[0].summary.duration;
+          const distances = this.state.statsKm;
+          const durations = this.state.statsMin;
+          const distanceKm = res.data.routes[0].summary.distance;
+          const distanceSec = res.data.routes[0].summary.duration;
           let distanceMin = distanceSec / 60;
           distances.push(distanceKm);
           durations.push(Math.round(distanceMin));
@@ -177,9 +185,7 @@ class APIGeoloc extends Component {
               employeesMarkers: mapData,
               isClicked: true
             },
-            () => {
-              this.getStatistics();
-            }
+            this.getStatistics()
           );
         })
         .catch(err => {
@@ -189,8 +195,8 @@ class APIGeoloc extends Component {
   };
 
   getStatistics = () => {
-    let allDistances = this.state.statsKm;
-    let allDurations = this.state.statsMin;
+    const allDistances = this.state.statsKm;
+    const allDurations = this.state.statsMin;
     let countPersUnder5 = 0;
     let countPers5To10 = 0;
     let countPers10To15 = 0;
@@ -260,18 +266,8 @@ class APIGeoloc extends Component {
     }
   };
 
-  startAnalysis = () => {
-    this.getLatLng();
-    this.getIsochrone();
-    setTimeout(() => {
-      this.getDistance();
-    }, 1000);
-  };
-
   render() {
-    const defaultZoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
-    const societyPosition = this.props.addressSociety;
     const societyIcon = L.icon({
       iconUrl: "./img/societyMarker.png",
       iconSize: [30, 30]
@@ -280,16 +276,13 @@ class APIGeoloc extends Component {
       iconUrl: "./img/employeeMarker.png",
       iconSize: [30, 30]
     });
-    const firstPolygon = [this.state.firstPolygon];
-    const secondPolygon = [this.state.secondPolygon];
-    const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
         <NotificationAlert ref="notificationAlertError" />
         {this.state.isClicked === false ? (
           <button
             className="btn mt-4 mb-4 ml-3 geolocButton"
-            onClick={this.startAnalysis}
+            onClick={this.getIsochrone}
           >
             Découvrir le résultat <i className={this.props.icon} />
           </button>
@@ -299,20 +292,20 @@ class APIGeoloc extends Component {
 
         <Row>
           <Col lg={{ size: 12 }}>
-            {societyPosition.length === 0 ? (
-              <Map center={defaultPosition} zoom={defaultZoom}>
+            {this.props.addressSociety.length === 0 ? (
+              <Map center={defaultPosition} zoom={10}>
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
               </Map>
             ) : (
-              <Map center={societyPosition} zoom={defaultZoom}>
+              <Map center={this.props.addressSociety} zoom={10}>
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
-                <Marker position={societyPosition} icon={societyIcon}>
+                <Marker position={this.props.addressSociety} icon={societyIcon}>
                   <Popup>
                     <span>Société</span>
                   </Popup>
@@ -326,9 +319,18 @@ class APIGeoloc extends Component {
                     />
                   );
                 })}
-                <Polygon positions={firstPolygon} color="rgb(55, 55, 226)" />
-                <Polygon positions={secondPolygon} color="rgb(224, 55, 26)" />
-                <Polygon positions={thirdPolygon} color="rgb(235, 235, 8)" />
+                <Polygon
+                  positions={[this.state.firstPolygon]}
+                  color="rgb(55, 55, 226)"
+                />
+                <Polygon
+                  positions={[this.state.secondPolygon]}
+                  color="rgb(224, 55, 26)"
+                />
+                <Polygon
+                  positions={[this.state.thirdPolygon]}
+                  color="rgb(235, 235, 8)"
+                />
               </Map>
             )}
           </Col>
