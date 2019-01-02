@@ -166,7 +166,7 @@ class Geolocalisation extends Component {
     let newPdf = new jsPDF();
     newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
     newPdf.setFontSize(30);
-    const allImages = this.state.imgData;
+    const allImages = this.state.imgData.reverse();
     allImages.map(image => {
       if (image.height >= 180) {
         newPdf.addImage(image, "JPEG", 5, 30, 200, 180);
@@ -224,167 +224,164 @@ class Geolocalisation extends Component {
           </Container>
           <Row>
             <Col md={{ size: 5, offset: 1 }}>
-              <Container>
-                <Row>
-                  <h5 className="mt-4">
-                    <img
-                      alt="step 1"
-                      src="https://img.icons8.com/metro/1600/1-circle.png"
-                      className="mr-2"
-                      width="50"
-                      height="50"
-                    />
-                    Renseigner l'adresse du lieu de travail :
-                  </h5>
-                </Row>
-                {this.state.isChecked === false ? (
-                  <form onSubmit={this.handleSubmitSocietyAddress}>
-                    <Row>
-                      <Col md={{ size: 8, offset: 1 }}>
-                        <input
-                          type="text"
-                          className="form-control mb-2"
-                          name="nbSociety"
-                          id="inputNbSociety"
-                          onChange={this.handleChange}
-                          value={this.state.nbSociety}
-                          placeholder="N°"
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={{ size: 8, offset: 1 }}>
-                        <input
-                          type="text"
-                          className="form-control mb-2"
-                          name="streetSociety"
-                          id="inputStreetSociety"
-                          onChange={this.handleChange}
-                          value={this.state.streetSociety}
-                          placeholder="Nom de rue"
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={{ size: 8, offset: 1 }}>
-                        <input
-                          type="text"
-                          className="form-control mb-2"
-                          name="zipCodeSociety"
-                          id="inputZipCodeSociety"
-                          onChange={this.handleChange}
-                          value={this.state.zipCodeSociety}
-                          placeholder="Code postal"
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={{ size: 8, offset: 1 }}>
-                        <input
-                          type="text"
-                          className="form-control mb-2"
-                          name="citySociety"
-                          id="inputCitySociety"
-                          onChange={this.handleChange}
-                          value={this.state.citySociety}
-                          placeholder="Ville"
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col md={{ size: 6, offset: 2 }}>
-                        <button className="btn saveButton mt-3 mb-3">
-                          Enregistrer <i className="fa fa-map-marker" />
-                        </button>
-                      </Col>
-                    </Row>
-                  </form>
-                ) : (
-                  <div className="successMsg shadow">
-                    L'adresse de l'entreprise a bien été géolocalisée{" "}
-                    <i className="fa fa-check-circle" />
-                  </div>
-                )}
-              </Container>
-            </Col>
-            <div className="separator" />
-            <Col md={{ size: 5 }}>
-              <Container className="ml-4 mt-4">
-                <h5>
+              <Row>
+                <h5 className="mt-4">
                   <img
-                    alt="step 2"
-                    src="https://img.icons8.com/metro/1600/2-circle.png"
+                    alt="step 1"
+                    src="./img/1-circle.png"
                     className="mr-2"
                     width="50"
                     height="50"
                   />
-                  Importer les adresses de vos salariés :
+                  Renseigner l'adresse du lieu de travail :
                 </h5>
-                <div>
-                  {this.state.addressEmployeeToTable !== undefined ? (
-                    <div>
-                      <div className="importAddress mt-3">
-                        <CsvToHtmlTable
-                          data={this.state.addressEmployeeToTable}
-                          csvDelimiter=","
-                          tableClassName="table table-striped table-hover"
-                          hasHeader={false}
-                        />
-                      </div>
-                      <Col lg={{ size: 6, offset: 6 }}>
-                        <p className="totalAddresses">
-                          <b>{this.state.addressEmployeeToArray.length}</b>{" "}
-                          adresse
-                          {this.state.addressEmployeeToArray.length <= 1
-                            ? " importée"
-                            : "s importées"}
-                        </p>
-                      </Col>
-                    </div>
-                  ) : (
-                    <div>
-                      <ReactFileReader
-                        fileTypes={[".csv"]}
-                        handleFiles={this.handleFiles}
-                      >
-                        <button className="btn importButton mb-3 mt-3">
-                          <i className="fa fa-upload" /> Importer mon fichier{" "}
-                        </button>
-                      </ReactFileReader>
-                      <span className="titleExample">
-                        Merci de suivre cet exemple pour l'import de votre
-                        fichier CSV
-                      </span>
-                      <img
-                        src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
-                        alt="infoIcon"
-                        width="25"
-                        height="25"
-                        className="ml-2"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+              </Row>
+              {this.state.isChecked === false ? (
+                <form onSubmit={this.handleSubmitSocietyAddress}>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="nbSociety"
+                        id="inputNbSociety"
+                        onChange={this.handleChange}
+                        value={this.state.nbSociety}
+                        placeholder="N°"
                       />
-                      <table className=" mt-3 table table-striped csvExample">
-                        <tbody>
-                          <tr>
-                            <td>50</td>
-                            <td>rue de Provence</td>
-                            <td>59000</td>
-                            <td>Lille</td>
-                          </tr>
-                          <tr>
-                            <td>3 B</td>
-                            <td>boulevard Vauban</td>
-                            <td>59000</td>
-                            <td>Lille</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  )}
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="streetSociety"
+                        id="inputStreetSociety"
+                        onChange={this.handleChange}
+                        value={this.state.streetSociety}
+                        placeholder="Nom de rue"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="zipCodeSociety"
+                        id="inputZipCodeSociety"
+                        onChange={this.handleChange}
+                        value={this.state.zipCodeSociety}
+                        placeholder="Code postal"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 8, offset: 1 }}>
+                      <input
+                        type="text"
+                        className="form-control mb-2"
+                        name="citySociety"
+                        id="inputCitySociety"
+                        onChange={this.handleChange}
+                        value={this.state.citySociety}
+                        placeholder="Ville"
+                      />
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col md={{ size: 6, offset: 2 }}>
+                      <button className="btn saveButton mt-3 mb-3">
+                        Enregistrer <i className="fa fa-map-marker" />
+                      </button>
+                    </Col>
+                  </Row>
+                </form>
+              ) : (
+                <div className="successMsg shadow">
+                  L'adresse de l'entreprise a bien été géolocalisée{" "}
+                  <i className="fa fa-check-circle" />
                 </div>
-              </Container>
+              )}
+            </Col>
+            <div className="separator" />
+            <Col md={{ size: 5 }} className="mt-4 ml-2">
+              <h5>
+                <img
+                  alt="step 2"
+                  src="./img/2-circle.png"
+                  className="mr-2"
+                  width="50"
+                  height="50"
+                />
+                Importer les adresses de vos salariés :
+              </h5>
+              <div>
+                {this.state.addressEmployeeToTable !== undefined ? (
+                  <div>
+                    <div className="importAddress mt-3">
+                      <CsvToHtmlTable
+                        data={this.state.addressEmployeeToTable}
+                        csvDelimiter=","
+                        tableClassName="table table-striped table-hover"
+                        hasHeader={false}
+                      />
+                    </div>
+                    <Col lg={{ size: 6, offset: 6 }}>
+                      <p className="totalAddresses pt-1 pl-1">
+                        <b>{this.state.addressEmployeeToArray.length}</b>{" "}
+                        adresse
+                        {this.state.addressEmployeeToArray.length <= 1
+                          ? " importée"
+                          : "s importées"}{" "}
+                        <i className="fa fa-check" />
+                      </p>
+                    </Col>
+                  </div>
+                ) : (
+                  <div>
+                    <ReactFileReader
+                      fileTypes={[".csv"]}
+                      handleFiles={this.handleFiles}
+                    >
+                      <button className="btn importButton mb-3 mt-3">
+                        <i className="fa fa-upload" /> Importer mon fichier{" "}
+                      </button>
+                    </ReactFileReader>
+                    <span className="titleExample">
+                      Merci de suivre cet exemple pour l'import de votre fichier
+                      CSV
+                    </span>
+                    <img
+                      src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
+                      alt="infoIcon"
+                      width="25"
+                      height="25"
+                      className="ml-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+                    />
+                    <table className=" mt-3 table table-striped csvExample">
+                      <tbody>
+                        <tr>
+                          <td>50</td>
+                          <td>rue de Provence</td>
+                          <td>59000</td>
+                          <td>Lille</td>
+                        </tr>
+                        <tr>
+                          <td>3 B</td>
+                          <td>boulevard Vauban</td>
+                          <td>59000</td>
+                          <td>Lille</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </Col>
           </Row>
           <hr />
@@ -392,7 +389,7 @@ class Geolocalisation extends Component {
             {" "}
             <img
               alt="step 1"
-              src="https://img.icons8.com/metro/1600/3-circle.png"
+              src="./img/3-circle.png"
               className="mr-2"
               width="50"
               height="50"
@@ -432,7 +429,7 @@ class Geolocalisation extends Component {
         <h5>
           <img
             alt="step 1"
-            src="https://img.icons8.com/metro/1600/4-circle.png"
+            src="./img/4-circle.png"
             className="mr-2"
             width="50"
             height="50"

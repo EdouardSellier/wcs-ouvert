@@ -415,14 +415,21 @@ class APIGeoloc extends Component {
                     ""
                   )}
                   <p>
+                    <img
+                      src="./img/right-arrow.png"
+                      alt="arrow"
+                      width="25"
+                      height="20"
+                      className="float-left mt-1 mr-1"
+                    />
                     <b>
                       Sur les {this.props.addressEmployees.length} salariés
                       enregistrés, {this.state.employeesMarkers.length} ont été
                       géolocalisés :
                     </b>
                   </p>
-                  <ul>
-                    <li>
+                  <ul className="list-unstyled">
+                    <li className="p-1">
                       {this.state.nbPersUnder5} salarié
                       {this.state.nbPersUnder5 > 1 ? "s" : ""} (
                       {this.state.percentUnder5}%) habite
@@ -430,7 +437,7 @@ class APIGeoloc extends Component {
                       {this.props.measure === "km" ? " km " : " minutes "}
                       {this.props.parameter} de l'entreprise.
                     </li>
-                    <li>
+                    <li className="p-1">
                       {this.state.nbPers5To10} salarié
                       {this.state.nbPers5To10 > 1 ? "s" : ""} (
                       {this.state.percent5To10}%) habite
@@ -438,7 +445,7 @@ class APIGeoloc extends Component {
                       {this.props.measure === "km" ? " km " : " minutes "}
                       {this.props.parameter} de l'entreprise.
                     </li>
-                    <li>
+                    <li className="p-1">
                       {this.props.parameter === "en voiture"
                         ? this.state.nbPers10To20
                         : this.state.nbPers10To15}{" "}
@@ -459,7 +466,7 @@ class APIGeoloc extends Component {
                       {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
                       {this.props.parameter} de l'entreprise.
                     </li>
-                    <li>
+                    <li className="p-1">
                       {this.props.parameter === "en voiture"
                         ? this.state.nbPersOver20
                         : this.state.nbPersOver15}{" "}
