@@ -1,6 +1,6 @@
 .successMsg {
   color: rgb(39, 105, 39);
-  margin: 15%;
+  margin: 12%;
   padding-top: 5%;
   font-size: 1em;
   background-color: rgb(190, 245, 190);
@@ -20,6 +20,12 @@
 .csvExample {
   color: rgb(78, 76, 76);
   font-size: 0.9em;
+}
+
+.totalAddresses {
+  font-size: 1em;
+  color: rgb(48, 48, 49);
+  font-style: italic;
 }
 
 .titleExample {
