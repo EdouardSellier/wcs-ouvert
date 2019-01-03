@@ -34,22 +34,24 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
-    let body = {
-      mail: this.state.mail,
-      password: this.state.password
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/connexion",
-      data: body
+    fetch("http://localhost:8080/auth/connexion", {
+      method: "POST",
+      body: JSON.stringify(this.state),
+      headers: {
+        "Content-Type": "application/json"
+      }
     })
       .then(res => {
-        if (res.data === "SUCCESS") {
+        if (res.status === 200) {
           this.props.history.push("/monespace");
+        } else {
+          const error = new Error(res.error);
+          throw error;
         }
       })
-      .catch(error => {
-        this.alertFunctionDanger();
+      .catch(err => {
+        console.error(err);
+        alert("Error logging in please try again");
       });
   };
 
