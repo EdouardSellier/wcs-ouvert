@@ -32,35 +32,6 @@ app.post("/inscription", (req, res) => {
         if (err) {
           res.status(500).send("The database crashed ! The reason is " + err);
         } else {
-          nodemailer.createTestAccount((err, account) => {
-            let transporter = nodemailer.createTransport({
-              host: "smtp.gmail.com",
-              port: 587,
-              secure: false,
-              auth: {
-                user: userTransporter.user,
-                pass: userTransporter.pass
-              }
-            });
-
-            let mailOptions = {
-              from: "no-reply@ouvert.com",
-              to: req.body.mail,
-              subject: "Hello ✔",
-              text: "Hello world?",
-              html: "<b>Hello world?</b>"
-            };
-
-            transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                res
-                  .status(500)
-                  .send(
-                    "An error occured with confirmation e-mail after sign up."
-                  );
-              }
-            });
-          });
           res.status(201).send("SUCCESS");
         }
       });
@@ -127,6 +98,86 @@ app.post("/geolocation", (req, res) => {
         res.status(500).send("The database crashed ! The reason is " + err);
       } else {
         res.status(200).send("SUCCESS");
+      }
+    }
+  );
+});
+
+app.post("/rh/survey", (req, res) => {
+  const formData = req.body;
+  connection.query("INSERT INTO survey SET ?", formData, (err, results) => {
+    if (err) {
+      res.status(500).send("The database crashed ! The reason is " + err);
+    } else {
+      res.status(200).send("SUCCESS");
+    }
+  });
+});
+
+app.post("/admin/payment", (req, res) => {
+  const formData = req.body;
+  const idSociety = req.body.id;
+  connection.query(
+    `UPDATE user SET ? WHERE user.id=${idSociety}`,
+    formData,
+    (err, results) => {
+      if (err) {
+        res.status(500).send("The database crashed ! The reason is " + err);
+      } else {
+        nodemailer.createTestAccount((err, account) => {
+          let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false,
+            auth: {
+              user: userTransporter.user,
+              pass: userTransporter.pass
+            }
+          });
+          let mailOptions = {
+            from: "no-reply@ouvert.com",
+            to: req.body.mail,
+            subject: "Hello ✔",
+            text: "Hello world?",
+            html: "<b>Hello world?</b>"
+          };
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              res
+                .status(500)
+                .send(
+                  "An error occured with confirmation e-mail after sign up."
+                );
+            }
+          });
+        });
+        res.status(200).send("SUCCESS");
+      }
+    }
+  );
+});
+
+app.get("/admin/list/society", (req, res) => {
+  connection.query(
+    "SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user WHERE is_admin = 0",
+    (err, results) => {
+      if (err) {
+        res.status(500).send("The database crashed ! The reason is " + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.get("/admin/list/survey", (req, res) => {
+  connection.query(
+    "SELECT survey_name, survey_address, starting_date, ending_date, user_id FROM survey",
+    (err, results) => {
+      if (err) {
+        res.status(500).send("The database crashed ! The reason is " + err);
+      } else {
+        res.json(results);
       }
     }
   );

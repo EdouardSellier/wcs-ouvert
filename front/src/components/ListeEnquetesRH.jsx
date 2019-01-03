@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -17,9 +16,6 @@ class ListeEnquetesRH extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <hr />
         <Container className="mt-4">
           <Row>
@@ -100,7 +96,6 @@ class ListeEnquetesRH extends Component {
             </Col>
           </Row>
         </Container>
-        <Footer />
       </div>
     );
   }

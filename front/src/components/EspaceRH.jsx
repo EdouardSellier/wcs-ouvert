@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import "./css/EspaceRH.css";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
@@ -12,12 +11,11 @@ class EspaceRH extends Component {
   render() {
     return (
       <div>
+        <hr />
         <Container>
           <Row>
             <Col lg={{ size: 8, offset: 2 }}>
-              <p className="homeSlogan">
-                MOUV'R : Enquête de mobilité pour vos salariés
-              </p>
+              <h3>Mon Espace</h3>
             </Col>
             <Col lg={{ size: 2 }}>
               <button
@@ -29,8 +27,6 @@ class EspaceRH extends Component {
             </Col>
           </Row>
         </Container>
-        <hr />
-        <h3>Mon Espace</h3>
         <Container className="espaceRH mt-5">
           <Row>
             <p className="text-justify ml-5 mr-5">
@@ -106,7 +102,6 @@ class EspaceRH extends Component {
             </Col>
           </Row>
         </Container>
-        <Footer />
       </div>
     );
   }

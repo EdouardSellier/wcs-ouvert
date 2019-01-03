@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Footer from "./Footer";
 import APIGeoloc from "./APIGeoloc";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
@@ -187,9 +186,6 @@ class Geolocalisation extends Component {
     const addressSociety = this.state.addressSocietyToLatLng;
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <hr />
         <div className="listAddress mt-2">
           <Container>
@@ -453,7 +449,6 @@ class Geolocalisation extends Component {
         ) : (
           ""
         )}
-        <Footer />
       </div>
     );
   }

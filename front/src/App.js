@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { Col } from "reactstrap";
 import "./App.css";
 import Accueil from "./components/Accueil";
 import Inscription from "./components/Inscription";
@@ -15,11 +16,17 @@ import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
+import Footer from "./components/Footer";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+        <Col lg={{ size: 8, offset: 2 }}>
+          <p className="homeSlogan">
+            MOUV'R : Enquête de mobilité pour vos salariés
+          </p>
+        </Col>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
@@ -38,6 +45,7 @@ class App extends Component {
             <Route path="/listeenquetes" component={ListeEnquetes} />
           </Switch>
         </BrowserRouter>
+        <Footer />
       </div>
     );
   }

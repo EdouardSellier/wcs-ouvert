@@ -1,7 +1,6 @@
 import React from "react";
 import "./css/Inscription.css";
 import Header from "./Header";
-import Footer from "./Footer";
 import { Row, Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
@@ -99,7 +98,6 @@ class Inscription extends React.Component {
           }
         })
         .catch(error => {
-          console.log("Fail: " + error);
           this.alertFunctionError();
         });
     }
@@ -145,9 +143,6 @@ class Inscription extends React.Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
         <Header />
         <div
           id="main-registration-container"
@@ -331,7 +326,6 @@ class Inscription extends React.Component {
             </form>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
