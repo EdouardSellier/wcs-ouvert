@@ -1,15 +1,31 @@
+.successMsg {
+  color: rgb(39, 105, 39);
+  margin: 12%;
+  padding-top: 5%;
+  font-size: 1em;
+  background-color: rgb(190, 245, 190);
+  border-radius: 8px;
+  padding-bottom: 5%;
+}
+
 .listAddress {
   padding: 15px;
 }
 
 .importAddress {
-  max-height: 200px;
+  max-height: 250px;
   overflow: scroll;
 }
 
 .csvExample {
   color: rgb(78, 76, 76);
   font-size: 0.9em;
+}
+
+.totalAddresses {
+  font-size: 1em;
+  color: rgb(48, 48, 49);
+  font-style: italic;
 }
 
 .titleExample {
@@ -20,49 +36,38 @@
 
 .leaflet-container {
   height: 400px;
-  width: 100%;
+  max-width: 90%;
+  margin: auto;
 }
 
 .legend {
   text-align: left;
   font-size: 0.8em;
-  border: 1px solid #dfdcdc;
+
   padding-left: 35px;
   padding-top: 10px;
   border-radius: 3%;
 }
 
 .bluePolygon {
-  color: blue;
-  background-color: blue;
+  color: rgb(55, 55, 226);
+  background-color: rgb(55, 55, 226);
   font-size: 0.5em;
   line-height: 0.5px;
 }
 
 .redPolygon {
-  color: red;
-  background-color: red;
+  color: rgb(224, 55, 26);
+  background-color: rgb(224, 55, 26);
   font-size: 0.5em;
   line-height: 0.5px;
 }
 
 .yellowPolygon {
-  color: yellow;
-  background-color: yellow;
+  color: rgb(235, 235, 8);
+  background-color: rgb(235, 235, 8);
   font-size: 0.5em;
   line-height: 0.5px;
-}
-
-/*.saveButton {
-  background-color: #5e9d38;
-}*/
-
-/*.importButton {
-  background-color: #9d4438;
-}*/
-
-.geolocButton {
-  background-color: #e23131;
 }
 
 .separator {
@@ -75,4 +80,24 @@
 .form-control {
   border: none;
   border-bottom: 1px solid rgb(202, 195, 195);
+}
+
+.stats {
+  font-size: 2em;
+}
+
+.statistics {
+  text-align: left;
+  padding: 20px;
+}
+
+.pdfButton {
+  background-color: rgb(177, 53, 53);
+}
+
+.importButton,
+.saveButton,
+.geolocButton {
+  background-color: #dbddf0;
+  color: rgb(41, 39, 39);
 }

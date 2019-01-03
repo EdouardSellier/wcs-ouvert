@@ -3,30 +3,26 @@ import Footer from "./Footer";
 import APIGeoloc from "./APIGeoloc";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
+import NotificationAlert from "react-notification-alert";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
-import NotificationAlert from "react-notification-alert";
 import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
-
-const successMsg = {
-  place: "tr",
-  message: (
-    <p>
-      L'adresse postale a bien été prise en compte pour la géolocalisation{" "}
-      <i className="fa fa-check-circle-o" />
-    </p>
-  ),
-  type: "success",
-  autoDismiss: 4
-};
 
 const errorMsg = {
   place: "tr",
   message:
     "Nous avons rencontré un problème avec votre adresse postale, merci de vérifier les champs",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorLimitMsg = {
+  place: "tr",
+  message:
+    "Vous avez dépassé la limite des 800 salariés, nous vous invitons à contacter l'assistance. Merci de votre compréhension.",
   type: "danger",
   autoDismiss: 4
 };
@@ -45,23 +41,24 @@ class Geolocalisation extends Component {
     this.state = {
       addressEmployeeToTable: undefined,
       addressEmployeeToArray: [],
+      isochroneCenter: [],
+      mapData: [],
       addressSocietyToLatLng: [],
       nbSociety: "",
       streetSociety: "",
       zipCodeSociety: "",
       citySociety: "",
-      allImagesToPdf: [],
       isChecked: false,
       pdfIsLoading: false
     };
   }
 
-  alertFunctionSuccess = () => {
-    this.refs.notificationAlertSuccess.notificationAlert(successMsg);
-  };
-
   alertFunctionError = () => {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
+
+  alertFunctionErrorLimit = () => {
+    this.refs.notificationAlertError.notificationAlert(errorLimitMsg);
   };
 
   alertFunctionProblem = () => {
@@ -74,32 +71,13 @@ class Geolocalisation extends Component {
     });
   };
 
-  handleSubmit = event => {
+  backToHome = event => {
     event.preventDefault();
     this.props.history.push("/monespace");
   };
 
   handleSubmitSocietyAddress = event => {
     event.preventDefault();
-    let body = {
-      nbSociety: this.state.nbSociety,
-      streetSociety: this.state.streetSociety,
-      zipCodeSociety: this.state.zipCodeSociety,
-      citySociety: this.state.citySociety
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/societyAddress",
-      data: body
-    })
-      .then(res => {
-        if (res.status !== 200) {
-          this.alertFunctionProblem();
-        }
-      })
-      .catch(error => {
-        this.alertFunctionError();
-      });
     let addressSocietyToArray = [
       this.state.nbSociety,
       this.state.streetSociety,
@@ -122,7 +100,6 @@ class Geolocalisation extends Component {
             citySociety: "",
             isChecked: true
           });
-          this.alertFunctionSuccess();
         } else {
           this.alertFunctionError();
         }
@@ -136,27 +113,33 @@ class Geolocalisation extends Component {
     const reader = new FileReader();
     reader.onload = e => {
       csv.parse(reader.result, (err, data) => {
-        this.setState({
-          addressEmployeeToArray: data
-        });
-      });
-      this.setState({
-        addressEmployeeToTable: reader.result
+        if (data.length < 800) {
+          this.setState({
+            addressEmployeeToArray: data,
+            addressEmployeeToTable: reader.result
+          });
+        } else {
+          this.alertFunctionErrorLimit();
+        }
       });
     };
     reader.readAsText(files[0]);
   };
 
   handleImg = () => {
-    let capture1 = document.querySelector("#capture1");
-    let capture2 = document.querySelector("#capture2");
-    let capture3 = document.querySelector("#capture3");
+    const capture1 = document.querySelector("#capture1");
+    const capture2 = document.querySelector("#capture2");
     let allCaptures = [];
-    allCaptures.push(capture1, capture2, capture3);
+    allCaptures.push(capture1, capture2);
     let allImagesData = [];
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
+        if (capture.clientHeight > 800) {
+          imgData = new Image(180, 180);
+        } else {
+          imgData = new Image(180, 110);
+        }
         imgData.src = dataUrl;
         allImagesData.push(imgData);
         this.setState(
@@ -179,24 +162,28 @@ class Geolocalisation extends Component {
       this.setState({
         pdfIsLoading: false
       });
-    }, 4000);
-    let newPdf = new jsPDF("portrait", "mm", "a4");
+    }, 3000);
+    let newPdf = new jsPDF();
     newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(40);
-    let allImages = this.state.imgData;
-    allImages.map(data => {
-      newPdf.addImage(data, "JPEG", 5, 20, 200, 200);
-      return newPdf.addPage("a4", "portrait");
+    newPdf.setFontSize(30);
+    const allImages = this.state.imgData.reverse();
+    allImages.map(image => {
+      if (image.height >= 180) {
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 180);
+      } else if (image.height < 180) {
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 130);
+      }
+      return newPdf.addPage();
     });
     let lastPage = newPdf.internal.getNumberOfPages();
     newPdf.deletePage(lastPage);
-    if (allImages.length > 2) {
+    if (allImages.length === 2) {
       newPdf.save("compte-rendu.pdf");
     }
   };
 
   render() {
-    const addressEmployee = this.state.addressEmployeeToArray;
+    const addressEmployees = this.state.addressEmployeeToArray;
     const addressSociety = this.state.addressSocietyToLatLng;
     return (
       <div>
@@ -210,7 +197,7 @@ class Geolocalisation extends Component {
               <Col lg={{ size: 2 }}>
                 <button
                   className="mt-2 btn text-white"
-                  onClick={this.handleSubmit}
+                  onClick={this.backToHome}
                 >
                   <i className="fa fa-home" /> Revenir à l'accueil
                 </button>
@@ -222,33 +209,35 @@ class Geolocalisation extends Component {
           </Container>
           <Container className="mt-3">
             <Row>
-              <NotificationAlert ref="notificationAlertSuccess" />
               <NotificationAlert ref="notificationAlertError" />
+              <NotificationAlert ref="notificationAlertErrorLimit" />
               <NotificationAlert ref="notificationAlertProblem" />
               <p className="text-justify m-4">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Cumque
-                optio ex non. Atque aspernatur laudantium totam hic? Dolorem
-                sapiente laboriosam ab consequatur repellat vel. Amet in
-                assumenda ad rerum molestiae!
+                Cette page vous permet de géolocaliser vos salariés. Grâce à
+                cela, vous connaîtrez entre autres la distance domicile –
+                travail moyenne que parcourent vos salariés, et la part d’entre
+                eux pouvant se rendre sur leur lieu de travail en vélo.
+                <br /> Pour géolocaliser vos salariés, il vous suffit de suivre
+                les étapes numérotées ci-dessous.
               </p>
             </Row>
           </Container>
           <Row>
             <Col md={{ size: 5, offset: 1 }}>
-              <Container className="">
+              <Row>
+                <h5 className="mt-4">
+                  <img
+                    alt="step 1"
+                    src="./img/1-circle.png"
+                    className="mr-2"
+                    width="50"
+                    height="50"
+                  />
+                  Renseigner l'adresse du lieu de travail :
+                </h5>
+              </Row>
+              {this.state.isChecked === false ? (
                 <form onSubmit={this.handleSubmitSocietyAddress}>
-                  <Row>
-                    <h5 className="mt-4">
-                      <img
-                        alt="step 1"
-                        src="https://img.icons8.com/metro/1600/1-circle.png"
-                        className="mr-2"
-                        width="50"
-                        height="50"
-                      />
-                      Renseigner l'adresse de l'entreprise :
-                    </h5>
-                  </Row>
                   <Row>
                     <Col md={{ size: 8, offset: 1 }}>
                       <input
@@ -303,131 +292,136 @@ class Geolocalisation extends Component {
                   </Row>
                   <Row>
                     <Col md={{ size: 6, offset: 2 }}>
-                      <button className="btn text-white saveButton mt-3 mb-3">
-                        Enregistr{this.state.isChecked === true ? "é" : "er"}{" "}
-                        {this.state.isChecked === true ? (
-                          <i className="fa fa-check-circle" />
-                        ) : (
-                          ""
-                        )}
+                      <button className="btn saveButton mt-3 mb-3">
+                        Enregistrer <i className="fa fa-map-marker" />
                       </button>
                     </Col>
                   </Row>
                 </form>
-              </Container>
+              ) : (
+                <div className="successMsg shadow">
+                  L'adresse de l'entreprise a bien été géolocalisée{" "}
+                  <i className="fa fa-check-circle" />
+                </div>
+              )}
             </Col>
             <div className="separator" />
-            <Col md={{ size: 5 }}>
-              <Container className="ml-4 mt-4">
-                <h5>
-                  <img
-                    alt="step 2"
-                    src="https://img.icons8.com/metro/1600/2-circle.png"
-                    className="mr-2"
-                    width="50"
-                    height="50"
-                  />
-                  Importer les adresses de vos salariés :
-                </h5>
-                <ReactFileReader
-                  fileTypes={[".csv"]}
-                  handleFiles={this.handleFiles}
-                >
-                  <button className="btn text-white importButton mb-3 mt-3">
-                    <i className="fa fa-upload" /> Importer un fichier CSV{" "}
-                  </button>
-                </ReactFileReader>
-                <div className="importAddress">
-                  {this.state.addressEmployeeToTable !== undefined ? (
-                    <CsvToHtmlTable
-                      data={this.state.addressEmployeeToTable}
-                      csvDelimiter=","
-                      tableClassName="table table-striped table-hover"
-                      hasHeader={false}
-                    />
-                  ) : (
-                    <div>
-                      <span className="titleExample">
-                        Merci de suivre cet exemple pour l'import de votre
-                        fichier CSV
-                      </span>
-                      <img
-                        src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
-                        alt="infoIcon"
-                        width="25"
-                        height="25"
-                        className="ml-2"
-                        data-toggle="tooltip"
-                        data-placement="top"
-                        title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+            <Col md={{ size: 5 }} className="mt-4 ml-2">
+              <h5>
+                <img
+                  alt="step 2"
+                  src="./img/2-circle.png"
+                  className="mr-2"
+                  width="50"
+                  height="50"
+                />
+                Importer les adresses de vos salariés :
+              </h5>
+              <div>
+                {this.state.addressEmployeeToTable !== undefined ? (
+                  <div>
+                    <div className="importAddress mt-3">
+                      <CsvToHtmlTable
+                        data={this.state.addressEmployeeToTable}
+                        csvDelimiter=","
+                        tableClassName="table table-striped table-hover"
+                        hasHeader={false}
                       />
-                      <table className=" mt-3 table table-striped csvExample">
-                        <tbody>
-                          <tr>
-                            <td>50</td>
-                            <td>rue</td>
-                            <td>de Provence</td>
-                            <td>59000</td>
-                            <td>Lille</td>
-                          </tr>
-                          <tr>
-                            <td>3 B</td>
-                            <td>boulevard</td>
-                            <td>Vauban</td>
-                            <td>59000</td>
-                            <td>Lille</td>
-                          </tr>
-                        </tbody>
-                      </table>
                     </div>
-                  )}
-                </div>
-              </Container>
+                    <Col lg={{ size: 6, offset: 6 }}>
+                      <p className="totalAddresses pt-1 pl-1">
+                        <b>{this.state.addressEmployeeToArray.length}</b>{" "}
+                        adresse
+                        {this.state.addressEmployeeToArray.length <= 1
+                          ? " importée"
+                          : "s importées"}{" "}
+                        <i className="fa fa-check" />
+                      </p>
+                    </Col>
+                  </div>
+                ) : (
+                  <div>
+                    <ReactFileReader
+                      fileTypes={[".csv"]}
+                      handleFiles={this.handleFiles}
+                    >
+                      <button className="btn importButton mb-3 mt-3">
+                        <i className="fa fa-upload" /> Importer mon fichier{" "}
+                      </button>
+                    </ReactFileReader>
+                    <span className="titleExample">
+                      Merci de suivre cet exemple pour l'import de votre fichier
+                      CSV
+                    </span>
+                    <img
+                      src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
+                      alt="infoIcon"
+                      width="25"
+                      height="25"
+                      className="ml-2"
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+                    />
+                    <table className=" mt-3 table table-striped csvExample">
+                      <tbody>
+                        <tr>
+                          <td>50</td>
+                          <td>rue de Provence</td>
+                          <td>59000</td>
+                          <td>Lille</td>
+                        </tr>
+                        <tr>
+                          <td>3 B</td>
+                          <td>boulevard Vauban</td>
+                          <td>59000</td>
+                          <td>Lille</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </Col>
           </Row>
           <hr />
-          <div id="capture1">
+          <h5>
+            {" "}
+            <img
+              alt="step 1"
+              src="./img/3-circle.png"
+              className="mr-2"
+              width="50"
+              height="50"
+            />
+            Analyser la distance et les temps de trajets en voiture et à vélo :
+          </h5>
+          <div id="capture1" className="m-3">
             <APIGeoloc
-              addressEmployee={addressEmployee}
+              addressEmployees={addressEmployees}
               addressSociety={addressSociety}
               profile="driving-car"
               rangeType="distance"
               range="5000,10000,15000"
               parameter="en voiture"
-              distance="Distance"
+              legendTitle="Distance"
               measure="km"
-              zoom={11.4}
-              title="de la distance"
+              statTitle="Distance"
+              icon="fa fa-car"
             />
           </div>
-          <hr />
-          <div id="capture2">
+          <div id="capture2" className="m-3">
             <APIGeoloc
-              addressEmployee={addressEmployee}
+              addressEmployees={addressEmployees}
               addressSociety={addressSociety.reverse()}
               profile="cycling-regular"
               rangeType="time"
               range="300,600,900"
               parameter="à vélo"
-              distance="Durée du trajet"
+              legendTitle="Durée du trajet"
               measure=" minutes "
-              zoom={11.4}
-              title="du temps de trajet"
-            />
-          </div>
-          <hr />
-          <div id="capture3">
-            <APIGeoloc
-              addressEmployee={addressEmployee}
-              addressSociety={addressSociety}
-              profile="foot-walking"
-              rangeType="time"
-              range="300,600,900"
-              parameter="à pieds"
-              distance="Durée du trajet"
-              measure=" minutes "
-              zoom={13}
-              title="du temps de trajet"
+              statTitle="Temps de trajet"
+              icon="fa fa-bicycle"
             />
           </div>
         </div>
@@ -435,15 +429,18 @@ class Geolocalisation extends Component {
         <h5>
           <img
             alt="step 1"
-            src="https://img.icons8.com/metro/1600/4-circle.png"
+            src="./img/4-circle.png"
             className="mr-2"
             width="50"
             height="50"
           />
-          Télécharger votre compte-rendu :
+          Enregistrer votre compte-rendu :
         </h5>
-        <button onClick={this.handleImg} className="mb-4 btn text-white">
-          <i className="fa fa-file-pdf-o" /> Télécharger
+        <button
+          onClick={this.handleImg}
+          className="mb-4 mt-3 btn text-white pdfButton"
+        >
+          <i className="fa fa-file-pdf-o" /> Télécharger PDF
         </button>
         {this.state.pdfIsLoading === true ? (
           <img

@@ -111,13 +111,25 @@ app.post("/connexion", (req, res) => {
   });
 });
 
-app.post("/societyAddress", (req, res) => {
-  console.log(req.body);
-  if (req.body) {
-    res.status(200).send("Success");
-  } else {
-    res.status(500).send("Something went wrong");
-  }
+app.post("/geolocation", (req, res) => {
+  let data = req.body.society_position.reverse();
+  let societyPosition = JSON.stringify(data);
+  let employeesPositions = req.body.employees_positions;
+  const formData = {
+    society_position: societyPosition,
+    employees_positions: employeesPositions
+  };
+  connection.query(
+    "INSERT INTO geolocation SET ?",
+    formData,
+    (err, results) => {
+      if (err) {
+        res.status(500).send("The database crashed ! The reason is " + err);
+      } else {
+        res.status(200).send("SUCCESS");
+      }
+    }
+  );
 });
 
 app.listen(port, err => {

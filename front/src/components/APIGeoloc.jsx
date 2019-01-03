@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import GeoStatistics from "./GeoStatistics";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
@@ -10,7 +9,7 @@ import NotificationAlert from "react-notification-alert";
 const errorMsg = {
   place: "tr",
   message:
-    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
+    "Nous avons rencontré un problème, merci de retenter dans quelques minutes ou de contacter l'assistance",
   type: "danger",
   autoDismiss: 4
 };
@@ -19,10 +18,29 @@ class APIGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapData: [],
+      employeesPositions: [],
+      employeesMarkers: [],
       firstPolygon: [],
       secondPolygon: [],
-      thirdPolygon: []
+      thirdPolygon: [],
+      statsKm: [],
+      statsMin: [],
+      average: 0,
+      min: 0,
+      max: 0,
+      nbPersUnder5: 0,
+      percentUnder5: 0,
+      nbPers5To10: 0,
+      percent5To10: 0,
+      nbPers10To15: 0,
+      percent10To15: 0,
+      nbPers10To20: 0,
+      percent10To20: 0,
+      nbPersOver15: 0,
+      percentOver15: 0,
+      nbPersOver20: 0,
+      percentOver20: 0,
+      isClicked: false
     };
   }
 
@@ -30,20 +48,145 @@ class APIGeoloc extends Component {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
   };
 
-  getLatLng = () => {
-    this.props.addressEmployee.map(data => {
-      let dataStr = data.join("+").replace(" ", "+");
-      return axios
-        .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
-        .then(result => {
-          let newData = result.data.features[0].geometry.coordinates;
-          newData.reverse();
-          let latLng = { marker: newData };
-          let allMapData = this.state.mapData;
-          allMapData.push(latLng);
-          this.setState({
-            mapData: allMapData
+  getIsochrone = () => {
+    axios
+      .get(
+        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${
+          this.props.addressSociety
+        }&profile=${this.props.profile}&range_type=${
+          this.props.rangeType
+        }&range=${this.props.range}`
+      )
+      .then(result => {
+        const firstResult = result.data.features[0].geometry.coordinates;
+        const secondResult = result.data.features[1].geometry.coordinates;
+        const thirdResult = result.data.features[2].geometry.coordinates;
+        let firstPolygon = [];
+        let secondPolygon = [];
+        let thirdPolygon = [];
+        firstResult.map(position => {
+          return position.map(latLng => {
+            let realLatLng = latLng.reverse();
+            firstPolygon = this.state.firstPolygon;
+            return firstPolygon.push(realLatLng);
           });
+        });
+        secondResult.map(position => {
+          return position.map(latLng => {
+            let realLatLng = latLng.reverse();
+            secondPolygon = this.state.secondPolygon;
+            return secondPolygon.push(realLatLng);
+          });
+        });
+        thirdResult.map(position => {
+          return position.map(latLng => {
+            let realLatLng = latLng.reverse();
+            thirdPolygon = this.state.thirdPolygon;
+            return thirdPolygon.push(realLatLng);
+          });
+        });
+        this.setState(
+          {
+            firstPolygon: firstPolygon,
+            secondPolygon: secondPolygon,
+            thirdPolygon: thirdPolygon
+          },
+          this.getLatLng()
+        );
+      })
+      .catch(err => {
+        this.alertFunctionError();
+      });
+  };
+
+  getLatLng = () => {
+    let allMapData = this.state.employeesPositions;
+    this.props.addressEmployees.map((address, id) => {
+      let addressQuery = address.join("+").replace(" ", "+");
+      return axios
+        .get(`https://api-adresse.data.gouv.fr/search/?q=${addressQuery}`)
+        .then(result => {
+          let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
+          let latLng = { id: id + 1, position: employeesMarkers };
+          allMapData.push(latLng);
+          if (allMapData.length === this.props.addressEmployees.length) {
+            this.setState(
+              {
+                employeesPositions: allMapData
+              },
+              this.getDistance()
+            );
+          }
+          if (
+            this.props.parameter === "à vélo" &&
+            allMapData.length === this.props.addressEmployees.length
+          ) {
+            let societyPosition = this.props.addressSociety;
+            let employeesPositions = JSON.stringify(allMapData);
+            let body = {
+              society_position: societyPosition,
+              employees_positions: employeesPositions
+            };
+            axios({
+              method: "post",
+              url: "http://localhost:8080/geolocation",
+              data: body
+            })
+              .then(result => {
+                if (result.status !== 200) {
+                  this.alertFunctionProblem();
+                }
+              })
+              .catch(error => {
+                this.alertFunctionError();
+              });
+          }
+        })
+        .catch(error => {
+          this.alertFunctionError();
+        });
+    });
+  };
+
+  getDistance = () => {
+    const employeesPositions = this.state.employeesPositions;
+    const societyPosition = this.props.addressSociety;
+    employeesPositions.map(marker => {
+      let employeeLatLng = marker.position.reverse();
+      let query = `${societyPosition}|${employeeLatLng}`;
+      return axios({
+        method: "get",
+        url: `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&coordinates=${query}&profile=${
+          this.props.profile
+        }&units=km&language=fr`
+      })
+        .then(res => {
+          const distances = this.state.statsKm;
+          const durations = this.state.statsMin;
+          const distanceKm = res.data.routes[0].summary.distance;
+          const distanceSec = res.data.routes[0].summary.duration;
+          let distanceMin = distanceSec / 60;
+          distances.push(distanceKm);
+          durations.push(Math.round(distanceMin));
+          let sum = distances.reduce((a, b) => a + b, 0);
+          let averageKm = sum / distances.length;
+          let min = Math.min(...distances);
+          let max = Math.max(...distances);
+          let mapData = this.state.employeesMarkers;
+          let newMarkers = { position: marker.position.reverse() };
+          mapData.push(newMarkers);
+          this.setState(
+            {
+              statsMin: durations,
+              statsKm: distances,
+              average: averageKm.toFixed(1),
+              min: min.toFixed(1),
+              max: max.toFixed(1),
+              employeesMarkers: mapData,
+              isClicked: true
+            },
+            this.getStatistics()
+          );
         })
         .catch(err => {
           this.alertFunctionError();
@@ -51,137 +194,147 @@ class APIGeoloc extends Component {
     });
   };
 
-  getIsochrone = () => {
-    let center = undefined;
-    if (
-      this.props.profile === "cycling-regular" ||
-      this.props.profile === "foot-walking"
-    ) {
-      center = this.props.addressSociety;
-    } else {
-      center = this.props.addressSociety.reverse();
-    }
-    axios
-      .get(
-        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${center}&profile=${
-          this.props.profile
-        }&range_type=${this.props.rangeType}&range=${this.props.range}`
-      )
-      .then(result => {
-        let firstRes = result.data.features[0].geometry.coordinates;
-        let secondRes = result.data.features[1].geometry.coordinates;
-        let thirdRes = result.data.features[2].geometry.coordinates;
-        let firstPolygon = [];
-        let secondPolygon = [];
-        let thirdPolygon = [];
-        firstRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            firstPolygon = this.state.firstPolygon;
-            return firstPolygon.push(realLatLng);
-          });
-        });
-        secondRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            secondPolygon = this.state.secondPolygon;
-            return secondPolygon.push(realLatLng);
-          });
-        });
-        thirdRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            thirdPolygon = this.state.thirdPolygon;
-            return thirdPolygon.push(realLatLng);
-          });
-        });
-        this.setState({
-          firstPolygon: firstPolygon,
-          secondPolygon: secondPolygon,
-          thirdPolygon: thirdPolygon
-        });
-      })
-      .catch(err => {
-        this.alertFunctionError();
+  getStatistics = () => {
+    const allDistances = this.state.statsKm;
+    const allDurations = this.state.statsMin;
+    let countPersUnder5 = 0;
+    let countPers5To10 = 0;
+    let countPers10To15 = 0;
+    let countPers10To20 = 0;
+    let countPersOver15 = 0;
+    let countPersOver20 = 0;
+    if (this.props.parameter === "en voiture") {
+      allDistances.map(distance => {
+        if (distance <= 5) {
+          countPersUnder5 = countPersUnder5 + 1;
+        }
+        if (distance > 5 && distance <= 10) {
+          countPers5To10 = countPers5To10 + 1;
+        }
+        if (distance > 10 && distance <= 20) {
+          countPers10To20 = countPers10To20 + 1;
+        }
+        if (distance > 20) {
+          countPersOver20 = countPersOver20 + 1;
+        }
+        return distance;
       });
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To20 = (countPers10To20 * 100) / allDistances.length;
+      let percentOver20 = (countPersOver20 * 100) / allDistances.length;
+      this.setState({
+        nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
+        nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
+        nbPers10To20: countPers10To20,
+        percent10To20: Math.round(percent10To20),
+        nbPersOver20: countPersOver20,
+        percentOver20: Math.round(percentOver20)
+      });
+    } else {
+      allDurations.map(duration => {
+        if (duration <= 5) {
+          countPersUnder5 = countPersUnder5 + 1;
+        }
+        if (duration > 5 && duration <= 10) {
+          countPers5To10 = countPers5To10 + 1;
+        }
+        if (duration > 10 && duration <= 15) {
+          countPers10To15 = countPers10To15 + 1;
+        }
+        if (duration > 15) {
+          countPersOver15 = countPersOver15 + 1;
+        }
+        return duration;
+      });
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To15 = (countPers10To15 * 100) / allDistances.length;
+      let percentOver15 = (countPersOver15 * 100) / allDistances.length;
+      this.setState({
+        nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
+        nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
+        nbPers10To15: countPers10To15,
+        percent10To15: Math.round(percent10To15),
+        nbPersOver15: countPersOver15,
+        percentOver15: Math.round(percentOver15)
+      });
+    }
   };
 
   render() {
-    const defaultZoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
-    const societyPosition = this.props.addressSociety;
     const societyIcon = L.icon({
-      iconUrl: "./img/marker.png",
+      iconUrl: "./img/societyMarker.png",
       iconSize: [30, 30]
     });
     const employeeIcon = L.icon({
-      iconUrl: "./img/marker-icon-red.png",
+      iconUrl: "./img/employeeMarker.png",
       iconSize: [30, 30]
     });
-    const firstPolygon = [this.state.firstPolygon];
-    const secondPolygon = [this.state.secondPolygon];
-    const thirdPolygon = [this.state.thirdPolygon];
     return (
       <div>
-        <Container className="m-3">
-          <NotificationAlert ref="notificationAlertError" />
-          <h5>
-            <img
-              alt="step 1"
-              src="https://img.icons8.com/metro/1600/3-circle.png"
-              className="mr-2"
-              width="50"
-              height="50"
-            />
-            Analyse {this.props.title} {this.props.parameter} :
-          </h5>
-          <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
-            <i className="fa fa-map-marker" /> Géolocaliser mes salariés
-          </button>
+        <NotificationAlert ref="notificationAlertError" />
+        {this.state.isClicked === false ? (
           <button
-            className="btn text-white mt-4 mb-3 ml-3"
+            className="btn mt-4 mb-4 ml-3 geolocButton"
             onClick={this.getIsochrone}
           >
-            <i className="fa fa-map-o" /> Afficher la cartographie isochrone
-            <em>(cf. légende)</em>
+            Découvrir le résultat <i className={this.props.icon} />
           </button>
-          <Row>
-            <Col md={{ size: 12 }} className="ml-5">
-              {societyPosition.length === 0 ? (
-                <Map center={defaultPosition} zoom={defaultZoom}>
-                  <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                  />
-                </Map>
-              ) : (
-                <Map center={societyPosition} zoom={this.props.zoom}>
-                  <TileLayer
-                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                    url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                  />
-                  <Marker position={societyPosition} icon={societyIcon}>
-                    <Popup>
-                      <span>Société</span>
-                    </Popup>
-                  </Marker>
-                  {this.state.mapData.map(data => {
-                    return (
-                      <Marker
-                        position={data.marker}
-                        key={data.marker}
-                        icon={employeeIcon}
-                      />
-                    );
-                  })}
-                  <Polygon positions={firstPolygon} color="blue" />
-                  <Polygon positions={secondPolygon} color="red" />
-                  <Polygon positions={thirdPolygon} color="yellow" />
-                </Map>
-              )}
-            </Col>
-          </Row>
-        </Container>
+        ) : (
+          ""
+        )}
+
+        <Row>
+          <Col lg={{ size: 12 }}>
+            {this.props.addressSociety.length === 0 ? (
+              <Map center={defaultPosition} zoom={10}>
+                <TileLayer
+                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+              </Map>
+            ) : (
+              <Map center={this.props.addressSociety} zoom={10}>
+                <TileLayer
+                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={this.props.addressSociety} icon={societyIcon}>
+                  <Popup>
+                    <span>Société</span>
+                  </Popup>
+                </Marker>
+                {this.state.employeesMarkers.map(marker => {
+                  return (
+                    <Marker
+                      position={marker.position}
+                      key={marker.position}
+                      icon={employeeIcon}
+                    />
+                  );
+                })}
+                <Polygon
+                  positions={[this.state.firstPolygon]}
+                  color="rgb(55, 55, 226)"
+                />
+                <Polygon
+                  positions={[this.state.secondPolygon]}
+                  color="rgb(224, 55, 26)"
+                />
+                <Polygon
+                  positions={[this.state.thirdPolygon]}
+                  color="rgb(235, 235, 8)"
+                />
+              </Map>
+            )}
+          </Col>
+        </Row>
         <Container className="mt-3">
           <Row>
             <Col lg={{ size: 4 }}>
@@ -190,7 +343,7 @@ class APIGeoloc extends Component {
                 <ul className="list-unstyled">
                   <li>
                     <img
-                      src="./img/marker.png"
+                      src="./img/societyMarker.png"
                       alt="societyMarker"
                       width="30"
                       height="30"
@@ -200,7 +353,7 @@ class APIGeoloc extends Component {
                   </li>
                   <li>
                     <img
-                      src="./img/marker-icon-red.png"
+                      src="./img/employeeMarker.png"
                       alt="employeeMarker"
                       width="30"
                       height="30"
@@ -208,9 +361,9 @@ class APIGeoloc extends Component {
                     Salariés
                   </li>
                 </ul>
-                <b>
-                  {this.props.distance} {this.props.parameter} :
-                </b>
+                <h6>
+                  {this.props.legendTitle} <i className={this.props.icon} /> :
+                </h6>
                 <ul className="list-unstyled">
                   <li>
                     <span className="bluePolygon mr-3">=====</span>Inférieur à 5{" "}
@@ -229,45 +382,113 @@ class APIGeoloc extends Component {
             </Col>
             <Col lg={{ size: 8 }}>
               <div className="card mb-3">
-                {this.props.parameter === "en voiture" ? (
-                  <GeoStatistics
-                    employeePositions={this.state.mapData}
-                    societyPosition={societyPosition}
-                    measure="km"
-                    profile="driving-car"
-                    parameter="en voiture"
-                    title="Distance"
-                    glyphicon="fa fa-car"
-                  />
-                ) : (
-                  ""
-                )}
-                {this.props.parameter === "à vélo" ? (
-                  <GeoStatistics
-                    employeePositions={this.state.mapData}
-                    societyPosition={societyPosition}
-                    measure="minutes"
-                    profile="cycling-regular"
-                    parameter="à vélo"
-                    title="Temps de trajet"
-                    glyphicon="fa fa-bicycle"
-                  />
-                ) : (
-                  ""
-                )}
-                {this.props.parameter === "à pieds" ? (
-                  <GeoStatistics
-                    employeePositions={this.state.mapData}
-                    societyPosition={societyPosition}
-                    measure="minutes"
-                    profile="foot-walking"
-                    parameter="à pieds"
-                    title="Temps de trajet"
-                    glyphicon="fa fa-street-view"
-                  />
-                ) : (
-                  ""
-                )}
+                <Container className="statistics ml-lg-5">
+                  {this.props.parameter === "en voiture" ? (
+                    <div>
+                      <p>
+                        {this.props.statTitle} domicile-lieu de travail en
+                        moyenne :
+                        <br />
+                        <span className="stats">
+                          {this.state.average} {this.props.measure}
+                        </span>
+                      </p>
+                      <p>
+                        {this.props.statTitle} domicile-lieu de travail minimale
+                        :
+                        <br />
+                        <span className="stats">
+                          {this.state.min} {this.props.measure}
+                        </span>
+                      </p>
+                      <p>
+                        {this.props.statTitle} domicile-lieu de travail maximale
+                        :
+                        <br />
+                        <span className="stats">
+                          {this.state.max} {this.props.measure}
+                        </span>
+                      </p>
+                      <br />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <p>
+                    <img
+                      src="./img/right-arrow.png"
+                      alt="arrow"
+                      width="25"
+                      height="20"
+                      className="float-left mt-1 mr-1"
+                    />
+                    <b>
+                      Sur les {this.props.addressEmployees.length} salariés
+                      enregistrés, {this.state.employeesMarkers.length} ont été
+                      géolocalisés :
+                    </b>
+                  </p>
+                  <ul className="list-unstyled">
+                    <li className="p-1">
+                      {this.state.nbPersUnder5} salarié
+                      {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                      {this.state.percentUnder5}%) habite
+                      {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
+                      {this.props.measure === "km" ? " km " : " minutes "}
+                      {this.props.parameter} de l'entreprise.
+                    </li>
+                    <li className="p-1">
+                      {this.state.nbPers5To10} salarié
+                      {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                      {this.state.percent5To10}%) habite
+                      {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
+                      {this.props.measure === "km" ? " km " : " minutes "}
+                      {this.props.parameter} de l'entreprise.
+                    </li>
+                    <li className="p-1">
+                      {this.props.parameter === "en voiture"
+                        ? this.state.nbPers10To20
+                        : this.state.nbPers10To15}{" "}
+                      salarié
+                      {this.state.nbPers10To20 > 1 ||
+                      this.state.nbPers10To15 > 1
+                        ? "s"
+                        : ""}{" "}
+                      {this.props.parameter === "en voiture"
+                        ? `(${this.state.percent10To20}%)`
+                        : `(${this.state.percent10To15}%)`}{" "}
+                      habite
+                      {this.state.nbPers10To20 > 1 ||
+                      this.state.nbPers10To15 > 1
+                        ? "nt"
+                        : ""}{" "}
+                      entre 10 et
+                      {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
+                      {this.props.parameter} de l'entreprise.
+                    </li>
+                    <li className="p-1">
+                      {this.props.parameter === "en voiture"
+                        ? this.state.nbPersOver20
+                        : this.state.nbPersOver15}{" "}
+                      salarié
+                      {this.state.nbPersOver20 > 1 ||
+                      this.state.nbPersOver15 > 1
+                        ? "s"
+                        : ""}{" "}
+                      {this.props.parameter === "en voiture"
+                        ? `(${this.state.percentOver20}%)`
+                        : `(${this.state.percentOver15}%)`}{" "}
+                      habite
+                      {this.state.nbPersOver20 > 1 ||
+                      this.state.nbPersOver15 > 1
+                        ? "nt"
+                        : ""}{" "}
+                      à plus de
+                      {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
+                      {this.props.parameter} de l'entreprise.
+                    </li>
+                  </ul>
+                </Container>
               </div>
             </Col>
           </Row>
