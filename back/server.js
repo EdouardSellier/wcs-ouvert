@@ -177,7 +177,6 @@ app.get("/admin/list/survey", (req, res) => {
       if (err) {
         res.status(500).send("The database crashed ! The reason is " + err);
       } else {
-        console.log(results);
         res.json(results);
       }
     }
