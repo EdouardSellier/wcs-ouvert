@@ -1,3 +1,13 @@
 .espaceAdmin {
-  min-height: 80vh;
+  min-height: 65vh;
+}
+
+.nbSociety {
+  font-size: 1.6em;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.adminStat {
+  text-align: left;
 }

@@ -1,3 +1,20 @@
 .listeEntreprises {
-  min-height: 80vh;
+  min-height: 100vh;
+}
+
+.arrowRight {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.arrowLeft {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.getSurveyPage {
+  background: none;
+  border: none;
 }
