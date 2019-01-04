@@ -1,16 +1,37 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
+import axios from "axios";
+import "./css/ListeEnquetesRH.css";
 
 class ListeEnquetesRH extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      allSurveyName: []
+    };
   }
 
   handleSubmit = event => {
     event.preventDefault();
     this.props.history.push("/monespace");
+  };
+
+  getSurveyName = () => {
+    axios
+      .get("http://localhost:8080/rh/list/survey")
+      .then(res => {
+        this.setState({
+          allSurveyName: res.data
+        });
+      })
+      .catch(error => {
+        console.log("Fail: " + error);
+      });
+  };
+
+  componentDidMount = () => {
+    this.getSurveyName();
   };
 
   render() {
@@ -24,7 +45,7 @@ class ListeEnquetesRH extends Component {
                 className="mt-2 btn text-white"
                 onClick={this.handleSubmit}
               >
-                Revenir à l'accueil
+                <i className="fa fa-home" /> Revenir à l'accueil
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
@@ -34,61 +55,53 @@ class ListeEnquetesRH extends Component {
         </Container>
         <Container className="mt-4">
           <p>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Fuga,
-            sequi nobis et fugiat ullam saepe error. Laborum sit eligendi, quas
-            asperiores quod in iusto reiciendis voluptatum accusamus id, veniam
-            sunt.
+            Ici, vous pouvez sélectionner une enquête et consulter les résultats
+            ou connaître le taux de participation si elle n'est pas encore
+            terminée.
           </p>
-          <select>
-            <option>Sélectionner une enquête</option>
-            <option>Enquête n°1 pour le site de Lille</option>
-            <option>Enquête n°2 pour le site de Reims</option>
-            <option>Enquête n°3 pour le site de Paris</option>
-          </select>
+          <Col lg={{ size: 6, offset: 3 }}>
+            <select className="form-control">
+              <option>Sélectionner une enquête</option>
+              {this.state.allSurveyName.map(survey => {
+                return (
+                  <option key={survey.survey_name}>{survey.survey_name}</option>
+                );
+              })}
+            </select>
+          </Col>
         </Container>
         <Container className="mt-4 mb-4">
           <h5>Que souhaitez-vous faire pour cette enquête ?</h5>
-          <Row className="justify-content-between mt-4">
-            <Col lg={{ size: 3 }}>
+          <Row className="mt-4">
+            <Col lg={{ size: 5, offset: 1 }}>
               <div className="card">
-                <div className="card-header">Consulter le sondage</div>
-                <div className="card-body">
-                  <Link to="/sondage">
-                    <img
-                      src="https://image.freepik.com/iconen-gratis/het-invoeren-van-tekst-op-browser-cirkelsymbool_318-57678.jpg"
-                      alt="icon"
-                      width="180"
-                      height="180"
-                    />
-                  </Link>
+                <div className="card-header">
+                  <h5>Consulter les résultats</h5>
                 </div>
-              </div>
-            </Col>
-            <Col lg={{ size: 3 }}>
-              <div className="card">
-                <div className="card-header">Consulter les résultats</div>
                 <div className="card-body">
                   <Link to="/resultat">
                     <img
-                      src="https://static.thenounproject.com/png/580745-200.png"
+                      src="./img/surveyResults.jpg"
                       alt="icon"
-                      width="170"
-                      height="170"
+                      width="150"
+                      height="150"
                     />
                   </Link>
                 </div>
               </div>
             </Col>
-            <Col lg={{ size: 3 }}>
+            <Col lg={{ size: 5 }}>
               <div className="card">
-                <div className="card-header">Demander de l'assistance</div>
+                <div className="card-header">
+                  <h5>Demander de l'assistance</h5>
+                </div>
                 <div className="card-body">
                   <Link to="/assistance">
                     <img
-                      src="http://cdn.onlinewebfonts.com/svg/img_571111.png"
+                      src="./img/assistance.jpg"
                       alt="icon"
-                      width="180"
-                      height="180"
+                      width="150"
+                      height="150"
                     />
                   </Link>
                 </div>

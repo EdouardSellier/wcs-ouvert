@@ -121,8 +121,7 @@ class Inscription extends React.Component {
       !fields["confirmPassword"]
     ) {
       formIsValid = false;
-      errors["empty"] =
-        "Merci de renseigner tous les champs accompagnés d'une étoile *";
+      errors["empty"] = "Merci de renseigner tous les champs";
     }
     if (fields["confirmMail"] !== fields["mail"]) {
       formIsValid = false;
@@ -144,33 +143,29 @@ class Inscription extends React.Component {
     return (
       <div>
         <Header />
-        <div
-          id="main-registration-container"
-          className="ml-lg-5 mr-lg-5 mt-lg-2"
-        >
-          <h2>Inscription</h2>
+        <div className="ml-lg-5 mr-lg-5 mt-lg-2 mb-lg-5">
           <NotificationAlert ref="notificationAlertSuccess" />
           <NotificationAlert ref="notificationAlertError" />
-          <div id="register">
+          <div>
             <form
               method="post"
               name="userRegistrationForm"
               onSubmit={this.submitUserRegistrationForm}
+              className="mt-5 mb-4 card shadow inscriptionForm"
             >
+              <h2 className="mt-3 mb-5 text-center">Inscription</h2>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Raison sociale *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="text"
                     name="company_name"
                     onChange={this.handleChange}
                     value={this.state.fields.company_name || ""}
-                    placeholder="Nom de la société"
+                    placeholder="Raison sociale"
                     className="form-control"
                   />
                 </Col>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>SIRET *</label>
+                <Col lg={{ size: 5 }}>
                   <input
                     type="text"
                     name="siret"
@@ -182,67 +177,61 @@ class Inscription extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Nom *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="text"
                     name="lastname"
                     onChange={this.handleChange}
                     value={this.state.fields.lastname || ""}
-                    placeholder="ex: Dupont"
+                    placeholder="Nom"
                     className="form-control"
                   />
                 </Col>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Prénom *</label>
+                <Col lg={{ size: 5 }}>
                   <input
                     type="text"
                     name="firstname"
                     onChange={this.handleChange}
                     value={this.state.fields.firstname || ""}
-                    placeholder="ex: Jean"
+                    placeholder="Prénom"
                     className="form-control"
                   />
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Adresse du siège *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="text"
                     name="company_address"
                     onChange={this.handleChange}
                     value={this.state.fields.company_address || ""}
-                    placeholder="ex: 1 rue de Paris 59000 Lille"
+                    placeholder="Adresse de la société"
                     className="form-control"
                   />
                 </Col>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Adresse de facturation</label>
+                <Col lg={{ size: 5 }}>
                   <input
                     type="text"
                     name="company_address2"
                     onChange={this.handleChange}
                     value={this.state.fields.company_address2 || ""}
-                    placeholder="Si différente de l'adresse du siège"
+                    placeholder="Adresse de facturation si différente"
                     className="form-control"
                   />
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Numéro de téléphone *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="text"
                     name="phone_number"
                     onChange={this.handleChange}
                     value={this.state.fields.phone_number || ""}
-                    placeholder="ex: 0601020304"
+                    placeholder="N° de téléphone"
                     className="form-control"
                   />
                 </Col>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Nombre de sites *</label>
+                <Col lg={{ size: 5 }}>
                   <input
                     type="text"
                     name="nb_sites"
@@ -254,57 +243,61 @@ class Inscription extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Adresse e-mail *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="text"
                     name="mail"
                     onChange={this.handleChange}
                     value={this.state.fields.mail || ""}
-                    placeholder="ex: dupont.jean@mail.com"
+                    placeholder="Adresse e-mail"
                     className="form-control"
                   />
                 </Col>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Confirmation adresse e-mail *</label>
+                <Col lg={{ size: 5 }}>
                   <input
                     type="email"
                     name="confirmMail"
                     onChange={this.handleChange}
                     value={this.state.fields.confirmMail || ""}
-                    placeholder="Confirmez votre adresse e-mail"
+                    placeholder="Confirmation de l'adresse e-mail"
                     className="form-control"
                   />
-                  <div className="errorMsg">
-                    {this.state.errors.confirmMail}
-                  </div>
+                  {this.state.errors.confirmMail !== undefined ? (
+                    <div className="errorMsg">
+                      {this.state.errors.confirmMail}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 6 }} xs={{ size: 12 }}>
-                  <label>Mot de passe *</label>
+                <Col lg={{ size: 5, offset: 1 }}>
                   <input
                     type="password"
                     name="password"
                     onChange={this.handleChange}
                     value={this.state.fields.password || ""}
-                    placeholder="Choisissez un mot de passe sécurisé"
+                    placeholder="Mot de passe"
                     className="form-control"
                   />
                 </Col>
-                <Col>
-                  <label>Confirmation mot de passe *</label>
+                <Col lg={{ size: 5 }} xs={{ size: 12 }}>
                   <input
                     type="password"
                     name="confirmPassword"
                     onChange={this.handleChange}
                     value={this.state.fields.confirmPassword || ""}
-                    placeholder="Confirmez votre mot de passe"
+                    placeholder="Confirmation du mot de passe"
                     className="form-control"
                   />
-                  <div className="errorMsg">
-                    {this.state.errors.confirmPassword}
-                  </div>
+                  {this.state.errors.confirmPassword !== undefined ? (
+                    <div className="errorMsg">
+                      {this.state.errors.confirmPassword}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </Col>
               </Row>
               <Row>
@@ -313,13 +306,9 @@ class Inscription extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col
-                  lg={{ size: 4, offset: 4 }}
-                  md={{ size: 3, offset: 4 }}
-                  sm={{ size: 10 }}
-                >
+                <Col lg={{ size: 4, offset: 5 }}>
                   <button className="btn text-white mb-3">
-                    Valider mon inscription
+                    Valider mon inscription <i className="fa fa-check" />
                   </button>
                 </Col>
               </Row>

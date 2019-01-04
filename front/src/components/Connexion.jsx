@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import "./css/Connexion.css";
-import { Row, Col } from "reactstrap";
+import { Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 
@@ -58,20 +58,24 @@ class Connexion extends Component {
         <Header />
         <div className="connexion mt-3">
           <NotificationAlert ref="notificationAlert" />
-          <h2>Connexion à mon espace</h2>
-          <Row>
-            <Col
-              lg={{ size: 6, offset: 3 }}
-              md={{ size: 8, offset: 2 }}
-              sm={{ size: 10, offset: 1 }}
-              xs={{ size: 10, offset: 1 }}
+          <Col
+            lg={{ size: 6, offset: 3 }}
+            md={{ size: 8, offset: 2 }}
+            sm={{ size: 10, offset: 1 }}
+            xs={{ size: 10, offset: 1 }}
+          >
+            <form
+              className="mt-5 formContainer card shadow"
+              onSubmit={this.isLoggedIn}
             >
-              <form
-                className="mt-5 formContainer shadow"
-                onSubmit={this.isLoggedIn}
-              >
-                <div className="form-group">
-                  <label>Adresse e-mail</label>
+              <h2 className="mt-2 mb-5 text-center">Connexion à mon espace</h2>
+              <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text form-control bg-transparent">
+                      <i className="fa fa-envelope" />
+                    </span>
+                  </div>
                   <input
                     type="email"
                     name="mail"
@@ -83,8 +87,14 @@ class Connexion extends Component {
                     value={this.state.mail}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Mot de passe</label>
+              </div>
+              <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text form-control bg-transparent">
+                      <i className="fa fa-lock passwordIcon" />
+                    </span>
+                  </div>
                   <input
                     type="password"
                     name="password"
@@ -96,12 +106,12 @@ class Connexion extends Component {
                     value={this.state.password}
                   />
                 </div>
-                <button type="submit" className="btn text-white mt-3">
-                  Me connecter
-                </button>
-              </form>
-            </Col>
-          </Row>
+              </div>
+              <button type="submit" className="btn text-white mt-3 loginButton">
+                Me connecter
+              </button>
+            </form>
+          </Col>
         </div>
       </div>
     );

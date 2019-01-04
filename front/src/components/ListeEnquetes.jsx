@@ -50,9 +50,17 @@ class ListeEnquetes extends Component {
       .then(result => {
         let arrayShown = result.data;
         let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
-        switch (this.state.currentPage) {
+        arrayShown = arrayShown.slice(
+          this.state.currentPage * this.state.isSelected,
+          this.state.currentPage * this.state.isSelected + this.state.isSelected
+        );
+        /*switch (this.state.currentPage) {
           case 1:
-            arrayShown = arrayShown.slice(0, this.state.isSelected);
+            arrayShown = arrayShown.slice(
+              this.state.currentPage * this.state.isSelected,
+              this.state.currentPage * this.state.isSelected +
+                this.state.isSelected
+            );
             break;
           case 2:
             arrayShown = arrayShown.slice(
@@ -62,22 +70,26 @@ class ListeEnquetes extends Component {
             break;
           case 3:
             arrayShown = arrayShown.slice(
-              this.state.isSelected * 2,
+              this.state.isSelected + this.state.isSelected,
               this.state.isSelected + this.state.isSelected * 2
             );
             break;
           case 4:
             arrayShown = arrayShown.slice(
-              this.state.isSelected * 2,
+              this.state.isSelected + this.state.isSelected,
               this.state.isSelected + this.state.isSelected * 2
             );
             break;
           case 5:
-            arrayShown = arrayShown.slice(this.state.isSelected);
+            arrayShown = arrayShown.slice(
+              this.state.isSelected + this.state.isSelected,
+              this.state.isSelected + this.state.isSelected * 2
+            );
             break;
           default:
             arrayShown = arrayShown.slice(0, this.state.isSelected);
-        }
+        }*/
+
         this.setState({
           surveyList: arrayShown,
           nbPages: nbPages
@@ -105,7 +117,10 @@ class ListeEnquetes extends Component {
   };
 
   changePageDown = () => {
-    if (this.state.currentPage >= 2 && this.state.currentPage <= 5) {
+    if (
+      this.state.currentPage >= 2 &&
+      this.state.currentPage <= this.state.nbPages
+    ) {
       this.setState({
         currentPage: this.state.currentPage - 1
       });
@@ -129,7 +144,6 @@ class ListeEnquetes extends Component {
     let columns = [
       { key: "user_id", label: "Société" },
       { key: "survey_name", label: "Nom de l'enquête" },
-      { key: "survey_address", label: "Adresse postale" },
       {
         key: "starting_date",
         label: "Début de l'enquête",

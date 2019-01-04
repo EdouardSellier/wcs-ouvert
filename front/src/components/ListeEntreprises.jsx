@@ -71,7 +71,12 @@ class ListeEntreprises extends Component {
       .then(result => {
         let arrayShown = result.data;
         let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
-        switch (this.state.currentPage) {
+        arrayShown = arrayShown.slice(
+          this.state.currentPage * this.state.isSelected,
+          this.state.currentPage * this.state.isSelected + this.state.isSelected
+        );
+        console.log(arrayShown);
+        /*switch (this.state.currentPage) {
           case 1:
             arrayShown = arrayShown.slice(0, this.state.isSelected);
             break;
@@ -98,7 +103,7 @@ class ListeEntreprises extends Component {
             break;
           default:
             arrayShown = arrayShown.slice(0, this.state.isSelected);
-        }
+        }*/
         this.setState({
           societyList: arrayShown,
           nbPages: nbPages
@@ -184,6 +189,7 @@ class ListeEntreprises extends Component {
         &times;
       </button>
     );
+
     let columns = [
       {
         key: "company_name",

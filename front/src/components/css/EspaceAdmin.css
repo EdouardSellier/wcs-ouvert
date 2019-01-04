@@ -3,7 +3,9 @@
 }
 
 .nbSociety {
-  font-size: 1.5em;
+  font-size: 1.6em;
+  font-weight: bold;
+  padding-right: 10px;
 }
 
 .adminStat {
