@@ -85,7 +85,7 @@ app.post("/connexion", (req, res) => {
 app.post("/geolocation", (req, res) => {
   let data = req.body.society_position.reverse();
   let societyPosition = JSON.stringify(data);
-  let employeesPositions = req.body.employees_positions;
+  const employeesPositions = req.body.employees_positions;
   const formData = {
     society_position: societyPosition,
     employees_positions: employeesPositions
@@ -111,6 +111,46 @@ app.post("/rh/survey", (req, res) => {
     } else {
       res.status(200).send("SUCCESS");
     }
+  });
+});
+
+app.get("/rh/list/survey", (req, res) => {
+  connection.query("SELECT survey_name FROM survey", (err, results) => {
+    if (err) {
+      res.status(500).send("The database crashed ! The reason is " + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post("/rh/send/survey", (req, res) => {
+  const mailsArray = req.body.mails;
+  mailsArray.map(mail => {
+    let tokenSurvey = uuidv4();
+    nodemailer.createTestAccount((err, account) => {
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: userTransporter.user,
+          pass: userTransporter.pass
+        }
+      });
+      let mailOptions = {
+        from: "no-reply@ouvert.com",
+        to: mail,
+        subject: "Sondage de mobilité ✔",
+        html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      };
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          res.status(500).send("An error occured during mail sending.");
+        }
+        res.status(200).send("SUCCESS");
+      });
+    });
   });
 });
 
@@ -172,7 +212,7 @@ app.get("/admin/list/society", (req, res) => {
 
 app.get("/admin/list/survey", (req, res) => {
   connection.query(
-    "SELECT survey_name, survey_address, starting_date, ending_date, user_id FROM survey",
+    "SELECT survey_name, starting_date, ending_date, user_id FROM survey",
     (err, results) => {
       if (err) {
         res.status(500).send("The database crashed ! The reason is " + err);
