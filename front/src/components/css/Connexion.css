@@ -1,15 +1,25 @@
 .connexion {
-  min-height: 80vh;
-}
-
-.homeSlogan {
-  color: #38909d;
-  font-size: 1.5em;
-  padding-top: 5px;
+  min-height: 70vh;
 }
 
 .formContainer {
   border-radius: 8px;
   padding: 20px;
-  margin-bottom: 20px;
+}
+
+.input-group-text {
+  width: 40px;
+}
+
+.input-group {
+  width: 80%;
+  margin: auto;
+}
+
+.loginButton {
+  margin: auto;
+}
+
+.passwordIcon {
+  font-size: 1.2em;
 }

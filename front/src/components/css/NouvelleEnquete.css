@@ -9,5 +9,10 @@
 }
 
 .newSurveyButton {
-  background-color: #38909d;
+  background-color: #dbddf0;
+  color: rgb(41, 39, 39);
+}
+
+.description {
+  text-align: left;
 }

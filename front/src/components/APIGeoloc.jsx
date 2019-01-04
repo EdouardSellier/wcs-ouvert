@@ -293,14 +293,22 @@ class APIGeoloc extends Component {
         <Row>
           <Col lg={{ size: 12 }}>
             {this.props.addressSociety.length === 0 ? (
-              <Map center={defaultPosition} zoom={10}>
+              <Map
+                center={defaultPosition}
+                zoom={10}
+                className="rounded shadow mb-4"
+              >
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
               </Map>
             ) : (
-              <Map center={this.props.addressSociety} zoom={10}>
+              <Map
+                center={this.props.addressSociety}
+                zoom={10}
+                className="rounded shadow mb-4"
+              >
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
