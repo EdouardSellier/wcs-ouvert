@@ -13,17 +13,30 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// CORS management
-app.use(cors());
-
-// -------------------------------------------------------------- PUBLIC ROUTES
-// Login, signup, everything auth-related
-app.use("/auth", require("./auth"));
-
-// Insert here all your public routes. Here is an example
-app.get("/", (req, res) => {
-  // console.log(`Request for 'GET /'`);
-  res.status(200).send("Hello world !");
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+app.post("/inscription", (req, res) => {
+  if (req.body) {
+    bcrypt.hash(req.body.password, 10, (err, hash) => {
+      req.body.password = hash;
+      const formData = req.body;
+      connection.query("INSERT INTO user SET ?", formData, (err, results) => {
+        if (err) {
+          res.status(500).send("The database crashed ! The reason is " + err);
+        } else {
+          res.status(201).send("SUCCESS");
+        }
+      });
+    });
+  } else {
+    res.status(403).send("You must provide all informations !");
+  }
 });
 
 // -------------------------------------------------------- AUTHENTICATION WALL

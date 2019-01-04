@@ -4,7 +4,8 @@ const questions = [
     type: "option",
     label: "Vous êtes :",
     possibilities: ["Un homme", "Une femme", "Je ne souhaite pas répondre"],
-    index: "genre"
+    index: "genre",
+    number: 1
   },
   {
     id: "age",
@@ -17,7 +18,8 @@ const questions = [
       "56 ans ou plus",
       "Je ne souhaite pas répondre"
     ],
-    index: "age"
+    index: "age",
+    number: 2
   },
   {
     id: "principalTransport",
@@ -36,7 +38,8 @@ const questions = [
       "Deux-roues motorisés",
       "Marche à pied"
     ],
-    index: "principalTransport"
+    index: "principalTransport",
+    number: 3
   },
   {
     id: "ocasionalyTransport",
@@ -55,7 +58,8 @@ const questions = [
       "Deux-roues motorisés",
       "Marche à pied"
     ],
-    index: "ocasionalyTransport"
+    index: "ocasionalyTransport",
+    number: 4
   },
   {
     id: "reasonTransport",
@@ -74,7 +78,8 @@ const questions = [
       "Indépendance",
       "Autre raison"
     ],
-    index: "reasonTransport"
+    index: "reasonTransport",
+    number: 5
   },
 
   {
@@ -82,14 +87,16 @@ const questions = [
     type: "number",
     label: "Quelle distance (en km) parcourez-vous pour :",
     possibilities: [],
-    index: "distanceKlm"
+    index: "distanceKlm",
+    number: 6
   },
   {
     id: "distanceMin",
     type: "number",
     label: "Combien de temps (en minutes) mettez-vous pour :",
     possibilities: [],
-    index: "distanceMin"
+    index: "distanceMin",
+    number: 7
   },
 
   {
@@ -97,7 +104,8 @@ const questions = [
     type: "number",
     label: "Quel budget (en euros) dépensez-vous pour :",
     possibilities: [],
-    index: "distanceMoney"
+    index: "distanceMoney",
+    number: 8
   },
   {
     id: "elements",
@@ -112,7 +120,8 @@ const questions = [
       "Déplacements professionnels fréquents",
       "Autre :"
     ],
-    index: "elements"
+    index: "elements",
+    number: 9
   },
   {
     id: "parkingPlace",
@@ -124,7 +133,8 @@ const questions = [
       "Non",
       "Je ne me rends pas sur mon lieu de travail en voiture"
     ],
-    index: "parkingPlace"
+    index: "parkingPlace",
+    number: 10
   },
   {
     id: "midday",
@@ -136,7 +146,8 @@ const questions = [
       "A mon domicile",
       "A l’extérieur"
     ],
-    index: "midday"
+    index: "midday",
+    number: 11
   },
   {
     id: "frequencyMidday",
@@ -150,7 +161,8 @@ const questions = [
       "2 à 4 fois par semaine",
       "Tous les jours"
     ],
-    index: "frequencyMidday"
+    index: "frequencyMidday",
+    number: 12
   },
   {
     id: "transportMidday",
@@ -170,7 +182,8 @@ const questions = [
       "Deux-roues motorisés",
       "Marche à pied"
     ],
-    index: "transportMidday"
+    index: "transportMidday",
+    number: 13
   },
   {
     id: "frequencyPro",
@@ -185,7 +198,8 @@ const questions = [
       "1 à 2 fois par semaine",
       "Plus de 2 fois par semaine"
     ],
-    index: "frequencyPro"
+    index: "frequencyPro",
+    number: 14
   },
   {
     id: "distancePro",
@@ -200,7 +214,8 @@ const questions = [
       "Entre 30 et 50 km",
       "Plus de 50 km"
     ],
-    index: "distancePro"
+    index: "distancePro",
+    number: 15
   },
   {
     id: "deplacementPro",
@@ -219,7 +234,8 @@ const questions = [
       "Deux-roues motorisés",
       "Marche à pied"
     ],
-    index: "deplacementPro"
+    index: "deplacementPro",
+    number: 16
   },
   {
     id: "reasonPersoCar",
@@ -234,7 +250,8 @@ const questions = [
       "Aucune raison particulière",
       "Je n’utilise pas ma voiture personnelle pour les déplacements professionnels"
     ],
-    index: "reasonPersoCar"
+    index: "reasonPersoCar",
+    number: 17
   },
   {
     id: "deplacementMethodPro",
@@ -249,7 +266,8 @@ const questions = [
       "Mes contraintes (logement, obligations familiales…) ne me permettent pas d’utiliser un autre mode de déplacement que la voiture",
       "Je n’ai pas envie de changer mes habitudes de déplacements"
     ],
-    index: "deplacementMethodPro"
+    index: "deplacementMethodPro",
+    number: 18
   },
   {
     id: "communTransport",
@@ -263,7 +281,8 @@ const questions = [
       "Un abonnement à une offre de transports en commun moins onéreuse",
       "Autre :"
     ],
-    index: "communTransport"
+    index: "communTransport",
+    number: 19
   },
   {
     id: "bike",
@@ -282,7 +301,8 @@ const questions = [
       "Autre :",
       "Rien, je ne souhaite pas pédaler"
     ],
-    index: "bike"
+    index: "bike",
+    number: 20
   },
   {
     id: "carpooling",
@@ -297,7 +317,8 @@ const questions = [
       "Autre :",
       "Rien, je ne souhaite pas covoiturer "
     ],
-    index: "carpooling"
+    index: "carpooling",
+    number: 21
   },
   {
     id: "otherThanCar",
@@ -305,7 +326,8 @@ const questions = [
     label:
       "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
     possibilities: [],
-    index: "otherThanCar"
+    index: "otherThanCar",
+    number: 22
   },
   {
     id: "commentary",
@@ -313,7 +335,8 @@ const questions = [
     label:
       "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
     possibilities: [],
-    index: "commentary"
+    index: "commentary",
+    number: 23
   }
 ];
 
