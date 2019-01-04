@@ -1,18 +1,15 @@
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const {
-  Strategy: JWTStrategy,
-  ExtractJwt: ExtractJWT
-} = require("passport-jwt");
-const mysql = require("mysql");
-const bcrypt = require("bcrypt");
-const { jwtSecret, dbHandle } = require("./conf");
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = require('passport-jwt');
+const mysql = require('mysql');
+const bcrypt = require('bcrypt');
+const { jwtSecret, dbHandle } = require('./conf');
 
 passport.use(
   new LocalStrategy(
     {
-      usernameField: "mail",
-      passwordField: "password"
+      usernameField: 'mail',
+      passwordField: 'password'
     },
     (mail, password, callback) => {
       dbHandle.query(
@@ -32,11 +29,11 @@ passport.use(
                 return callback(
                   null,
                   { id: user.id, username: user.mail },
-                  { message: "Logged In Successfully" }
+                  { message: 'Logged In Successfully' }
                 );
               }
               return callback(null, false, {
-                message: "Incorrect username or password."
+                message: 'Incorrect username or password.'
               });
             });
           }
