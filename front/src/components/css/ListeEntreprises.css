@@ -18,3 +18,7 @@
   background: none;
   border: none;
 }
+
+.paymentButton {
+  width: 90px;
+}

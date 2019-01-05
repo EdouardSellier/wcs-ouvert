@@ -7,7 +7,7 @@ import NotificationAlert from "react-notification-alert";
 
 const errorMsg = {
   place: "tr",
-  message: "La liste ne peut pas être affichée.",
+  message: "La liste ne peut pas être affichée pour l'instant.",
   type: "danger",
   autoDismiss: 4
 };
@@ -18,8 +18,8 @@ class ListeEnquetes extends Component {
     this.state = {
       surveyList: [],
       currentPage: 1,
-      nbPages: 1,
-      changePage: false,
+      nbPages: 0,
+      nextPage: 0,
       isSelected: 5
     };
   }
@@ -45,95 +45,76 @@ class ListeEnquetes extends Component {
   };
 
   getList = () => {
-    axios
-      .get("http://localhost:8080/admin/list/survey")
-      .then(result => {
-        let arrayShown = result.data;
-        let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
-        arrayShown = arrayShown.slice(
-          this.state.currentPage * this.state.isSelected,
-          this.state.currentPage * this.state.isSelected + this.state.isSelected
-        );
-        /*switch (this.state.currentPage) {
-          case 1:
-            arrayShown = arrayShown.slice(
-              this.state.currentPage * this.state.isSelected,
-              this.state.currentPage * this.state.isSelected +
-                this.state.isSelected
-            );
-            break;
-          case 2:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected,
-              this.state.isSelected * 2
-            );
-            break;
-          case 3:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 4:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 5:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          default:
-            arrayShown = arrayShown.slice(0, this.state.isSelected);
-        }*/
-
+    let startPage = 0 + this.state.nextPage;
+    let body = {
+      start: startPage,
+      limit: this.state.isSelected
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/admin/list/survey",
+      data: body
+    })
+      .then(res => {
+        let arrayShown = res.data.data;
+        let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
           surveyList: arrayShown,
           nbPages: nbPages
         });
       })
-      .catch(err => {
+      .catch(error => {
         this.alertFunctionError();
       });
   };
 
+  componentDidMount = () => {
+    this.getList();
+  };
+
+  handleChangePage = currentPage => {
+    this.getList(currentPage);
+    this.setState({
+      currentPage
+    });
+  };
+
   changePageUp = () => {
-    if (
-      this.state.currentPage >= 1 &&
-      this.state.currentPage < this.state.nbPages
-    ) {
-      this.setState({
-        currentPage: this.state.currentPage + 1
-      });
-      this.getList();
-    }
+    let newPage =
+      parseInt(this.state.nextPage) + parseInt(this.state.isSelected);
+    this.setState(
+      {
+        currentPage: this.state.currentPage + 1,
+        nextPage: newPage
+      },
+      () => {
+        this.getList();
+      }
+    );
   };
 
   isDisabledUpButton = () => {
-    return this.state.currentPage !== 1;
+    return this.state.currentPage > 1;
   };
 
   changePageDown = () => {
-    if (
-      this.state.currentPage >= 2 &&
-      this.state.currentPage <= this.state.nbPages
-    ) {
-      this.setState({
-        currentPage: this.state.currentPage - 1
-      });
-      this.getList();
+    let newPage =
+      parseInt(this.state.nextPage) - parseInt(this.state.isSelected);
+    if (this.state.currentPage > 1) {
+      this.setState(
+        {
+          currentPage: this.state.currentPage - 1,
+          nextPage: newPage
+        },
+        () => {
+          this.getList();
+        }
+      );
     }
   };
 
   isDisabledDownButton = () => {
-    return this.state.currentPage !== this.state.nbPages;
-  };
-
-  componentDidMount = () => {
-    this.getList();
+    return this.state.currentPage < this.state.nbPages;
   };
 
   getSocietyListPage = () => {

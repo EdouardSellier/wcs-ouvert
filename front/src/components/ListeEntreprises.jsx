@@ -35,9 +35,12 @@ class ListeEntreprises extends Component {
     this.state = {
       societyList: [],
       currentPage: 1,
-      nbPages: 1,
-      modal: false,
-      isSelected: 5
+      nbPages: 0,
+      nextPage: 0,
+      modalAddPayment: false,
+      modalRemovePayment: false,
+      isSelected: 5,
+      currentCell: []
     };
   }
 
@@ -66,51 +69,26 @@ class ListeEntreprises extends Component {
   };
 
   getList = () => {
-    axios
-      .get("http://localhost:8080/admin/list/society")
-      .then(result => {
-        let arrayShown = result.data;
-        let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
-        arrayShown = arrayShown.slice(
-          this.state.currentPage * this.state.isSelected,
-          this.state.currentPage * this.state.isSelected + this.state.isSelected
-        );
-        console.log(arrayShown);
-        /*switch (this.state.currentPage) {
-          case 1:
-            arrayShown = arrayShown.slice(0, this.state.isSelected);
-            break;
-          case 2:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected,
-              this.state.isSelected * 2
-            );
-            break;
-          case 3:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected * 2,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 4:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected * 2,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 5:
-            arrayShown = arrayShown.slice(this.state.isSelected);
-            break;
-          default:
-            arrayShown = arrayShown.slice(0, this.state.isSelected);
-        }*/
+    let startPage = 0 + this.state.nextPage;
+    let body = {
+      start: startPage,
+      limit: this.state.isSelected
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/admin/list/society",
+      data: body
+    })
+      .then(res => {
+        let arrayShown = res.data.data;
+        let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
           societyList: arrayShown,
           nbPages: nbPages
         });
       })
-      .catch(err => {
-        this.alertFunctionError();
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -118,77 +96,228 @@ class ListeEntreprises extends Component {
     this.getList();
   };
 
-  toggle = () => {
-    this.setState({
-      modal: !this.state.modal
-    });
-  };
-
-  hasPaid = columnKey => {
-    this.state.societyList.map(society => {
-      if (columnKey.id === society.id) {
-        let body = {
-          id: society.id,
-          mail: society.mail,
-          has_paid: 1
-        };
-        return axios({
-          method: "post",
-          url: "http://localhost:8080/admin/payment",
-          data: body
-        })
-          .then(res => {
-            if (res.data === "SUCCESS") {
-              this.getList();
-            }
-          })
-          .catch(error => {
-            this.alertFunctionErrorPayment();
-          });
-      }
-      return society;
-    });
-  };
-
   changePageUp = () => {
-    if (
-      this.state.currentPage >= 1 &&
-      this.state.currentPage < this.state.nbPages
-    ) {
-      this.setState({
-        currentPage: this.state.currentPage + 1
-      });
-      this.getList();
-    }
+    let newPage =
+      parseInt(this.state.isSelected) + parseInt(this.state.nextPage);
+    this.setState(
+      {
+        currentPage: this.state.currentPage + 1,
+        nextPage: newPage
+      },
+      () => {
+        this.getList();
+      }
+    );
   };
 
   isDisabledUpButton = () => {
-    return this.state.currentPage !== 1;
+    return this.state.currentPage > 1;
   };
 
   changePageDown = () => {
-    if (this.state.currentPage >= 2 && this.state.currentPage <= 5) {
-      this.setState({
-        currentPage: this.state.currentPage - 1
-      });
-      this.getList();
+    let newPage =
+      parseInt(this.state.nextPage) - parseInt(this.state.isSelected);
+    if (this.state.currentPage > 1) {
+      this.setState(
+        {
+          currentPage: this.state.currentPage - 1,
+          nextPage: newPage
+        },
+        () => {
+          this.getList();
+        }
+      );
     }
   };
 
   isDisabledDownButton = () => {
-    return this.state.currentPage !== this.state.nbPages;
+    return this.state.currentPage < this.state.nbPages;
+  };
+
+  toggleAddPayment = () => {
+    this.setState({
+      modalAddPayment: !this.state.modalAddPayment
+    });
+  };
+
+  hasPaid = () => {
+    let body = {
+      id: this.state.currentCell.id,
+      mail: this.state.currentCell.mail,
+      has_paid: 1
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/admin/payment",
+      data: body
+    })
+      .then(res => {
+        if (res.data === "SUCCESS") {
+          this.getList();
+          this.setState({
+            modalAddPayment: false
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionErrorPayment();
+      });
+  };
+
+  toggleRemovePayment = () => {
+    this.setState({
+      modalRemovePayment: !this.state.modalRemovePayment
+    });
+  };
+
+  hasNotPaid = () => {
+    let body = {
+      id: this.state.currentCell.id,
+      mail: this.state.currentCell.mail,
+      has_paid: 0
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/admin/payment",
+      data: body
+    })
+      .then(res => {
+        if (res.data === "SUCCESS") {
+          this.getList();
+          this.setState({
+            modalRemovePayment: false
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionErrorPayment();
+      });
   };
 
   getSurveyListPage = () => {
     this.props.history.push("/listeenquetes");
   };
 
+  onClickCell = (e, column, item) => {
+    if (column === "has_paid") {
+      if (item.has_paid === 0) {
+        this.setState(
+          {
+            currentCell: item
+          },
+          this.toggleAddPayment()
+        );
+      } else if (item.has_paid === 1) {
+        this.setState(
+          {
+            currentCell: item
+          },
+          this.toggleRemovePayment()
+        );
+      }
+    }
+  };
+
   render() {
-    const closeBtn = (
-      <button className="close" onClick={this.toggle}>
+    const closeBtnAdd = (
+      <button className="close" onClick={this.toggleAddPayment}>
         &times;
       </button>
     );
+
+    const ModalAddPayment = () => {
+      return (
+        <Modal
+          isOpen={this.state.modalAddPayment}
+          toggle={this.toggleAddPayment}
+        >
+          <ModalHeader close={closeBtnAdd}>
+            {this.state.currentCell.company_name} est en attente de paiement
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              <strong>
+                Avez-vous reçu le règlement de{" "}
+                {this.state.currentCell.company_name} ?
+              </strong>
+            </p>
+            <p>
+              Si vous confirmez, {this.state.currentCell.company_name} recevra
+              un e-mail de confirmation et pourra désormais bénéficier de nos
+              services.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={() => {
+                this.hasPaid();
+              }}
+              className="btn-success text-white"
+            >
+              Oui je confirme
+            </Button>
+            <Button
+              onClick={() => {
+                this.toggleAddPayment();
+              }}
+              className="btn text-white"
+            >
+              Annuler
+            </Button>
+          </ModalFooter>
+        </Modal>
+      );
+    };
+
+    const closeBtnRemove = (
+      <button className="close" onClick={this.toggleRemovePayment}>
+        &times;
+      </button>
+    );
+
+    const ModalRemovePayment = () => {
+      return (
+        <Modal
+          isOpen={this.state.modalRemovePayment}
+          toggle={this.toggleRemovePayment}
+        >
+          <ModalHeader close={closeBtnRemove}>
+            {this.state.currentCell.company_name} n'est plus à jour de paiement.
+          </ModalHeader>
+          <ModalBody>
+            <p>
+              <strong>
+                Souhaitez-vous désactiver le compte de{" "}
+                {this.state.currentCell.company_name} ?
+              </strong>
+            </p>
+            <p>
+              Si vous confirmez, {this.state.currentCell.company_name} recevra
+              un e-mail indiquant qu'ils n'ont plus accès à notre plateforme
+              faute de règlement.
+            </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              onClick={() => {
+                this.hasNotPaid();
+              }}
+              className="btn-warning"
+            >
+              Oui je confirme
+            </Button>
+            <Button
+              onClick={() => {
+                this.toggleRemovePayment();
+              }}
+              className="btn text-white"
+            >
+              Annuler
+            </Button>
+          </ModalFooter>
+        </Modal>
+      );
+    };
 
     let columns = [
       {
@@ -209,66 +338,32 @@ class ListeEntreprises extends Component {
       {
         key: "has_paid",
         label: "Paiement",
-        cell: columnKey => {
-          return (
-            <div>
-              {columnKey.has_paid === 0 ? (
-                <div>
-                  <button
-                    onClick={this.toggle}
-                    className="btn btn-warning btn-sm"
-                    title="Confirmer la réception du paiement"
-                  >
-                    En attente
-                  </button>
-                  <Modal
-                    isOpen={this.state.modal}
-                    toggle={this.toggle}
-                    className=""
-                  >
-                    <ModalHeader
-                      toggle={this.toggle}
-                      close={closeBtn}
-                      className="modalHeader"
-                    >
-                      {columnKey.company_name} est en attente de paiement
-                    </ModalHeader>
-                    <ModalBody className="movieModal">
-                      <strong>
-                        Avez-vous reçu le règlement de {columnKey.company_name}{" "}
-                        ?
-                      </strong>
-                      <p>
-                        Si vous confirmez, {columnKey.company_name} recevra un
-                        e-mail de confirmation et pourra désormais bénéficier de
-                        nos services.
-                      </p>
-                    </ModalBody>
-                    <ModalFooter className="movieModal">
-                      <Button
-                        onClick={() => {
-                          this.hasPaid(columnKey);
-                        }}
-                        className="btn-success text-white"
-                      >
-                        Oui je confirme
-                      </Button>
-                      <Button
-                        onClick={this.toggle}
-                        className="bg-dark text-white"
-                      >
-                        Non pas encore
-                      </Button>
-                    </ModalFooter>
-                  </Modal>
-                </div>
-              ) : (
-                <p className="hasPaid">
-                  Ok <i className="fa fa-check-circle" />
-                </p>
-              )}
-            </div>
-          );
+        cell: function(item) {
+          if (item.has_paid === 0) {
+            return (
+              <div>
+                <button
+                  className="btn btn-warning btn-sm paymentButton"
+                  title="Confirmer la réception du paiement"
+                >
+                  En attente <i className="fa fa-clock-o ml-1" />
+                </button>
+                <ModalAddPayment />
+              </div>
+            );
+          } else {
+            return (
+              <div>
+                <button
+                  className="btn btn-success btn-sm paymentButton"
+                  title="Désactiver le compte"
+                >
+                  Accepté <i className="fa fa-check ml-2" />
+                </button>
+                <ModalRemovePayment />
+              </div>
+            );
+          }
         }
       }
     ];
@@ -298,7 +393,8 @@ class ListeEntreprises extends Component {
             <Col>
               <p className="mt-5">
                 L'e-mail de confirmation d'inscription sera envoyé aux sociétés
-                quand elles seront à jour de réglement.
+                quand elles seront à jour de réglement. Vous avez également la
+                possibilité de revenir en arrière en cas de problème.
               </p>
             </Col>
           </Row>
@@ -320,7 +416,9 @@ class ListeEntreprises extends Component {
               <JsonTable
                 rows={this.state.societyList}
                 columns={columns}
+                noRowsMessage="Aucun élément à afficher"
                 className="table table-striped"
+                onClickCell={this.onClickCell}
               />
               <div className="row justify-content-around pb-3 mb-5 mt-3">
                 <button
