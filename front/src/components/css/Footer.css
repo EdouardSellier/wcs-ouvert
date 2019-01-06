@@ -1,9 +1,5 @@
 footer {
-  background: linear-gradient(
-    to bottom,
-    rgb(210, 216, 210) 0%,
-    rgb(172, 167, 167) 100%
-  );
+  background-color: rgba(141, 136, 136, 0.611);
 }
 
 .legalMentions {
@@ -38,4 +34,12 @@ footer {
 .madeWithLove:hover {
   text-decoration: none;
   color: #fff;
+}
+
+.ecolonomie {
+  font-size: 1.2em;
+  letter-spacing: 4px;
+  font-weight: bold;
+  color: #40a3b3;
+  text-shadow: 1px 1px 1px grey;
 }

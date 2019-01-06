@@ -1,11 +1,7 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
-import { Col } from "reactstrap";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import Accueil from "./components/Accueil";
-import Inscription from "./components/Inscription";
-import Connexion from "./components/Connexion";
-import Contact from "./components/Contact";
 import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
@@ -23,17 +19,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Col lg={{ size: 8, offset: 2 }}>
-          <p className="homeSlogan">
-            <b>MOV'R : Enquête de mobilité pour vos salariés</b>
-          </p>
-        </Col>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
-            <Route path="/inscription" component={Inscription} />
-            <Route path="/connexion" component={Connexion} />
-            <Route path="/contact" component={Contact} />
             <Route path="/monespace" component={EspaceRH} />
             <Route path="/nouvelleenquete" component={NouvelleEnquete} />
             <Route path="/listeenquetesrh" component={ListeEnquetesRH} />

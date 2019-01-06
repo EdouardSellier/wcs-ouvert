@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import questions from "./questions";
 import "./css/SondageRH.css";
+import questions from "./questions";
 import {
   Container,
   Row,
@@ -12,6 +12,15 @@ import {
   ModalFooter
 } from "reactstrap";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de l'envoi de l'enquête à vos salariés, nous vous remercions de bien vouloir contacter l'assistance.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 const MultipleOption = props => {
   return (
@@ -106,6 +115,10 @@ class SondageRH extends Component {
     };
   }
 
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
+
   toggle = () => {
     this.setState({
       modal: !this.state.modal
@@ -125,14 +138,13 @@ class SondageRH extends Component {
       data: body
     })
       .then(res => {
-        console.log(res);
         this.setState({
           modal: false,
           isSend: true
         });
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionError();
       });
   };
 
@@ -143,126 +155,117 @@ class SondageRH extends Component {
       </button>
     );
     return (
-      <div>
-        <hr />
-        <div>
-          <Container className="mt-4">
+      <div className="text-white">
+        <NotificationAlert ref="notificationAlertError" />
+        <Container className="card shadow mt-5 mb-5 pt-3">
+          <Row>
+            <Col lg={{ size: 2 }}>
+              <button
+                className="mt-2 btn text-white"
+                onClick={this.handleSubmit}
+              >
+                <i className="fa fa-chevron-left" /> Précédent
+              </button>
+            </Col>
+            <Col lg={{ size: 8 }}>
+              <h1>Consulter et diffuser l'enquête à mes salariés</h1>
+            </Col>
+          </Row>
+          <Row>
+            <Col lg={{ size: 12 }}>
+              <div>
+                <div className="mt-5 surveyCard p-3">
+                  {questions.map(data => {
+                    switch (data.type) {
+                      case "option":
+                        return <Option key={data.id} data={data} />;
+                      case "number":
+                        return <Number key={data.id} data={data} />;
+                      case "multipleOption":
+                        return <MultipleOption key={data.id} data={data} />;
+                      case "text":
+                        return <Text key={data.id} data={data} />;
+                      default:
+                        return <p>Il y a une erreur.</p>;
+                    }
+                  })}
+                </div>
+              </div>
+            </Col>
+          </Row>
+
+          {this.state.isSend === false ? (
             <Row>
-              <Col lg={{ size: 2 }}>
-                <button
-                  className="mt-2 btn text-white"
-                  onClick={this.handleSubmit}
-                >
-                  <i className="fa fa-chevron-left" /> Précédent
+              <Col lg={{ size: 8, offset: 2 }}>
+                <p>
+                  Si vous souhaitez ajouter des questions à cette enquête, nous
+                  vous invitons à contacter l'assistance.
+                </p>
+              </Col>
+              <Col lg={{ size: 6, offset: 3 }}>
+                <button className="btn text-white m-3" onClick={this.toggle}>
+                  <i className="fa fa-envelope-o" /> Diffuser l'enquête
                 </button>
               </Col>
-              <Col lg={{ size: 8 }}>
-                <h3>Consulter et diffuser l'enquête à mes salariés</h3>
-              </Col>
             </Row>
-          </Container>
-          <Container>
+          ) : (
             <Row>
-              <Col lg={{ size: 12 }}>
-                <div className="card shadow mt-5">
-                  <div className="surveyCard p-3">
-                    {questions.map(data => {
-                      switch (data.type) {
-                        case "option":
-                          return <Option key={data.id} data={data} />;
-                        case "number":
-                          return <Number key={data.id} data={data} />;
-                        case "multipleOption":
-                          return <MultipleOption key={data.id} data={data} />;
-                        case "text":
-                          return <Text key={data.id} data={data} />;
-                        default:
-                          return <p>Il y a une erreur.</p>;
-                      }
-                    })}
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            <Container className="mt-4">
-              <Row>
-                <Col lg={{ size: 8, offset: 2 }}>
-                  <p>
-                    Si vous souhaitez ajouter des questions à cette enquête,
-                    nous vous invitons à contacter l'assistance.
-                  </p>
-                </Col>
-              </Row>
-            </Container>
-            <Row>
-              {this.state.isSend === false ? (
-                <Col lg={{ size: 6, offset: 3 }}>
-                  <button className="btn text-white m-3" onClick={this.toggle}>
-                    <i className="fa fa-envelope-o" /> Diffuser l'enquête
-                  </button>
-                </Col>
-              ) : (
-                <Col lg={{ size: 8, offset: 2 }}>
-                  <p className="mt-2 mb-2 confirmationMsg">
-                    Le sondage a bien été envoyé à votre liste. Vous devez
-                    attendre la date de fin indiquée lors de la création de
-                    l'enquête pour obtenir les résultats.
-                  </p>
-                  <button
-                    className="btn text-white mb-4"
-                    onClick={() => {
-                      this.props.history.push("/monespace");
-                    }}
-                  >
-                    <i className="fa fa-home" /> Revenir à l'accueil
-                  </button>
-                </Col>
-              )}
-
-              <Modal
-                isOpen={this.state.modal}
-                toggle={this.toggle}
-                className=""
-              >
-                <ModalHeader
-                  toggle={this.toggle}
-                  close={closeBtn}
-                  className="modalHeader"
+              <Col lg={{ size: 8, offset: 2 }}>
+                <p className="mt-2 mb-2 confirmationMsg">
+                  Le sondage a bien été envoyé à votre liste. Vous devez
+                  attendre la date de fin indiquée lors de la création de
+                  l'enquête pour obtenir les résultats.
+                </p>
+                <button
+                  className="btn text-white mb-4"
+                  onClick={() => {
+                    this.props.history.push("/monespace");
+                  }}
                 >
-                  {" "}
-                  Confirmer la diffusion{" "}
-                </ModalHeader>
-                <ModalBody className="movieModal">
-                  <h6>Souhaitez-vous diffuser l'enquête ?</h6>
-                  <br />
-                  <p>
-                    Suite à votre fichier enregistré dans l'étape précédente,{" "}
-                    {this.props.location.state.nbMails > 1
-                      ? `${
-                          this.props.location.state.nbMails
-                        } e-mails seront envoyés.`
-                      : `${
-                          this.props.location.state.nbMails
-                        } e-mail sera envoyé.`}
-                  </p>
-                </ModalBody>
-                <ModalFooter className="movieModal">
-                  <Button
-                    onClick={() => {
-                      this.sendMails();
-                    }}
-                    className="btn-success text-white"
-                  >
-                    Oui je confirme
-                  </Button>
-                  <Button onClick={this.toggle} className="bg-dark text-white">
-                    Non
-                  </Button>
-                </ModalFooter>
-              </Modal>
+                  <i className="fa fa-home" /> Revenir à l'accueil
+                </button>
+              </Col>
             </Row>
-          </Container>
-        </div>
+          )}
+
+          <Modal isOpen={this.state.modal} toggle={this.toggle} className="">
+            <ModalHeader
+              toggle={this.toggle}
+              close={closeBtn}
+              className="modalHeader"
+            >
+              {" "}
+              Confirmer la diffusion{" "}
+            </ModalHeader>
+            <ModalBody className="movieModal">
+              <p>
+                <b>Souhaitez-vous diffuser l'enquête ?</b>
+              </p>
+              <br />
+              <p>
+                Suite à votre fichier enregistré dans l'étape précédente,{" "}
+                {this.props.location.state.nbMails > 1
+                  ? `${
+                      this.props.location.state.nbMails
+                    } e-mails seront envoyés.`
+                  : `${this.props.location.state.nbMails} e-mail sera envoyé.`}
+              </p>
+            </ModalBody>
+            <ModalFooter className="movieModal">
+              <Button
+                onClick={() => {
+                  this.sendMails();
+                }}
+                className="btn-success text-white"
+              >
+                Oui je confirme
+              </Button>
+              <Button onClick={this.toggle} className="bg-dark text-white">
+                Non
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </Container>
       </div>
     );
   }

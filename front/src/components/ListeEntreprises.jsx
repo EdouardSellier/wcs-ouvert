@@ -88,7 +88,7 @@ class ListeEntreprises extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        this.alertFunctionError();
       });
   };
 
@@ -141,11 +141,20 @@ class ListeEntreprises extends Component {
   };
 
   hasPaid = () => {
-    let body = {
-      id: this.state.currentCell.id,
-      mail: this.state.currentCell.mail,
-      has_paid: 1
-    };
+    let body = {};
+    if (this.state.currentCell.has_paid === 0) {
+      body = {
+        id: this.state.currentCell.id,
+        mail: this.state.currentCell.mail,
+        has_paid: 1
+      };
+    } else if (this.state.currentCell.has_paid === 1) {
+      body = {
+        id: this.state.currentCell.id,
+        mail: this.state.currentCell.mail,
+        has_paid: 0
+      };
+    }
     axios({
       method: "post",
       url: "http://localhost:8080/admin/payment",
@@ -155,7 +164,8 @@ class ListeEntreprises extends Component {
         if (res.data === "SUCCESS") {
           this.getList();
           this.setState({
-            modalAddPayment: false
+            modalAddPayment: false,
+            modalRemovePayment: false
           });
         }
       })
@@ -168,30 +178,6 @@ class ListeEntreprises extends Component {
     this.setState({
       modalRemovePayment: !this.state.modalRemovePayment
     });
-  };
-
-  hasNotPaid = () => {
-    let body = {
-      id: this.state.currentCell.id,
-      mail: this.state.currentCell.mail,
-      has_paid: 0
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/admin/payment",
-      data: body
-    })
-      .then(res => {
-        if (res.data === "SUCCESS") {
-          this.getList();
-          this.setState({
-            modalRemovePayment: false
-          });
-        }
-      })
-      .catch(error => {
-        this.alertFunctionErrorPayment();
-      });
   };
 
   getSurveyListPage = () => {
@@ -300,7 +286,7 @@ class ListeEntreprises extends Component {
           <ModalFooter>
             <Button
               onClick={() => {
-                this.hasNotPaid();
+                this.hasPaid();
               }}
               className="btn-warning"
             >
@@ -369,8 +355,7 @@ class ListeEntreprises extends Component {
     ];
 
     return (
-      <div>
-        <hr />
+      <div className="text-white mt-3">
         <NotificationAlert ref="notificationAlertError" />
         <NotificationAlert ref="notificationAlertErrorPayment" />
         <Container>
@@ -381,7 +366,9 @@ class ListeEntreprises extends Component {
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
-              <h2>Liste des entreprises inscrites</h2>
+              <h2>
+                <b>Liste des entreprises inscrites</b>
+              </h2>
             </Col>
             <Col lg={{ size: 2 }}>
               <Button className="btn-danger" onClick={this.handleSubmit}>
@@ -391,10 +378,13 @@ class ListeEntreprises extends Component {
           </Row>
           <Row>
             <Col>
-              <p className="mt-5">
-                L'e-mail de confirmation d'inscription sera envoyé aux sociétés
-                quand elles seront à jour de réglement. Vous avez également la
-                possibilité de revenir en arrière en cas de problème.
+              <p className="mt-5 description">
+                <b>
+                  L'e-mail de confirmation d'inscription sera envoyé aux
+                  sociétés quand elles seront à jour de réglement. Vous avez
+                  également la possibilité de revenir en arrière en cas de
+                  problème.
+                </b>
               </p>
             </Col>
           </Row>
@@ -411,7 +401,7 @@ class ListeEntreprises extends Component {
               </select>
             </Col>
           </Row>
-          <Row>
+          <Row className="card shadow">
             <Col lg={{ size: 12 }}>
               <JsonTable
                 rows={this.state.societyList}
@@ -420,7 +410,7 @@ class ListeEntreprises extends Component {
                 className="table table-striped"
                 onClickCell={this.onClickCell}
               />
-              <div className="row justify-content-around pb-3 mb-5 mt-3">
+              <div className="row justify-content-around pb-3 mt-3">
                 <button
                   className="btn arrowLeft"
                   onClick={this.changePageDown}
@@ -444,10 +434,10 @@ class ListeEntreprises extends Component {
           <Row>
             <Col lg={{ size: 2, offset: 10 }}>
               <button
-                className="btn getSurveyPage mb-3"
+                className="btn getSurveyPage text-white mt-4 mb-3"
                 onClick={this.getSurveyListPage}
               >
-                Consulter les enquêtes <i className="fa fa-bar-chart" />{" "}
+                <b>Consulter les enquêtes</b> <i className="fa fa-bar-chart" />{" "}
                 <i className="fa fa-arrow-right" />
               </button>
             </Col>

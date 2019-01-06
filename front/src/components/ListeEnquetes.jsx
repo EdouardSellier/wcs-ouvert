@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import "./css/ListeEnquetes.css";
 import { Container, Row, Col } from "reactstrap";
-import axios from "axios";
-import JsonTable from "ts-react-json-table";
 import NotificationAlert from "react-notification-alert";
+import JsonTable from "ts-react-json-table";
+import axios from "axios";
 
 const errorMsg = {
   place: "tr",
@@ -151,8 +151,7 @@ class ListeEnquetes extends Component {
       }
     ];
     return (
-      <div className="surveyList">
-        <hr />
+      <div className="surveyList text-white mt-3">
         <NotificationAlert ref="notificationAlertError" />
         <Container>
           <Row>
@@ -162,7 +161,9 @@ class ListeEnquetes extends Component {
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
-              <h2>Liste des enquêtes</h2>
+              <h1>
+                <b>Liste des enquêtes</b>
+              </h1>
             </Col>
             <Col lg={{ size: 2 }}>
               <button className="btn btn-danger" onClick={this.handleSubmit}>
@@ -183,14 +184,14 @@ class ListeEnquetes extends Component {
               </select>
             </Col>
           </Row>
-          <Row>
+          <Row className="card shadow">
             <Col lg={{ size: 12 }}>
               <JsonTable
                 rows={this.state.surveyList}
                 columns={columns}
                 className="table table-striped"
               />
-              <div className="row justify-content-around pb-3 mb-5 mt-3">
+              <div className="row justify-content-around pb-3 mt-3">
                 <button
                   className="btn arrowLeft"
                   onClick={this.changePageDown}
@@ -214,11 +215,11 @@ class ListeEnquetes extends Component {
         </Container>
         <Col lg={{ size: 3 }}>
           <button
-            className="btn getSocietyPage mb-3"
+            className="btn getSocietyPage mt-3 mb-3 text-white"
             onClick={this.getSocietyListPage}
           >
             <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
-            Consulter les entreprises
+            <b>Consulter les entreprises</b>
           </button>
         </Col>
       </div>

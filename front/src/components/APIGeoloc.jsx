@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import L from "leaflet";
-import NotificationAlert from "react-notification-alert";
 
 const errorMsg = {
   place: "tr",
@@ -389,7 +389,7 @@ class APIGeoloc extends Component {
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
-              <div className="card mb-3">
+              <div className="mb-3">
                 <Container className="statistics ml-lg-5">
                   {this.props.parameter === "en voiture" ? (
                     <div>

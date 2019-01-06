@@ -1,10 +1,8 @@
-.connexion {
-  min-height: 70vh;
-}
-
 .formContainer {
   border-radius: 8px;
   padding: 20px;
+  margin-top: 50px;
+  margin-bottom: 100px;
 }
 
 .input-group-text {

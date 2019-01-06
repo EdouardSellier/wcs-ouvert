@@ -1,8 +1,17 @@
 import React, { Component } from "react";
+import "./css/ListeEnquetesRH.css";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import "./css/ListeEnquetesRH.css";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Nous n'avons pas réussi à récupérer la liste de vos enquêtes, nous vous invitons à contacter l'assistance. Merci de votre compréhension",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class ListeEnquetesRH extends Component {
   constructor(props) {
@@ -11,6 +20,10 @@ class ListeEnquetesRH extends Component {
       allSurveyName: []
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   handleSubmit = event => {
     event.preventDefault();
@@ -26,7 +39,7 @@ class ListeEnquetesRH extends Component {
         });
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionError();
       });
   };
 
@@ -37,7 +50,6 @@ class ListeEnquetesRH extends Component {
   render() {
     return (
       <div>
-        <hr />
         <Container className="mt-4">
           <Row>
             <Col lg={{ size: 2 }}>
@@ -49,18 +61,16 @@ class ListeEnquetesRH extends Component {
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
-              <h3>Consulter mes enquêtes en cours</h3>
+              <h1 className="text-white">
+                <b>Consulter mes enquêtes en cours</b>
+              </h1>
             </Col>
           </Row>
         </Container>
-        <Container className="mt-4">
-          <p>
-            Ici, vous pouvez sélectionner une enquête et consulter les résultats
-            ou connaître le taux de participation si elle n'est pas encore
-            terminée.
-          </p>
+        <Container className="mt-5">
+          <NotificationAlert ref="notificationAlertError" />
           <Col lg={{ size: 6, offset: 3 }}>
-            <select className="form-control">
+            <select className="form-control surveySelect">
               <option>Sélectionner une enquête</option>
               {this.state.allSurveyName.map(survey => {
                 return (
@@ -70,14 +80,10 @@ class ListeEnquetesRH extends Component {
             </select>
           </Col>
         </Container>
-        <Container className="mt-4 mb-4">
-          <h5>Que souhaitez-vous faire pour cette enquête ?</h5>
-          <Row className="mt-4">
-            <Col lg={{ size: 5, offset: 1 }}>
-              <div className="card">
-                <div className="card-header">
-                  <h5>Consulter les résultats</h5>
-                </div>
+        <Container className="mt-5 mb-4">
+          <Row className="mt-5">
+            <Col lg={{ size: 4, offset: 1 }}>
+              <div className="card shadow mt-5 mb-4">
                 <div className="card-body">
                   <Link to="/resultat">
                     <img
@@ -85,16 +91,15 @@ class ListeEnquetesRH extends Component {
                       alt="icon"
                       width="150"
                       height="150"
+                      className="cardIcon mb-4"
                     />
                   </Link>
+                  <h4>Consulter les résultats</h4>
                 </div>
               </div>
             </Col>
-            <Col lg={{ size: 5 }}>
-              <div className="card">
-                <div className="card-header">
-                  <h5>Demander de l'assistance</h5>
-                </div>
+            <Col lg={{ size: 4, offset: 1 }}>
+              <div className="card shadow mt-5 mb-4">
                 <div className="card-body">
                   <Link to="/assistance">
                     <img
@@ -102,8 +107,10 @@ class ListeEnquetesRH extends Component {
                       alt="icon"
                       width="150"
                       height="150"
+                      className="cardIcon mb-4"
                     />
                   </Link>
+                  <h4>Demander de l'assistance</h4>
                 </div>
               </div>
             </Col>

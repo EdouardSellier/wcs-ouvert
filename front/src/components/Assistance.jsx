@@ -5,13 +5,12 @@ import "./css/Assistance.css";
 class Assistance extends Component {
   handleSubmit = event => {
     event.preventDefault();
-    this.props.history.push("/monespace");
+    this.props.history.push("/listeenquetesrh");
   };
   render() {
     return (
       <div>
-        <div className="assistance">
-          <hr />
+        <div className="assistance text-white mb-5">
           <Container className="mt-2">
             <Row>
               <Col lg={{ size: 2 }}>
@@ -19,43 +18,49 @@ class Assistance extends Component {
                   className="mt-2 btn text-white"
                   onClick={this.handleSubmit}
                 >
-                  Revenir à l'accueil
+                  <i className="fa fa-arrow-left" /> Précédent
                 </button>
               </Col>
               <Col lg={{ size: 8 }}>
-                <h3>Assistance</h3>
+                <h1>
+                  <b>Assistance</b>
+                </h1>
               </Col>
             </Row>
           </Container>
-          <p className="m-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos
-            eligendi dolor quaerat, perferendis repudiandae, quasi facilis
-            cupiditate odit nesciunt eveniet optio laudantium quo? Tempora
-            blanditiis neque, pariatur reprehenderit ipsam dicta!
-          </p>
-          <form method="post" action="" className="mt-3">
-            <div className="form-group offset-3 col-md-6">
-              <label>Adresse e-mail</label>
-              <input
-                type="email"
-                className="form-control"
-                id="inputEmailContact"
-                placeholder="Adresse e-mail"
-              />
+          <Col lg={{ size: 6, offset: 3 }}>
+            <div className="contact card shadow p-5">
+              <p className="mt-3 text-left">
+                Pour tout renseignement complémentaire, vous pouvez nous
+                contacter par téléphone du lundi au vendredi de 9h00 à 17h00 :{" "}
+                <i className="fa fa-phone" /> 03.20.00.00.00
+                <br />
+                Vous pouvez également nous envoyer un message, nous vous
+                répondrons dans les meilleurs délais.
+              </p>
+              <form method="post" action="" className="mt-2">
+                <div className="form-group">
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="inputEmailContact"
+                    placeholder="Adresse e-mail"
+                  />
+                </div>
+                <div className="form-group">
+                  <textarea
+                    type="text"
+                    className="form-control"
+                    id="inputMessageContact"
+                    placeholder="Votre message..."
+                  />
+                </div>
+                <button type="submit" className="btn text-white">
+                  Envoyer ma demande <i className="fa fa-envelope" />
+                </button>
+              </form>
             </div>
-            <div className="form-group offset-3 col-md-6">
-              <label>Votre message :</label>
-              <textarea
-                type="text"
-                className="form-control"
-                id="inputMessageContact"
-                placeholder="Votre message..."
-              />
-            </div>
-            <button type="submit" className="btn text-white mb-3">
-              Envoyer ma demande
-            </button>
-          </form>
+          </Col>
         </div>
       </div>
     );

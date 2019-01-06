@@ -1,23 +1,23 @@
 import React from "react";
 import "./css/Inscription.css";
-import Header from "./Header";
 import { Row, Col } from "reactstrap";
-import axios from "axios";
+import { withRouter } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import axios from "axios";
 
 const successMsg = {
-  place: "tr",
+  place: "br",
   message: "Votre inscription a bien été prise en compte",
   type: "success",
-  autoDismiss: 4
+  autoDismiss: 5
 };
 
 const errorMsg = {
-  place: "tr",
+  place: "br",
   message:
     "Il semblerait qu'il y ait un problème avec votre inscription, merci de vérifier tous les champs",
   type: "danger",
-  autoDismiss: 4
+  autoDismiss: 5
 };
 
 class Inscription extends React.Component {
@@ -93,7 +93,6 @@ class Inscription extends React.Component {
       })
         .then(res => {
           if (res.data === "SUCCESS") {
-            this.props.history.push("/inscription");
             this.alertFunctionSuccess();
           }
         })
@@ -141,12 +140,11 @@ class Inscription extends React.Component {
 
   render() {
     return (
-      <div>
-        <Header />
-        <div className="ml-lg-5 mr-lg-5 mt-lg-2 mb-lg-5">
-          <NotificationAlert ref="notificationAlertSuccess" />
-          <NotificationAlert ref="notificationAlertError" />
-          <div>
+      <div className="mb-5">
+        <NotificationAlert ref="notificationAlertSuccess" />
+        <NotificationAlert ref="notificationAlertError" />
+        <div className="inscriptionContainer">
+          <Col lg={{ size: 8, offset: 2 }}>
             <form
               method="post"
               name="userRegistrationForm"
@@ -306,18 +304,18 @@ class Inscription extends React.Component {
                 </Col>
               </Row>
               <Row>
-                <Col lg={{ size: 4, offset: 5 }}>
-                  <button className="btn text-white mb-3">
+                <Col lg={{ size: 4, offset: 4 }}>
+                  <button className="btn text-white ml-5 mb-3">
                     Valider mon inscription <i className="fa fa-check" />
                   </button>
                 </Col>
               </Row>
             </form>
-          </div>
+          </Col>
         </div>
       </div>
     );
   }
 }
 
-export default Inscription;
+export default withRouter(Inscription);

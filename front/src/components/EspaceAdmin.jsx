@@ -1,13 +1,14 @@
 import React, { Component } from "react";
+import "./css/EspaceAdmin.css";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
-import "./css/EspaceAdmin.css";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
+import Zoom from "react-reveal/Zoom";
 
 const errorMsg = {
   place: "tr",
-  message: "Nous ne pouvons pas afficher les statistiques.",
+  message: "Nous ne pouvons pas afficher les statistiques pour le moment.",
   type: "danger",
   autoDismiss: 4
 };
@@ -25,6 +26,10 @@ class AccueilAdmin extends Component {
       surveyArray: []
     };
   }
+
+  handleSubmit = () => {
+    this.props.history.push("/");
+  };
 
   alertFunctionError = () => {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
@@ -86,13 +91,16 @@ class AccueilAdmin extends Component {
 
   render() {
     return (
-      <div>
-        <hr />
+      <div className="text-white">
         <NotificationAlert ref="notificationAlertError" />
-        <Container className="mb-5">
+        <Container className="mb-5 mt-3">
           <Row>
             <Col lg={{ size: 8, offset: 2 }}>
-              <h2>Bienvenue sur votre espace administrateur</h2>
+              <Zoom>
+                <h1>
+                  <b>Bienvenue sur votre espace administrateur</b>
+                </h1>
+              </Zoom>
             </Col>
             <Col lg={{ size: 2 }}>
               <button
@@ -109,10 +117,10 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 5, offset: 1 }} className="mt-5">
               <div className="card">
                 <div className="card-header">
-                  <h4>
+                  <h3>
                     <i className="fa fa-users" /> Inscriptions :{" "}
                     {this.state.societyList}
-                  </h4>
+                  </h3>
                 </div>
                 <div className="card-body p-5 adminStat">
                   <p>
@@ -143,10 +151,10 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 5 }} className="mt-5">
               <div className="card">
                 <div className="card-header">
-                  <h4>
+                  <h3>
                     <i className="fa fa-bar-chart" /> Enquêtes de mobilité :{" "}
                     {this.state.surveyList}{" "}
-                  </h4>
+                  </h3>
                 </div>
                 <div className="card-body p-5 adminStat">
                   <p>

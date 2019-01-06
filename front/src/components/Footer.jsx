@@ -7,19 +7,21 @@ class Footer extends Component {
       <footer className="footer navbar-dark">
         <div className="container-fluid">
           <div className="row">
-            <div className="adresseOuvert col-lg-12">BUREAU D'ECOLONOMIE</div>
-            <div className="adresseOuvert col-lg-12">
+            <div className="ecolonomie col-lg-12 mt-1 mb-2">
+              BUREAU D'ECOLONOMIE
+            </div>
+            <div className="adresseOuvert col-lg-12 mb-2">
               POCHECO - 13 rue des Roloirs, F 59510 Forest sur Marque - Tél. :
               +33 (0)3 20 61 90 89 - bureau@ouvert.eu
             </div>
           </div>
           <div className="row">
-            <div className="legalMentions col-lg-12">Mentions Légales</div>
+            <div className="legalMentions col-lg-12 mb-2">Mentions Légales</div>
           </div>
           <div className="row">
             <a
               href="https://wildcodeschool.fr"
-              className="madeWithLove col-lg-12"
+              className="madeWithLove col-lg-12 mb-2"
             >
               Made with <span className="heart">♥</span> by Wild Code School
             </a>

@@ -73,7 +73,7 @@ app.post("/connexion", (req, res) => {
             res.status(500).send("WRONG");
           } else {
             let session = uuidv4();
-            res.status(200).send("SUCCESS");
+            res.status(200).send(session);
           }
         });
       } else {
