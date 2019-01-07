@@ -198,8 +198,9 @@ class SondageRH extends Component {
             <Row>
               <Col lg={{ size: 8, offset: 2 }}>
                 <p>
-                  Si vous souhaitez ajouter des questions à cette enquête, nous
-                  vous invitons à contacter l'assistance.
+                  Pour créer une enquête personnalisée et ajouter des questions,
+                  nous vous invitons à{" "}
+                  <a href="/assistance">prendre contact avec nous</a>.
                 </p>
               </Col>
               <Col lg={{ size: 6, offset: 3 }}>
@@ -239,11 +240,15 @@ class SondageRH extends Component {
             </ModalHeader>
             <ModalBody className="movieModal">
               <p>
-                <b>Souhaitez-vous diffuser l'enquête ?</b>
+                <b>
+                  Votre enquête est prête, souhaitez-vous la diffuser à vos
+                  salariés ?
+                </b>
               </p>
               <br />
               <p>
-                Suite à votre fichier enregistré dans l'étape précédente,{" "}
+                L’enquête sera envoyée aux adresses e-mail renseignées dans la
+                page de création de l’enquête,{" "}
                 {this.props.location.state.nbMails > 1
                   ? `${
                       this.props.location.state.nbMails

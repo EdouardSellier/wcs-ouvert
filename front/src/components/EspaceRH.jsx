@@ -47,12 +47,12 @@ class EspaceRH extends Component {
                   </Link>
                   <h4>Créer et diffuser une enquête</h4>
                   <p className="text-justify">
-                    Depuis cette page, vous pouvez consulter et diffuser une
-                    enquête pour mieux comprendre leurs habitudes de
-                    déplacement. Cela vous permettra par la suite d’élaborer un
-                    plan d’actions pertinent pour réduire la part d’utilisation
-                    de la voiture individuelle dans les déplacements quotidiens
-                    de vos salariés.
+                    Depuis cette page, vous pouvez diffuser auprès de vos
+                    salariés une enquête permettant de mieux comprendre leurs
+                    habitudes de déplacement. Cela vous aidera par la suite à
+                    proposer des solutions d’alternatives à l’utilisation de la
+                    voiture individuelle pertinentes pour les déplacements
+                    quotidiens de vos salariés.
                   </p>
                 </div>
               </div>
@@ -71,9 +71,10 @@ class EspaceRH extends Component {
                   </Link>
                   <h4>Suivre les enquêtes en cours</h4>
                   <p className="text-justify p-3">
-                    Ici, vous pouvez sélectionner une enquête et consulter les
-                    résultats ou connaître le taux de participation si elle
-                    n'est pas encore terminée.
+                    Ici, sélectionnez parmi les enquêtes que vous avez créées
+                    celle dont vous voulez consulter les résultats. Si l’enquête
+                    n’a pas pris fin, vous serez alors informé du taux de
+                    participation.
                   </p>
                 </div>
               </div>

@@ -10,12 +10,9 @@ class Contact extends Component {
           <div className="contact card shadow p-5">
             <h2>Nous contacter</h2>
             <p className="mt-3 text-left">
-              Pour tout renseignement complémentaire, vous pouvez nous contacter
-              par téléphone du lundi au vendredi de 9h00 à 17h00 :{" "}
-              <i className="fa fa-phone" /> 03.20.00.00.00
-              <br />
-              Vous pouvez également nous envoyer un message, nous vous
-              répondrons dans les meilleurs délais.
+              Si vous rencontrez un problème, n’hésitez pas à nous contacter par
+              mail via le formulaire ci-dessous ou à nous joindre par téléphone
+              au <i className="fa fa-phone" /> 03.20.61.90.89.
             </p>
             <form method="post" action="" className="mt-2">
               <div className="form-group">
