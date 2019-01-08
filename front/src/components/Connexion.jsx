@@ -26,3 +26,7 @@ handleChange = event => {
         [event.target.name]: event.target.value
     });
 };  
+
+alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
+  };
