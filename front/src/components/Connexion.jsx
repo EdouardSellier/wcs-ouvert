@@ -33,23 +33,15 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
-    let body = {
-      mail: this.state.mail,
-      password: this.state.password
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/connexion",
-      data: body
-    })
-      .then(res => {
-        if (res.data === "SUCCESS") {
-          this.props.history.push("/monespace");
-        }
+    axios
+      .post("http://localhost:8080/auth/connexion", this.state)
+      .then(response => {
+        localStorage.setItem("currentUser", this.state.mail);
+        const { token } = response.data;
+        localStorage.setItem("token", token);
+        console.log("Envoyé", response.data);
       })
-      .catch(error => {
-        this.alertFunctionDanger();
-      });
+      .catch(err => console.log("Error", err));
   };
 
   render() {
