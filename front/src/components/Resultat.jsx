@@ -167,7 +167,7 @@ const ResultPie = props => {
       labels: tabName,
       datasets: [
         {
-          data: tab.pie1,
+          data: pies.pie1,
           backgroundColor: color
         }
       ]
@@ -176,7 +176,7 @@ const ResultPie = props => {
       labels: tabName,
       datasets: [
         {
-          data: tab.pie2,
+          data: pies.pie2,
           backgroundColor: color
         }
       ]
@@ -185,7 +185,7 @@ const ResultPie = props => {
       labels: tabName,
       datasets: [
         {
-          data: tab.pie3,
+          data: pies.pie3,
           backgroundColor: color
         }
       ]
