@@ -95,6 +95,14 @@ const ResultPie = props => {
   props.possibilities.map(data => possibilities.push(data));
   possibilities.push("------");
 
+  let tab = { pie1: [], pie2: [], pie3: [] };
+  props.possibilities.map(data =>
+    tab.pie1.push(
+      props.dataFetch.filter(state => state[props.index + "one"] === data)
+        .length
+    )
+  );
+
   return (
     <React.Fragment>
       <Row className="">
