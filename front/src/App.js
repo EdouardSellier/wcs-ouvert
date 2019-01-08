@@ -55,8 +55,8 @@ class App extends Component {
             <PrivateRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <PrivateRoute path="/geolocalisation" component={Geolocalisation} />
             <PrivateRoute path="/sondage" component={Sondage} />
-            <PrivateRoute path="/resultat" component={Resultat} />
             <PrivateRoute path="/assistance" component={Assistance} />
+            <PrivateRoute path="/resultat" component={Resultat} />
             <PrivateRoute path="/admin" component={EspaceAdmin} />
             <PrivateRoute
               path="/listeentreprises"
