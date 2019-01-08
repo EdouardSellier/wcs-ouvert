@@ -91,6 +91,7 @@ const ResultBar = props => {
             </Col>
           </Col>
         </Col>
+
         <Col xs={{ size: 10 }} className="mb-5 pb-5 d-block d-lg-none">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
@@ -138,7 +139,7 @@ const ResultPie = props => {
   );
 
   possibilities.map(data =>
-    tab.pie3.push(
+    pies.pie3.push(
       props.dataFetch.filter(state => state[props.index + "three"] === data)
         .length
     )
@@ -161,7 +162,6 @@ const ResultPie = props => {
     "#b604cf",
     "#66354f"
   ];
-
   const data = [
     {
       labels: tabName,
@@ -390,11 +390,33 @@ class Resultat extends Component {
         {questions.map(data => {
           switch (data.type) {
             case "option":
-              return <ResultBar />;
+              return (
+                <ResultBar
+                  hovering={this.state.hovering}
+                  possibilities={data.possibilities}
+                  index={data.index}
+                  dataFetch={this.state.dataFetch}
+                  label={data.label}
+                />
+              );
             case "multipleOption":
-              return <ResultPie />;
+              return (
+                <ResultPie
+                  possibilities={data.possibilities}
+                  index={data.index}
+                  dataFetch={this.state.dataFetch}
+                  label={data.label}
+                />
+              );
             case "number":
-              return <ResultText />;
+              return (
+                <ResultText
+                  possibilities={data.possibilities}
+                  index={data.index}
+                  dataFetch={this.state.dataFetch}
+                  label={data.label}
+                />
+              );
             default:
               return false;
           }
