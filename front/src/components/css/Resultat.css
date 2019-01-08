@@ -46,3 +46,11 @@
   text-align: left;
   font-weight: bold;
 }
+
+.colZero {
+  height: 33%;
+  display: flex;
+  align-items: flex-end;
+  text-align: left;
+  font-weight: bold;
+}
