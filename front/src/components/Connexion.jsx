@@ -30,3 +30,6 @@ handleChange = event => {
 alertFunctionDanger = () => {
     this.refs.notificationAlert.notificationAlert(dangerMsg);
   };
+
+isLoggedIn = event => {
+    event.preventDefault();
