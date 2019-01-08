@@ -4,7 +4,11 @@ import "./css/Resultat.css";
 
 class Resultat extends Component {
   render() {
-    return <div />;
+    return (
+      <div className="container-fluid mt-2">
+        <Row />
+      </div>
+    );
   }
 }
 
