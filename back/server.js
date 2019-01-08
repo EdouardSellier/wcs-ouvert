@@ -12,3 +12,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/auth', require('./auth'));
+
+app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
+  next();
+});
