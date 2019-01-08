@@ -91,6 +91,13 @@ const ResultBar = props => {
 };
 
 const ResultText = props => {
+  let result = 0;
+
+  props.dataFetch.map(data => {
+    result += data[props.index];
+    return false;
+  });
+  result = (result / props.dataFetch.length).toFixed(2);
   return (
     <React.Fragment>
       <Row>
