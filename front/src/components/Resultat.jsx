@@ -356,7 +356,7 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:8080/resultats", {
+    fetch("http://localhost:8080/states", {
       method: "POST"
     })
       .then(results => results.json())
