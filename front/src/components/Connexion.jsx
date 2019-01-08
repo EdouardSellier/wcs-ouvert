@@ -1,15 +1,14 @@
 import React, { Component } from "react";
-import Header from "./Header";
-import "./css/Connexion.css";
+import { withRouter } from "react-router-dom";
 import { Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 
 const dangerMsg = {
-  place: "tr",
+  place: "br",
   message: "Votre email et/ou votre mot de passe sont incorrects",
   type: "danger",
-  autoDismiss: 4
+  autoDismiss: 5
 };
 
 class Connexion extends Component {
@@ -43,7 +42,7 @@ class Connexion extends Component {
       data: body
     })
       .then(res => {
-        if (res.data === "SUCCESS") {
+        if (res.status === 200) {
           this.props.history.push("/monespace");
         }
       })
@@ -55,8 +54,7 @@ class Connexion extends Component {
   render() {
     return (
       <div>
-        <Header />
-        <div className="connexion mt-3">
+        <div className="connexionContainer">
           <NotificationAlert ref="notificationAlert" />
           <Col
             lg={{ size: 6, offset: 3 }}
@@ -65,7 +63,7 @@ class Connexion extends Component {
             xs={{ size: 10, offset: 1 }}
           >
             <form
-              className="mt-5 formContainer card shadow"
+              className="formContainer card shadow"
               onSubmit={this.isLoggedIn}
             >
               <h2 className="mt-2 mb-5 text-center">Connexion à mon espace</h2>
@@ -118,4 +116,4 @@ class Connexion extends Component {
   }
 }
 
-export default Connexion;
+export default withRouter(Connexion);
