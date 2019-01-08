@@ -2,6 +2,16 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import "./css/Resultat.css";
 
+const Square = posed.div({
+  start: {
+    height: "0%"
+  },
+  end: {
+    height: "100%",
+    transition: { delay: 100 }
+  }
+});
+
 const StyledSquare = styled(Square)`
   width: 100%;
   background: linear-gradient(to left, blue 60%, white 70%, blue 100%);
