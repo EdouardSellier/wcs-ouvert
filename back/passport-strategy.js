@@ -4,3 +4,11 @@ const { Strategy: JWTStrategy, ExtractJwt: ExtractJWT } = require('passport-jwt'
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
 const { jwtSecret, dbHandle } = require('./conf');
+
+
+passport.use(
+    new LocalStrategy(
+      {
+        usernameField: 'mail',
+        passwordField: 'password'
+      },
