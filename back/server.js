@@ -20,3 +20,8 @@ app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next)
 app.get('/authrequired', (req, res) => {
   res.send(`You're in, congrats !\n`);
 });
+
+app.get('/monespace', (req, res) => {
+  console.log(`Request for 'GET /monespace'`);
+  res.status(200).send('Mon espace');
+});
