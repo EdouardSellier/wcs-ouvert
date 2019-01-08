@@ -110,6 +110,13 @@ const ResultPie = props => {
     )
   );
 
+  possibilities.map(data =>
+    tab.pie3.push(
+      props.dataFetch.filter(state => state[props.index + "three"] === data)
+        .length
+    )
+  );
+
   return (
     <React.Fragment>
       <Row className="">
