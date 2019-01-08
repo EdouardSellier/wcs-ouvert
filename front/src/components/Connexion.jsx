@@ -31,5 +31,8 @@ alertFunctionDanger = () => {
     this.refs.notificationAlert.notificationAlert(dangerMsg);
   };
 
-isLoggedIn = event => {
+  isLoggedIn = event => {
     event.preventDefault();
+    axios
+      .post("http://localhost:8080/auth/connexion", this.state)
+      .then(response => {
