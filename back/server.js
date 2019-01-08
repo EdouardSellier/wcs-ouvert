@@ -7,7 +7,6 @@ const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const uuidv4 = require("uuid/v4");
 const nodemailer = require("nodemailer");
-const mysql = require("node-mysql");
 
 app.use(bodyParser.json());
 app.use(
@@ -83,13 +82,28 @@ app.post("/connexion", (req, res) => {
   });
 });
 
-app.post("/geolocation", (req, res) => {
-  let data = req.body.society_position.reverse();
-  let societyPosition = JSON.stringify(data);
+app.post("/user/geolocation", (req, res) => {
+  let positionSociety = req.body.society_position.position.reverse().toString();
+  let addressSociety = req.body.society_position.address.toString();
+  const regex = /\+/g;
+  let correctAddressSociety = addressSociety.replace(regex, " ");
+  let correctPositionSociety = positionSociety.replace(",", " - ");
+  let sendSocietyData = `${correctAddressSociety} - (${correctPositionSociety})`;
   const employeesPositions = req.body.employees_positions;
+  const sendEmployeesData = [];
+  employeesPositions.map(data => {
+    let correctPositionEmployee = data.position
+      .reverse()
+      .toString()
+      .replace(",", " - ");
+    let addressEmployee = data.address.toString();
+    let correctAddressEmployee = addressEmployee.replace(regex, " ");
+    let finalData = `${correctAddressEmployee} - (${correctPositionEmployee})`;
+    sendEmployeesData.push(finalData);
+  });
   const formData = {
-    society_position: societyPosition,
-    employees_positions: employeesPositions
+    society_position: sendSocietyData,
+    employees_positions: sendEmployeesData.toString()
   };
   connection.query(
     "INSERT INTO geolocation SET ?",
@@ -243,6 +257,16 @@ app.get("/admin/list/survey", (req, res) => {
   );
 });
 
+app.get("/admin/list/geolocation", (req, res) => {
+  connection.query("SELECT id FROM geolocation", (err, results) => {
+    if (err) {
+      res.status(500).send("The database crashed ! The reason is " + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.post("/admin/list/society", (req, res) => {
   let totalCount = undefined;
   connection.query("SELECT COUNT(*) AS TotalCount FROM user", function(
@@ -292,6 +316,38 @@ app.post("/admin/list/survey", (req, res) => {
     }
     connection.query(
       `SELECT survey_name, starting_date, ending_date, user_id FROM survey LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
+app.post("/admin/list/geolocation", (req, res) => {
+  let totalCount = undefined;
+  connection.query("SELECT COUNT(*) AS TotalCount FROM geolocation", function(
+    err,
+    rows
+  ) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    connection.query(
+      `SELECT * FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
           res.json(err);
