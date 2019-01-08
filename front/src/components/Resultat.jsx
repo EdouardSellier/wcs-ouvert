@@ -52,6 +52,8 @@ class Resultat extends Component {
                   label={data.label}
                 />
               );
+            default:
+              return false;
           }
         })}
       </div>
