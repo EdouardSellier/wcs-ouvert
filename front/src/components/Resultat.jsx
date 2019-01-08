@@ -342,6 +342,14 @@ const ResultText = props => {
 };
 
 class Resultat extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      dataFetch: []
+    };
+  }
+
   render() {
     return (
       <div className="container-fluid mt-2">
