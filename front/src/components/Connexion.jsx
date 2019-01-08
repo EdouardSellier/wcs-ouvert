@@ -36,3 +36,6 @@ alertFunctionDanger = () => {
     axios
       .post("http://localhost:8080/auth/connexion", this.state)
       .then(response => {
+        const { token } = response.data;
+        localStorage.setItem("currentUser", this.state.mail);
+        localStorage.setItem("token", token);
