@@ -9,3 +9,8 @@
   border-bottom: 2px black solid;
   border-left: 2px black solid;
 }
+
+.piesContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
