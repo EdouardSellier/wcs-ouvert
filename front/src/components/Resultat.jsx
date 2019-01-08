@@ -64,13 +64,13 @@ const ResultBar = props => {
             </Col>
           </Col>
         </Col>
-        <Col xs={{ size: 10 }} className="">
-          <Col xs={{ size: 12 }} className="">
+        <Col xs={{ size: 10 }} className="mb-5 pb-5 d-block d-lg-none">
+          <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="px-0">
             {props.possibilities.map(data => (
-              <Col xs={{ size: 12 }} className="">
+              <Col xs={{ size: 12 }} className="d-flex my-2 border-bottom">
                 <Col xs={{ size: 8 }}>{data}</Col>
                 <Col xs={{ size: 4 }}>
                   {(
