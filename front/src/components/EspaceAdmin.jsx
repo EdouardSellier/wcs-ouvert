@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "./css/EspaceAdmin.css";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import Zoom from "react-reveal/Zoom";
+import "./css/EspaceAdmin.css";
 
 const errorMsg = {
   place: "tr",
@@ -134,10 +134,10 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 4 }} className="mt-5">
               <div className="card adminCard pt-2">
                 <div className="card-header">
-                  <h3>
+                  <h4>
                     <i className="fa fa-users" /> Inscriptions :{" "}
                     <b>{this.state.societyList}</b>
-                  </h3>
+                  </h4>
                 </div>
                 <div className="card-body adminStat">
                   <p>
@@ -166,10 +166,10 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 4 }} className="mt-5">
               <div className="card adminCard pt-2">
                 <div className="card-header">
-                  <h3>
+                  <h4>
                     <i className="fa fa-bar-chart" /> Enquêtes de mobilité :{" "}
                     <b>{this.state.surveyList}</b>
-                  </h3>
+                  </h4>
                 </div>
                 <div className="card-body adminStat">
                   <p>
@@ -200,10 +200,10 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 4 }} className="mt-5">
               <div className="card adminCard pt-2">
                 <div className="card-header">
-                  <h3>
+                  <h4>
                     <i className="fa fa-map" /> Géolocalisations :{" "}
                     <b>{this.state.geolocationLength}</b>
-                  </h3>
+                  </h4>
                 </div>
                 <div className="card-body adminStat">
                   <p>

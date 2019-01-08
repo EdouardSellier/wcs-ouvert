@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "./css/EspaceAdmin.css";
 import { Container, Row, Col } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
 import JsonTable from "ts-react-json-table";
 import axios from "axios";
 import { CSVLink } from "react-csv";
+import "./css/EspaceAdmin.css";
 
 const errorMsg = {
   place: "tr",
@@ -145,6 +145,7 @@ class ListeGeoloc extends Component {
 
   render() {
     let columns = [
+      { key: "user_id", label: "Société" },
       { key: "society_position", label: "Adresse et position de la société" },
       {
         key: "employees_positions",
@@ -170,7 +171,7 @@ class ListeGeoloc extends Component {
           return (
             <CSVLink
               data={this.state.csvData}
-              className="btn btn-sm btn-warning"
+              className="btn btn-sm btn-warning ml-3"
             >
               <b>
                 Export CSV <i className="fa fa-file-o" />

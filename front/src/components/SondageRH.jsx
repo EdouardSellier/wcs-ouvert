@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./css/SondageRH.css";
 import questions from "./questions";
 import {
   Container,
@@ -13,6 +12,7 @@ import {
 } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
+import "./css/EspaceRH.css";
 
 const errorMsg = {
   place: "tr",
@@ -134,7 +134,7 @@ class SondageRH extends Component {
     let body = { mails: this.props.location.state.mailsData };
     axios({
       method: "post",
-      url: "http://localhost:8080/rh/send/survey",
+      url: "http://localhost:8080/user/send/survey",
       data: body
     })
       .then(res => {
@@ -235,17 +235,13 @@ class SondageRH extends Component {
               close={closeBtn}
               className="modalHeader"
             >
-              {" "}
-              Confirmer la diffusion{" "}
+              <b>Confirmer la diffusion</b>
             </ModalHeader>
             <ModalBody className="movieModal">
               <p>
-                <b>
-                  Votre enquête est prête, souhaitez-vous la diffuser à vos
-                  salariés ?
-                </b>
+                Votre enquête est prête, souhaitez-vous la diffuser à vos
+                salariés ?
               </p>
-              <br />
               <p>
                 L’enquête sera envoyée aux adresses e-mail renseignées dans la
                 page de création de l’enquête,{" "}

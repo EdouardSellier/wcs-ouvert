@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./css/Geolocalisation.css";
 import APIGeoloc from "./APIGeoloc";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
@@ -10,6 +9,7 @@ import csv from "csv";
 import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
 import ScrollAnimation from "react-animate-on-scroll";
+import "./css/Geolocalisation.css";
 
 const errorMsg = {
   place: "tr",

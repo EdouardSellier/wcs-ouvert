@@ -1,9 +1,9 @@
 import React from "react";
-import "./css/Inscription.css";
 import { Row, Col } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import "./css/Accueil.css";
 
 const successMsg = {
   place: "br",

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import "./css/EspaceRH.css";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
 import Zoom from "react-reveal/Zoom";
+import "./css/EspaceRH.css";
 
 class EspaceRH extends Component {
   handleSubmit = event => {

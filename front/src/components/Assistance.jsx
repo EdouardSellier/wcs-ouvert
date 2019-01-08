@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import "./css/Assistance.css";
 
 class Assistance extends Component {
   handleSubmit = event => {
@@ -10,7 +9,7 @@ class Assistance extends Component {
   render() {
     return (
       <div>
-        <div className="assistance text-white mb-5">
+        <div className="text-white mb-5">
           <Container className="mt-2">
             <Row>
               <Col lg={{ size: 2 }}>

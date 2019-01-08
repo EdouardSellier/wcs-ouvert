@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "./css/EspaceAdmin.css";
 import {
   Container,
   Row,
@@ -13,6 +12,7 @@ import {
 import axios from "axios";
 import JsonTable from "ts-react-json-table";
 import NotificationAlert from "react-notification-alert";
+import "./css/EspaceAdmin.css";
 
 const errorMsg = {
   place: "tr",
@@ -378,12 +378,12 @@ class ListeEntreprises extends Component {
           </Row>
           <Row>
             <Col>
-              <p className="mt-5 description">
+              <p className="mt-5 descInscription">
                 <b>
                   L'e-mail de confirmation d'inscription sera envoyé aux
                   sociétés quand elles seront à jour de réglement. Vous avez
-                  également la possibilité de revenir en arrière en cas de
-                  problème.
+                  également la possibilité de désactiver un compte si la société
+                  n'a pas renouvelé son inscription après échéance.
                 </b>
               </p>
             </Col>

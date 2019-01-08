@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import "./css/ListeEnquetesRH.css";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
+import "./css/EnqueteRH.css";
 
 const errorMsg = {
   place: "tr",
@@ -32,7 +32,7 @@ class ListeEnquetesRH extends Component {
 
   getSurveyName = () => {
     axios
-      .get("http://localhost:8080/rh/list/survey")
+      .get("http://localhost:8080/user/list/survey")
       .then(res => {
         this.setState({
           allSurveyName: res.data

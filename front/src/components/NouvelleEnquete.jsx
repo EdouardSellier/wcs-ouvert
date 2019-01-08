@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import "./css/NouvelleEnquete.css";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
 import NotificationAlert from "react-notification-alert";
 import csv from "csv";
 import axios from "axios";
+import "./css/EnqueteRH.css";
 
 const errorMsg = {
   place: "tr",
@@ -68,7 +68,7 @@ class Home extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/rh/survey",
+      url: "http://localhost:8080/user/survey",
       data: body
     })
       .then(res => {
