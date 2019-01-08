@@ -91,7 +91,21 @@ const ResultBar = props => {
 };
 
 const ResultText = props => {
-  return <React.Fragment />;
+  return (
+    <React.Fragment>
+      <Row>
+        <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="">
+            {props.label}
+          </Col>
+          <Col xs={{ size: 12 }} className="">
+            La moyenne des salariés ayant répondu est de{" "}
+            <span className="dataResultText">{result}€</span>
+          </Col>
+        </Col>
+      </Row>
+    </React.Fragment>
+  );
 };
 
 class Resultat extends Component {
