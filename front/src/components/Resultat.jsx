@@ -5,26 +5,26 @@ import "./css/Resultat.css";
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="">
-        <Col md={{ size: 10 }} className="">
-          <Col xs={{ size: 12 }} className="">
+      <Row className="d-flex justify-content-center">
+        <Col md={{ size: 10 }} className="mb-5 pb-5  d-none d-lg-block">
+          <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="">
-            <Col xs={{ size: 1 }} className="">
-              <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="d-flex containerResultBar px-0">
+            <Col xs={{ size: 1 }} className="px-0">
+              <Col xs={{ size: 12 }} className="colHundred pl-1">
                 100%
               </Col>
-              <Col xs={{ size: 12 }} className="">
+              <Col xs={{ size: 12 }} className="colFifty pl-1">
                 50%
               </Col>
-              <Col xs={{ size: 12 }} className="">
+              <Col xs={{ size: 12 }} className="colZero  pl-1">
                 0%
               </Col>
             </Col>
-            <Col xs={{ size: 11 }} className="">
+            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
               {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="">
+                <Col xs={{ size: 1 }} className="containerBar">
                   <Col
                     xs={{ size: 12 }}
                     style={{
@@ -38,7 +38,7 @@ const ResultBar = props => {
                       display: "flex",
                       alignItems: "flex-end"
                     }}
-                    className=""
+                    className="px-0"
                   >
                     <StyledSquare pose={props.hovering ? "end" : "start"}>
                       {(
@@ -54,10 +54,10 @@ const ResultBar = props => {
               ))}
             </Col>
           </Col>
-          <Col xs={{ size: 12 }} className="">
-            <Col xs={{ size: 11 }} className="">
+          <Col xs={{ size: 12 }} className="px-0 justifyContentRight">
+            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
               {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="">
+                <Col xs={{ size: 1 }} className="barTitle">
                   {data}
                 </Col>
               ))}
