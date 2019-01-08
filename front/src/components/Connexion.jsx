@@ -34,24 +34,14 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
-    fetch("http://localhost:8080/auth/connexion", {
-      method: "POST",
-      body: JSON.stringify(this.state),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    })
-      .then(res => {
-        if (res.status === 200) {
-          this.props.history.push("/monespace");
-        } else {
-          const error = new Error(res.error);
-          throw error;
-        }
+    axios
+      .post("http://localhost:8080/auth/connexion", this.state)
+      .then(response => {
+        console.log("Envoyé", response.data);
       })
-      .catch(err => {
-        this.alertFunctionDanger();
-      });
+      .catch(err => console.log("Error", err));
+    localStorage.setItem("currentUser", this.state.mail);
+    localStorage.setItem("token");
   };
 
   render() {

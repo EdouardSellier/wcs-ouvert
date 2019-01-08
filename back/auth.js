@@ -20,7 +20,7 @@ router.post('/connexion', (req, res) => {
       }
       // generate a signed Json Web Token with the contents of user object and return it in the response
       const token = jwt.sign(user, jwtSecret);
-      return res.json({ user, token });
+      return res.status(200).json({ user, token });
     });
     return undefined;
   })(req, res);
