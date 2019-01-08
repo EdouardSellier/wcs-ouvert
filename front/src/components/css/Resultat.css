@@ -22,3 +22,9 @@
   text-align: left;
   font-weight: bold;
 }
+
+.barTitle {
+  word-wrap: break-word;
+  font-size: 0.8em;
+  font-weight: bold;
+}
