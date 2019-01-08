@@ -248,7 +248,7 @@ const ResultPie = props => {
 
   return (
     <React.Fragment>
-      <Row className="">
+      <Row className="d-none d-lg-block">
         <Col xs={{ size: 12 }} className="mb-5 pb-5">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
