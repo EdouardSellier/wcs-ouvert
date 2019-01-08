@@ -4,3 +4,8 @@
   align-items: flex-end;
   height: 33vh;
 }
+
+.containerResultBar {
+  border-bottom: 2px black solid;
+  border-left: 2px black solid;
+}
