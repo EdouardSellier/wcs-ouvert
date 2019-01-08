@@ -21,14 +21,14 @@ class Connexion extends Component {
     };
   }
 
-  alertFunctionDanger = () => {
-    this.refs.notificationAlert.notificationAlert(dangerMsg);
-  };
-
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
     });
+  };
+
+  alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
   };
 
   isLoggedIn = event => {
