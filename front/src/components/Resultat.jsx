@@ -210,6 +210,42 @@ const ResultPie = props => {
     }
   ];
 
+  const options2 = [
+    {
+      title: {
+        display: true,
+        text: "Priorité 1.",
+        fontFamily: "Roboto",
+        fontSize: 13
+      },
+      legend: {
+        display: false
+      }
+    },
+    {
+      title: {
+        display: true,
+        text: "Priorité 2.",
+        fontFamily: "Roboto",
+        fontSize: 13
+      },
+      legend: {
+        display: false
+      }
+    },
+    {
+      title: {
+        display: true,
+        text: "Priorité 3.",
+        fontFamily: "Roboto",
+        fontSize: 13
+      },
+      legend: {
+        display: false
+      }
+    }
+  ];
+
   return (
     <React.Fragment>
       <Row className="">
