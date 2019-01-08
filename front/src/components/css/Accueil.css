@@ -1,18 +1,29 @@
 .homeSlogan {
-  color: #38909d;
   font-size: 1.5em;
   padding-top: 5px;
+  color: #474b4d;
 }
 
 .homeImage {
   width: 100%;
-  height: 400px;
+  height: 82vh;
+  opacity: 0.6;
+}
+
+.backgroundImage {
+  background: black;
 }
 
 .home {
   min-height: 80vh;
 }
 
-.card-body {
-  height: 200px;
+.homeCard {
+  height: 250px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+h4 {
+  font-weight: bold;
 }

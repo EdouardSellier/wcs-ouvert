@@ -1,12 +1,17 @@
 header {
-  background-color: #c0c0c0;
+  background: linear-gradient(
+    to bottom,
+    rgba(125, 126, 125, 1) 0%,
+    rgba(14, 14, 14, 1) 100%
+  );
 }
 
-.navLink {
+.navLink,
+.navbar-brand {
   text-decoration: none;
-  color: white;
+  color: #fff;
 }
 
 .navLink:hover {
-  color: white;
+  color: #fff;
 }

@@ -1,0 +1,16 @@
+.surveyCard {
+  height: 330px;
+  overflow: scroll;
+  text-align: left;
+}
+
+.confirmationMsg {
+  color: #38909d;
+  padding: 22px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.surveyTextArea {
+  width: 60%;
+}
