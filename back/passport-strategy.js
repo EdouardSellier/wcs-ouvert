@@ -52,7 +52,6 @@ passport.use(
     },
     (jwtPayload, cb) => {
       const user = jwtPayload;
-      // find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
       return cb(null, user);
     }
   )
