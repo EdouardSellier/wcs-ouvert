@@ -41,3 +41,16 @@ passport.use(
     }
   )
 );
+
+passport.use(
+  new JWTStrategy(
+    {
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+      secretOrKey: jwtSecret
+    },
+    (jwtPayload, cb) => {
+      const user = jwtPayload;
+      return cb(null, user);
+    }
+  )
+);
