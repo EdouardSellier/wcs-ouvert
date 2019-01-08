@@ -11,3 +11,42 @@ body {
   color: rgb(78, 78, 78);
   font-family: "Abel", sans-serif;
 }
+
+h4 {
+  font-weight: bold;
+}
+
+hr {
+  border-top: 2px ridge white;
+  width: 80%;
+}
+
+.card {
+  border-top-width: 3px;
+  border-color: #cfdbe2;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  border-radius: 0.25rem;
+  color: rgb(53, 51, 51);
+}
+
+.card-header {
+  background-color: #fff;
+  border-bottom: 0;
+}
+
+input {
+  border: 1px solid #dde6e9;
+  border-radius: 0.25rem;
+  margin-bottom: 20px;
+}
+
+button {
+  background-color: #38909d;
+}
+
+.description {
+  font-size: 1.1em;
+  text-shadow: 1px 1px 1px black;
+  letter-spacing: 1px;
+  text-align: left;
+}
