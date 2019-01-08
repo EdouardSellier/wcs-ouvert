@@ -90,6 +90,10 @@ const ResultBar = props => {
   );
 };
 
+const ResultPie = props => {
+  return <React.Fragment />;
+};
+
 const ResultText = props => {
   let result = 0;
 
@@ -98,6 +102,7 @@ const ResultText = props => {
     return false;
   });
   result = (result / props.dataFetch.length).toFixed(2);
+
   return (
     <React.Fragment>
       <Row>
