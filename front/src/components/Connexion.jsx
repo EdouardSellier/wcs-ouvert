@@ -39,6 +39,7 @@ class Connexion extends Component {
         const { token } = response.data;
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("token", token);
+        this.props.history.push("/monespace");
         console.log("Envoyé", response.data);
       })
       .catch(err => console.log("Error", err));
