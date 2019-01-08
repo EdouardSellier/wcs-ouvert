@@ -1,5 +1,9 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "reactstrap";
+import posed from "react-pose";
+import styled from "styled-components";
+import { Row, Col } from "reactstrap";
+import questions from "./questions";
+import { Pie } from "react-chartjs-2";
 import "./css/Resultat.css";
 
 const Square = posed.div({
