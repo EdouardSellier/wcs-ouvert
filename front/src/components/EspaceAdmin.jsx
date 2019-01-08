@@ -23,7 +23,8 @@ class AccueilAdmin extends Component {
       surveyList: 0,
       surveyFinished: 0,
       surveyNotFinished: 0,
-      surveyArray: []
+      surveyArray: [],
+      geolocationLength: 0
     };
   }
 
@@ -84,9 +85,25 @@ class AccueilAdmin extends Component {
         this.alertFunctionError();
       });
   };
+
+  getGeolocationStat = () => {
+    axios
+      .get("http://localhost:8080/admin/list/geolocation")
+      .then(result => {
+        let geolocationList = result.data.length;
+        this.setState({
+          geolocationLength: geolocationList
+        });
+      })
+      .catch(err => {
+        this.alertFunctionError();
+      });
+  };
+
   componentDidMount = () => {
     this.getSocietyStat();
     this.getSurveyStat();
+    this.getGeolocationStat();
   };
 
   render() {
@@ -114,15 +131,15 @@ class AccueilAdmin extends Component {
         </Container>
         <Container className="espaceAdmin mb-4">
           <Row>
-            <Col lg={{ size: 5, offset: 1 }} className="mt-5">
-              <div className="card">
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
                 <div className="card-header">
                   <h3>
                     <i className="fa fa-users" /> Inscriptions :{" "}
-                    {this.state.societyList}
+                    <b>{this.state.societyList}</b>
                   </h3>
                 </div>
-                <div className="card-body p-5 adminStat">
+                <div className="card-body adminStat">
                   <p>
                     <span className="nbSociety">{this.state.societyPaid}</span>{" "}
                     entreprise
@@ -138,25 +155,23 @@ class AccueilAdmin extends Component {
                       ? "s sont en attente de confirmation."
                       : " est en attente de confirmation."}
                   </p>
-                  <Col lg={{ size: 10, offset: 1 }}>
-                    <Link to="/listeentreprises">
-                      <button className="btn text-white m-3">
-                        Consulter la liste des entreprises
-                      </button>
-                    </Link>
-                  </Col>
+                  <Link to="/listeentreprises">
+                    <button className="btn text-white mt-4 ml-5">
+                      Consulter la liste des entreprises
+                    </button>
+                  </Link>
                 </div>
               </div>
             </Col>
-            <Col lg={{ size: 5 }} className="mt-5">
-              <div className="card">
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
                 <div className="card-header">
                   <h3>
                     <i className="fa fa-bar-chart" /> Enquêtes de mobilité :{" "}
-                    {this.state.surveyList}{" "}
+                    <b>{this.state.surveyList}</b>
                   </h3>
                 </div>
-                <div className="card-body p-5 adminStat">
+                <div className="card-body adminStat">
                   <p>
                     <span className="nbSociety">
                       {this.state.surveyFinished}
@@ -174,13 +189,33 @@ class AccueilAdmin extends Component {
                       ? "s en cours."
                       : " en cours."}{" "}
                   </p>
-                  <Col lg={{ size: 10, offset: 1 }}>
-                    <Link to="/listeenquetes">
-                      <button className="btn text-white m-3">
-                        Consulter la liste des enquêtes
-                      </button>
-                    </Link>
-                  </Col>
+                  <Link to="/listeenquetes">
+                    <button className="btn text-white mt-5 ml-5">
+                      Consulter la liste des enquêtes
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
+                <div className="card-header">
+                  <h3>
+                    <i className="fa fa-map" /> Géolocalisations :{" "}
+                    <b>{this.state.geolocationLength}</b>
+                  </h3>
+                </div>
+                <div className="card-body adminStat">
+                  <p>
+                    Vous pouvez retrouver sur cette page les coordonnées GPS et
+                    les adresses du lieu de travail et des salariés renseignés
+                    lors de la géolocalisation et les exporter sous format CSV.
+                  </p>
+                  <Link to="/listegeoloc">
+                    <button className="btn text-white mt-4 ml-3">
+                      Consulter la liste des géolocalisations
+                    </button>
+                  </Link>
                 </div>
               </div>
             </Col>

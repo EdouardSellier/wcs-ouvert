@@ -43,6 +43,7 @@ class Geolocalisation extends Component {
       addressEmployeeToArray: [],
       isochroneCenter: [],
       mapData: [],
+      addressSocietyToArray: [],
       addressSocietyToLatLng: [],
       nbSociety: "",
       streetSociety: "",
@@ -98,6 +99,7 @@ class Geolocalisation extends Component {
             streetSociety: "",
             zipCodeSociety: "",
             citySociety: "",
+            addressSocietyToArray: dataStr,
             isChecked: true
           });
         } else {
@@ -381,6 +383,7 @@ class Geolocalisation extends Component {
                 <APIGeoloc
                   addressEmployees={addressEmployees}
                   addressSociety={addressSociety}
+                  addressSocietyToArray={this.state.addressSocietyToArray}
                   profile="driving-car"
                   rangeType="distance"
                   range="5000,10000,15000"
@@ -399,6 +402,7 @@ class Geolocalisation extends Component {
                 <APIGeoloc
                   addressEmployees={addressEmployees}
                   addressSociety={addressSociety.reverse()}
+                  addressSocietyToArray={this.state.addressSocietyToArray}
                   profile="cycling-regular"
                   rangeType="time"
                   range="300,600,900"

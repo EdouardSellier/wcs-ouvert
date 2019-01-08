@@ -18,6 +18,10 @@
   margin-bottom: 30px;
 }
 
+.homeCard:hover {
+  transform: scale(1.05);
+}
+
 h4 {
   font-weight: bold;
 }

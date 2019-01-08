@@ -34,9 +34,9 @@ class EspaceRH extends Component {
         <Container className="mt-5">
           <Row className="justify-content-between">
             <Col lg={{ size: 4 }}>
-              <div className="card shadow mt-5 rhCard">
-                <div className="card-body">
-                  <Link to="/nouvelleenquete">
+              <Link to="/nouvelleenquete" className="linkTo">
+                <div className="card shadow mt-5 rhCard">
+                  <div className="card-body">
                     <img
                       src="./img/createSurvey.jpg"
                       alt="icon"
@@ -44,23 +44,23 @@ class EspaceRH extends Component {
                       height="150"
                       className="cardIcon"
                     />
-                  </Link>
-                  <h4>Créer et diffuser une enquête</h4>
-                  <p className="text-justify">
-                    Depuis cette page, vous pouvez diffuser auprès de vos
-                    salariés une enquête permettant de mieux comprendre leurs
-                    habitudes de déplacement. Cela vous aidera par la suite à
-                    proposer des solutions d’alternatives à l’utilisation de la
-                    voiture individuelle pertinentes pour les déplacements
-                    quotidiens de vos salariés.
-                  </p>
+                    <h4>Créer et diffuser une enquête</h4>
+                    <p className="text-justify">
+                      Depuis cette page, vous pouvez diffuser auprès de vos
+                      salariés une enquête permettant de mieux comprendre leurs
+                      habitudes de déplacement. Cela vous aidera par la suite à
+                      proposer des solutions d’alternatives à l’utilisation de
+                      la voiture individuelle pertinentes pour les déplacements
+                      quotidiens de vos salariés.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Col>
             <Col lg={{ size: 4 }}>
-              <div className="card shadow mt-5 mb-4 rhCard">
-                <div className="card-body">
-                  <Link to="/listeenquetesrh">
+              <Link to="/listeenquetesrh" className="linkTo">
+                <div className="card shadow mt-5 mb-4 rhCard">
+                  <div className="card-body">
                     <img
                       src="./img/surveyInProgress.jpg"
                       alt="icon"
@@ -68,21 +68,22 @@ class EspaceRH extends Component {
                       height="150"
                       className="cardIcon"
                     />
-                  </Link>
-                  <h4>Suivre les enquêtes en cours</h4>
-                  <p className="text-justify p-3">
-                    Ici, sélectionnez parmi les enquêtes que vous avez créées
-                    celle dont vous voulez consulter les résultats. Si l’enquête
-                    n’a pas pris fin, vous serez alors informé du taux de
-                    participation.
-                  </p>
+
+                    <h4>Suivre les enquêtes en cours</h4>
+                    <p className="text-justify p-3">
+                      Ici, sélectionnez parmi les enquêtes que vous avez créées
+                      celle dont vous voulez consulter les résultats. Si
+                      l’enquête n’a pas pris fin, vous serez alors informé du
+                      taux de participation.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Col>
             <Col lg={{ size: 4 }}>
-              <div className="card shadow mt-5 mb-4 rhCard">
-                <div className="card-body">
-                  <Link to="/geolocalisation">
+              <Link to="/geolocalisation" className="linkTo">
+                <div className="card shadow mt-5 mb-4 rhCard">
+                  <div className="card-body">
                     <img
                       src="./img/geoloc.jpg"
                       alt="icon"
@@ -90,18 +91,18 @@ class EspaceRH extends Component {
                       height="150"
                       className="cardIcon"
                     />
-                  </Link>
-                  <h4>Géolocaliser les salariés</h4>
-                  <p className="text-justify">
-                    Cette page vous permet de géolocaliser vos salariés. Grâce à
-                    cela, vous connaîtrez entre autres la distance domicile –
-                    travail moyenne que parcourent vos salariés, et la part
-                    d’entre eux pouvant se rendre sur leur lieu de travail en
-                    vélo. Pour géolocaliser vos salariés, il vous suffit de
-                    suivre les étapes numérotées ci-dessous.
-                  </p>
+                    <h4>Géolocaliser les salariés</h4>
+                    <p className="text-justify">
+                      Cette page vous permet de géolocaliser vos salariés. Grâce
+                      à cela, vous connaîtrez entre autres la distance domicile
+                      – travail moyenne que parcourent vos salariés, et la part
+                      d’entre eux pouvant se rendre sur leur lieu de travail en
+                      vélo. Pour géolocaliser vos salariés, il vous suffit de
+                      suivre les étapes numérotées ci-dessous.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Col>
           </Row>
         </Container>

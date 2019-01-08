@@ -101,13 +101,16 @@ class APIGeoloc extends Component {
 
   getLatLng = () => {
     let allMapData = this.state.employeesPositions;
-    this.props.addressEmployees.map((address, id) => {
+    this.props.addressEmployees.map(address => {
       let addressQuery = address.join("+").replace(" ", "+");
       return axios
         .get(`https://api-adresse.data.gouv.fr/search/?q=${addressQuery}`)
         .then(result => {
           let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
-          let latLng = { id: id + 1, position: employeesMarkers };
+          let latLng = {
+            position: employeesMarkers,
+            address: addressQuery
+          };
           allMapData.push(latLng);
           if (allMapData.length === this.props.addressEmployees.length) {
             this.setState(
@@ -121,15 +124,18 @@ class APIGeoloc extends Component {
             this.props.parameter === "à vélo" &&
             allMapData.length === this.props.addressEmployees.length
           ) {
-            let societyPosition = this.props.addressSociety;
-            let employeesPositions = JSON.stringify(allMapData);
+            let societyPosition = {
+              position: this.props.addressSociety,
+              address: this.props.addressSocietyToArray
+            };
+            let employeesPositions = allMapData;
             let body = {
               society_position: societyPosition,
               employees_positions: employeesPositions
             };
             axios({
               method: "post",
-              url: "http://localhost:8080/geolocation",
+              url: "http://localhost:8080/user/geolocation",
               data: body
             })
               .then(result => {

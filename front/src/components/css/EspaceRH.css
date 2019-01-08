@@ -25,3 +25,11 @@
 .rhCard {
   height: 320px;
 }
+
+.rhCard:hover {
+  transform: scale(1.05);
+}
+
+.linkTo:hover {
+  text-decoration: none;
+}

@@ -12,6 +12,7 @@ import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
+import ListeGeoloc from "./components/ListeGeoloc";
 import Sondage from "./components/Sondage";
 import Footer from "./components/Footer";
 
@@ -32,6 +33,7 @@ class App extends Component {
             <Route path="/admin" component={EspaceAdmin} />
             <Route path="/listeentreprises" component={ListeEntreprises} />
             <Route path="/listeenquetes" component={ListeEnquetes} />
+            <Route path="/listegeoloc" component={ListeGeoloc} />
             <Route path="/sondage" component={Sondage} />
           </Switch>
         </BrowserRouter>

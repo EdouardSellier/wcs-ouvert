@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import "./css/ListeEntreprises.css";
+import "./css/EspaceAdmin.css";
 import {
   Container,
   Row,
@@ -324,7 +324,7 @@ class ListeEntreprises extends Component {
       {
         key: "has_paid",
         label: "Paiement",
-        cell: function(item) {
+        cell: item => {
           if (item.has_paid === 0) {
             return (
               <div>
@@ -434,7 +434,7 @@ class ListeEntreprises extends Component {
           <Row>
             <Col lg={{ size: 2, offset: 10 }}>
               <button
-                className="btn getSurveyPage text-white mt-4 mb-3"
+                className="btn getPage text-white mt-4 mb-3"
                 onClick={this.getSurveyListPage}
               >
                 <b>Consulter les enquêtes</b> <i className="fa fa-bar-chart" />{" "}
