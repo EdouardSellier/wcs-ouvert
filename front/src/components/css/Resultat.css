@@ -54,3 +54,9 @@
   text-align: left;
   font-weight: bold;
 }
+
+.dataResultText {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-left: 1%;
+}
