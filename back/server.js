@@ -118,7 +118,7 @@ app.post("/user/geolocation", (req, res) => {
   );
 });
 
-app.post("/rh/survey", (req, res) => {
+app.post("/user/survey", (req, res) => {
   const formData = req.body;
   connection.query("INSERT INTO survey SET ?", formData, (err, results) => {
     if (err) {
@@ -129,7 +129,7 @@ app.post("/rh/survey", (req, res) => {
   });
 });
 
-app.get("/rh/list/survey", (req, res) => {
+app.get("/user/list/survey", (req, res) => {
   connection.query("SELECT survey_name FROM survey", (err, results) => {
     if (err) {
       res.status(500).send("The database crashed ! The reason is " + err);
@@ -139,7 +139,7 @@ app.get("/rh/list/survey", (req, res) => {
   });
 });
 
-app.post("/rh/send/survey", (req, res) => {
+app.post("/user/send/survey", (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
@@ -347,7 +347,7 @@ app.post("/admin/list/geolocation", (req, res) => {
       limitNum = req.body.limit;
     }
     connection.query(
-      `SELECT * FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
+      `SELECT id, society_position, employees_positions, user_id FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
           res.json(err);
