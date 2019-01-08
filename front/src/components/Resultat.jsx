@@ -135,6 +135,36 @@ const ResultPie = props => {
     "#66354f"
   ];
 
+  const data = [
+    {
+      labels: tabName,
+      datasets: [
+        {
+          data: tab.pie1,
+          backgroundColor: color
+        }
+      ]
+    },
+    {
+      labels: tabName,
+      datasets: [
+        {
+          data: tab.pie2,
+          backgroundColor: color
+        }
+      ]
+    },
+    {
+      labels: tabName,
+      datasets: [
+        {
+          data: tab.pie3,
+          backgroundColor: color
+        }
+      ]
+    }
+  ];
+
   return (
     <React.Fragment>
       <Row className="">
