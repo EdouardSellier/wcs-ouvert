@@ -39,3 +39,7 @@ alertFunctionDanger = () => {
         const { token } = response.data;
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("token", token);
+        console.log("Envoyé", response.data);
+      })
+      .catch(err => console.log("Error", err));
+  };
