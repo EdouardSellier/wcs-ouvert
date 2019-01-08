@@ -95,10 +95,17 @@ const ResultPie = props => {
   props.possibilities.map(data => possibilities.push(data));
   possibilities.push("------");
 
-  let tab = { pie1: [], pie2: [], pie3: [] };
+  let pies = { pie1: [], pie2: [], pie3: [] };
   props.possibilities.map(data =>
-    tab.pie1.push(
+    pies.pie1.push(
       props.dataFetch.filter(state => state[props.index + "one"] === data)
+        .length
+    )
+  );
+
+  possibilities.map(data =>
+    pies.pie2.push(
+      props.dataFetch.filter(state => state[props.index + "two"] === data)
         .length
     )
   );
