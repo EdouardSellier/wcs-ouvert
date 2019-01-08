@@ -24,6 +24,16 @@ class Resultat extends Component {
         </Row>
         {questions.map(data => {
           switch (data.type) {
+            case "option":
+              return (
+                <ResultBar
+                  hovering={this.state.hovering}
+                  possibilities={data.possibilities}
+                  index={data.index}
+                  dataFetch={this.state.dataFetch}
+                  label={data.label}
+                />
+              );
           }
         })}
       </div>
