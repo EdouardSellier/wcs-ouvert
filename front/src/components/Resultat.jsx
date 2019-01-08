@@ -91,6 +91,10 @@ const ResultBar = props => {
 };
 
 const ResultPie = props => {
+  let possibilities = [];
+  props.possibilities.map(data => possibilities.push(data));
+  possibilities.push("------");
+
   return (
     <React.Fragment>
       <Row className="">
