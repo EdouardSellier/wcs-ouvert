@@ -18,7 +18,6 @@ router.post('/connexion', (req, res) => {
       if (loginErr) {
         res.send(loginErr);
       }
-      // generate a signed Json Web Token with the contents of user object and return it in the response
       const token = jwt.sign(user, jwtSecret);
       return res.status(200).json({ user, token });
     });
