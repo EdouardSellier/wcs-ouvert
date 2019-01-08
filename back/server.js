@@ -32,3 +32,7 @@ app.use((req, res, next) => {
     .status(404)
     .send(`This page seems too be *really* missing, that's not a way of keeping you out !`);
 });
+
+app.listen(portServer, () => {
+  console.log(`Listening on http://localhost:${portServer}...`);
+});
