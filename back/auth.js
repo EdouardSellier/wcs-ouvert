@@ -24,3 +24,19 @@ router.post('/connexion', (req, res) => {
     return undefined;
   })(req, res);
 });
+
+router.post('/inscription', (req, res) => {
+  const formData = req.body;
+  console.log(formData);
+  bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
+    formData.password = hash;
+    dbHandle.query(`INSERT INTO user SET ?`, formData, (errorRequest, results) => {
+      if (errorRequest) {
+        return res.status(500).send(`We crashed, here is the message : ${errorRequest}`);
+      }
+      return res.status(201).send(`Signup successful`);
+    });
+  });
+});
+
+module.exports = router;
