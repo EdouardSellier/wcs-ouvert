@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import "./css/Resultat.css";
 
+const ResultBar = props => {return();};
+
 class Resultat extends Component {
   render() {
     return (
@@ -25,33 +27,11 @@ class Resultat extends Component {
         {questions.map(data => {
           switch (data.type) {
             case "option":
-              return (
-                <ResultBar
-                  hovering={this.state.hovering}
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
+              return <ResultBar />;
             case "multipleOption":
-              return (
-                <ResultPie
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
+              return <ResultPie />;
             case "number":
-              return (
-                <ResultText
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
+              return <ResultText />;
             default:
               return false;
           }
