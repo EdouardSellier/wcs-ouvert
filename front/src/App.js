@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
+import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Accueil from "./components/Accueil";
 import Inscription from "./components/Inscription";
@@ -16,6 +16,30 @@ import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authChecker.getUser() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/connexion",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
+);
+
+const authChecker = {
+  getUser() {
+    return localStorage.getItem("currentUser", "token") || null;
+  }
+};
+
 class App extends Component {
   render() {
     return (
@@ -25,17 +49,20 @@ class App extends Component {
             <Route exact path="/" component={Accueil} />
             <Route path="/inscription" component={Inscription} />
             <Route path="/connexion" component={Connexion} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/monespace" component={EspaceRH} />
-            <Route path="/nouvelleenquete" component={NouvelleEnquete} />
-            <Route path="/listeenquetesrh" component={ListeEnquetesRH} />
-            <Route path="/geolocalisation" component={Geolocalisation} />
-            <Route path="/sondage" component={Sondage} />
-            <Route path="/resultat" component={Resultat} />
-            <Route path="/assistance" component={Assistance} />
-            <Route path="/admin" component={EspaceAdmin} />
-            <Route path="/listeentreprises" component={ListeEntreprises} />
-            <Route path="/listeenquetes" component={ListeEnquetes} />
+            <PrivateRoute path="/contact" component={Contact} />
+            <PrivateRoute path="/monespace" component={EspaceRH} />
+            <PrivateRoute path="/nouvelleenquete" component={NouvelleEnquete} />
+            <PrivateRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
+            <PrivateRoute path="/geolocalisation" component={Geolocalisation} />
+            <PrivateRoute path="/sondage" component={Sondage} />
+            <PrivateRoute path="/resultat" component={Resultat} />
+            <PrivateRoute path="/assistance" component={Assistance} />
+            <PrivateRoute path="/admin" component={EspaceAdmin} />
+            <PrivateRoute
+              path="/listeentreprises"
+              component={ListeEntreprises}
+            />
+            <PrivateRoute path="/listeenquetes" component={ListeEnquetes} />
           </Switch>
         </BrowserRouter>
       </div>
