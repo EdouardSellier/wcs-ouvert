@@ -121,6 +121,20 @@ const ResultPie = props => {
   props.possibilities.map(data => tabName.push(data));
   tabName.push("Aucun");
 
+  let color = [
+    "#aad7a9",
+    "#348b5",
+    "#3cd74b",
+    "#fd62d9",
+    "#cda889",
+    "#bfb1e5",
+    "#c5eff2",
+    "#3bf859",
+    "#5f8a01",
+    "#b604cf",
+    "#66354f"
+  ];
+
   return (
     <React.Fragment>
       <Row className="">
