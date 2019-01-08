@@ -33,3 +33,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     }
   />
 );
+
+const authChecker = {
+  getUser() {
+    return localStorage.getItem("currentUser", "token") || null;
+  }
+};
