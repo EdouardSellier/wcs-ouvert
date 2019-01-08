@@ -123,7 +123,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnDescription}>
-                      <h2>OUVERT Bureau d'Ecolonomie</h2>
+                      <b>OUVERT Bureau d'Ecolonomie</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
@@ -247,7 +247,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnPDM}>
-                      <h2>Le plan de mobilité (PDM)</h2>
+                      <b>Le plan de mobilité (PDM)</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
@@ -285,23 +285,23 @@ class Home extends Component {
                           décalés, dispersion des employés sur le territoire, …
                           Les PDM sont avantageux pour l’entreprise et ses
                           employés sur de nombreux points :
-                          <ul>
-                            <li>
-                              Economies d’énergie, baisse de l’impact sur
-                              l’environnement de l’activité
-                            </li>
-                            <li>
-                              Réduction des frais liés aux transport, à la
-                              gestion des parkings, à la gestion des notes de
-                              frais, …
-                            </li>
-                            <li>
-                              Réduction des risques d’accidents et du stress lié
-                              aux embouteillages, amélioration du bien-être,
-                              fierté d’appartenance à l’entreprise, …
-                            </li>
-                          </ul>
                         </p>
+                        <ul>
+                          <li>
+                            Economies d’énergie, baisse de l’impact sur
+                            l’environnement de l’activité
+                          </li>
+                          <li>
+                            Réduction des frais liés aux transport, à la gestion
+                            des parkings, à la gestion des notes de frais, …
+                          </li>
+                          <li>
+                            Réduction des risques d’accidents et du stress lié
+                            aux embouteillages, amélioration du bien-être,
+                            fierté d’appartenance à l’entreprise, …
+                          </li>
+                        </ul>
+
                         <h4 className="text-center">
                           <b>Quelle méthode ? </b>
                         </h4>
@@ -369,7 +369,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnInscription}>
-                      <h2>Modalités d'inscription</h2>
+                      <b>Modalités d'inscription</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
@@ -382,61 +382,61 @@ class Home extends Component {
                           seulement dans la démarche PDE. Grâce à MOUV’R, vous
                           réalisez la première étape de votre PDM en moins de 10
                           minutes. En effet, MOUV’R vous permet de :
-                          <ul>
-                            <li>
-                              Diffuser par mail à l’ensemble de vos salariés une
-                              enquête prérédigée portant sur les habitudes de
-                              déplacement
-                            </li>
-                            <li>Suivre le taux de participation à l’enquête</li>
-                            <li>
-                              Consulter les résultats de l’enquête sous la forme
-                              de données statistiques
-                            </li>
-                            <li>
-                              Géolocaliser vos salariés et connaître les
-                              distances domicile-travail parcourues par eux
-                              quotidiennement
-                            </li>
-                            <li>
-                              Connaître l’accessibilité de votre site à vélo
-                            </li>
-                          </ul>
                         </p>
+                        <ul>
+                          <li>
+                            Diffuser par mail à l’ensemble de vos salariés une
+                            enquête prérédigée portant sur les habitudes de
+                            déplacement
+                          </li>
+                          <li>Suivre le taux de participation à l’enquête</li>
+                          <li>
+                            Consulter les résultats de l’enquête sous la forme
+                            de données statistiques
+                          </li>
+                          <li>
+                            Géolocaliser vos salariés et connaître les distances
+                            domicile-travail parcourues par eux quotidiennement
+                          </li>
+                          <li>
+                            Connaître l’accessibilité de votre site à vélo
+                          </li>
+                        </ul>
+
                         <h4 className="text-center">
                           <b>ET ENSUITE ?</b>
                         </h4>
                         <p>
                           Une fois ces premiers éléments de diagnostic établis,
                           vous pouvez:
-                          <ul>
-                            <li>
-                              Compléter le diagnostic par une étude
-                              d’accessibilité par les réseaux de transports en
-                              commun : combien de vos salariés résident à
-                              proximité d’une ligne de bus desservant
-                              directement votre entreprise ? Quel est le temps
-                              de transport depuis la gare la plus proche, et
-                              comment faire la liaison ? … Cette étude peut être
-                              réalisée par OUVERT. Pour cela, n’hésitez pas à
-                              nous contacter.
-                            </li>
-                            <li>
-                              Organiser des groupes de travail pour construire
-                              avec vos équipes un plan d’actions. Celui-ci
-                              reprend l’ensemble des mesures à mettre en place
-                              au sein de votre entreprise pour diminuer
-                              l’emprise de la voiture individuelle dans les
-                              déplacements quotidiens. Ces séances de travail
-                              peuvent être animées par OUVERT. Pour cela,
-                              n’hésitez pas à nous contacter.
-                            </li>
-                            <li>
-                              Mettre en œuvre les mesures définies dans le plan
-                              d’actions.
-                            </li>
-                          </ul>
                         </p>
+                        <ul>
+                          <li>
+                            Compléter le diagnostic par une étude
+                            d’accessibilité par les réseaux de transports en
+                            commun : combien de vos salariés résident à
+                            proximité d’une ligne de bus desservant directement
+                            votre entreprise ? Quel est le temps de transport
+                            depuis la gare la plus proche, et comment faire la
+                            liaison ? … Cette étude peut être réalisée par
+                            OUVERT. Pour cela, n’hésitez pas à nous contacter.
+                          </li>
+                          <li>
+                            Organiser des groupes de travail pour construire
+                            avec vos équipes un plan d’actions. Celui-ci reprend
+                            l’ensemble des mesures à mettre en place au sein de
+                            votre entreprise pour diminuer l’emprise de la
+                            voiture individuelle dans les déplacements
+                            quotidiens. Ces séances de travail peuvent être
+                            animées par OUVERT. Pour cela, n’hésitez pas à nous
+                            contacter.
+                          </li>
+                          <li>
+                            Mettre en œuvre les mesures définies dans le plan
+                            d’actions.
+                          </li>
+                        </ul>
+
                         <h4 className="text-center">
                           <b>TARIFS </b>
                         </h4>
