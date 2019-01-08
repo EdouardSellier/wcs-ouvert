@@ -117,6 +117,10 @@ const ResultPie = props => {
     )
   );
 
+  let tabName = [];
+  props.possibilities.map(data => tabName.push(data));
+  tabName.push("Aucun");
+
   return (
     <React.Fragment>
       <Row className="">
