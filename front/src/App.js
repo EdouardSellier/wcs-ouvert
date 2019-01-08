@@ -39,3 +39,13 @@ const authChecker = {
     return localStorage.getItem("currentUser", "token") || null;
   }
 };
+
+class App extends Component {
+    render() {
+      return (
+        <div className="App">
+          <BrowserRouter>
+            <Switch>
+            <Route exact path="/" component={Accueil} />
+            <Route path="/inscription" component={Inscription} />
+            <Route path="/connexion" component={Connexion} />
