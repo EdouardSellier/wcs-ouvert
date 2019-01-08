@@ -11,3 +11,12 @@ const dangerMsg = {
   type: "danger",
   autoDismiss: 4
 };
+
+class Connexion extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        mail: "",
+        password: ""
+      };
+    }
