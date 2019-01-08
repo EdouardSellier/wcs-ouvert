@@ -22,11 +22,16 @@
   transform: scale(1.05);
 }
 
+.modalHeader {
+  font-size: 1.2em;
+}
+
 .toggleButton {
   background: none;
   border: none;
   cursor: pointer;
   font-weight: bold;
+  color: #38909d;
 }
 
 .formContainer {
