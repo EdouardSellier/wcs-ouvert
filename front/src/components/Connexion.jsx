@@ -32,7 +32,6 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
-<<<<<<< HEAD
     axios
       .post("http://localhost:8080/auth/connexion", this.state)
       .then(response => {
@@ -40,21 +39,6 @@ class Connexion extends Component {
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("token", token);
         console.log("Envoyé", response.data);
-=======
-    let body = {
-      mail: this.state.mail,
-      password: this.state.password
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/connexion",
-      data: body
-    })
-      .then(res => {
-        if (res.status === 200) {
-          this.props.history.push("/monespace");
-        }
->>>>>>> 40cf34ebf77896cfd1483c763be8f3be43588b49
       })
       .catch(err => console.log("Error", err));
   };
