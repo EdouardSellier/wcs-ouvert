@@ -25,3 +25,10 @@ app.get('/monespace', (req, res) => {
   console.log(`Request for 'GET /monespace'`);
   res.status(200).send('Mon espace');
 });
+
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'text/plain');
+  res
+    .status(404)
+    .send(`This page seems too be *really* missing, that's not a way of keeping you out !`);
+});
