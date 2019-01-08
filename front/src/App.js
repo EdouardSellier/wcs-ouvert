@@ -17,3 +17,19 @@ import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authChecker.getUser() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/connexion",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
+);
