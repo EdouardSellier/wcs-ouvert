@@ -123,7 +123,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnDescription}>
-                      <b>OUVERT Bureau d'Ecolonomie</b>
+                      <b className="modalHeader">OUVERT Bureau d'Ecolonomie</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
@@ -247,7 +247,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnPDM}>
-                      <b>Le plan de mobilité (PDM)</b>
+                      <b className="modalHeader">Le plan de mobilité (PDM)</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
@@ -369,7 +369,7 @@ class Home extends Component {
                     className="modal-lg"
                   >
                     <ModalHeader close={closeBtnInscription}>
-                      <b>Modalités d'inscription</b>
+                      <b className="modalHeader">Modalités d'inscription</b>
                     </ModalHeader>
                     <ModalBody className="p-4 text-justify">
                       <div>
