@@ -16,3 +16,7 @@ app.use('/auth', require('./auth'));
 app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   next();
 });
+
+app.get('/authrequired', (req, res) => {
+  res.send(`You're in, congrats !\n`);
+});
