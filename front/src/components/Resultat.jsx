@@ -94,11 +94,11 @@ const ResultText = props => {
   return (
     <React.Fragment>
       <Row>
-        <Col xs={{ size: 12 }} className="">
-          <Col xs={{ size: 12 }} className="">
+        <Col xs={{ size: 12 }} className="mb-5 pb-5">
+          <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="d-flex justify-content-center">
             La moyenne des salariés ayant répondu est de{" "}
             <span className="dataResultText">{result}€</span>
           </Col>
