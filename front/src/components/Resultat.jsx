@@ -64,6 +64,27 @@ const ResultBar = props => {
             </Col>
           </Col>
         </Col>
+        <Col xs={{ size: 10 }} className="">
+          <Col xs={{ size: 12 }} className="">
+            {props.label}
+          </Col>
+          <Col xs={{ size: 12 }} className="">
+            {props.possibilities.map(data => (
+              <Col xs={{ size: 12 }} className="">
+                <Col xs={{ size: 8 }}>{data}</Col>
+                <Col xs={{ size: 4 }}>
+                  {(
+                    100 /
+                    (props.dataFetch.length /
+                      props.dataFetch.filter(
+                        dataFetch => dataFetch[props.index] === data
+                      ).length)
+                  ).toFixed(2) + "%"}
+                </Col>
+              </Col>
+            ))}
+          </Col>
+        </Col>
       </Row>
     </React.Fragment>
   );
