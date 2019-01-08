@@ -354,6 +354,20 @@ class Resultat extends Component {
     event.preventDefault();
     this.props.history.push("/monespace");
   };
+
+  componentDidMount() {
+    fetch("http://localhost:8080/resultats", {
+      method: "POST"
+    })
+      .then(results => results.json())
+      .then(data => {
+        this.setState({
+          dataFetch: data,
+          hovering: true
+        });
+      });
+  }
+
   render() {
     return (
       <div className="container-fluid mt-2">
