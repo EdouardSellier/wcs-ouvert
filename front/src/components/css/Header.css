@@ -1,17 +1,18 @@
 header {
-  background: linear-gradient(
-    to bottom,
-    rgba(125, 126, 125, 1) 0%,
-    rgba(14, 14, 14, 1) 100%
-  );
+  background-color: rgba(141, 136, 136, 0.411);
 }
 
-.navLink,
+.nav-item,
 .navbar-brand {
   text-decoration: none;
-  color: #fff;
+  color: rgb(255, 255, 255);
+  font-weight: bold;
+  padding-right: 30px;
 }
 
-.navLink:hover {
-  color: #fff;
+.logLink:hover,
+.contactLink:hover {
+  text-decoration: none;
+  border-bottom: 1px solid white;
+  color: rgb(255, 255, 255);
 }

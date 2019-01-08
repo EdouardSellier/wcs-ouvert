@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
 import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
+import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import L from "leaflet";
-import NotificationAlert from "react-notification-alert";
+import "./css/Geolocalisation.css";
 
 const errorMsg = {
   place: "tr",
@@ -40,7 +40,8 @@ class APIGeoloc extends Component {
       percentOver15: 0,
       nbPersOver20: 0,
       percentOver20: 0,
-      isClicked: false
+      isClicked: false,
+      mapIsLoading: false
     };
   }
 
@@ -49,9 +50,17 @@ class APIGeoloc extends Component {
   };
 
   getIsochrone = () => {
+    this.setState({
+      mapIsLoading: true
+    });
+    setTimeout(() => {
+      this.setState({
+        mapIsLoading: false
+      });
+    }, 5000);
     axios
       .get(
-        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${
+        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${
           this.props.addressSociety
         }&profile=${this.props.profile}&range_type=${
           this.props.rangeType
@@ -101,13 +110,16 @@ class APIGeoloc extends Component {
 
   getLatLng = () => {
     let allMapData = this.state.employeesPositions;
-    this.props.addressEmployees.map((address, id) => {
+    this.props.addressEmployees.map(address => {
       let addressQuery = address.join("+").replace(" ", "+");
       return axios
         .get(`https://api-adresse.data.gouv.fr/search/?q=${addressQuery}`)
         .then(result => {
           let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
-          let latLng = { id: id + 1, position: employeesMarkers };
+          let latLng = {
+            position: employeesMarkers,
+            address: addressQuery
+          };
           allMapData.push(latLng);
           if (allMapData.length === this.props.addressEmployees.length) {
             this.setState(
@@ -121,15 +133,18 @@ class APIGeoloc extends Component {
             this.props.parameter === "à vélo" &&
             allMapData.length === this.props.addressEmployees.length
           ) {
-            let societyPosition = this.props.addressSociety;
-            let employeesPositions = JSON.stringify(allMapData);
+            let societyPosition = {
+              position: this.props.addressSociety,
+              address: this.props.addressSocietyToArray
+            };
+            let employeesPositions = allMapData;
             let body = {
               society_position: societyPosition,
               employees_positions: employeesPositions
             };
             axios({
               method: "post",
-              url: "http://localhost:8080/geolocation",
+              url: "http://localhost:8080/user/geolocation",
               data: body
             })
               .then(result => {
@@ -156,7 +171,7 @@ class APIGeoloc extends Component {
       let query = `${societyPosition}|${employeeLatLng}`;
       return axios({
         method: "get",
-        url: `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&coordinates=${query}&profile=${
+        url: `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&coordinates=${query}&profile=${
           this.props.profile
         }&units=km&language=fr`
       })
@@ -280,12 +295,23 @@ class APIGeoloc extends Component {
       <div>
         <NotificationAlert ref="notificationAlertError" />
         {this.state.isClicked === false ? (
-          <button
-            className="btn mt-4 mb-4 ml-3 geolocButton"
-            onClick={this.getIsochrone}
-          >
-            Découvrir le résultat <i className={this.props.icon} />
-          </button>
+          <div>
+            <button
+              className="btn mt-4 mb-4 ml-3 geolocButton"
+              onClick={this.getIsochrone}
+            >
+              Découvrir le résultat <i className={this.props.icon} />
+            </button>{" "}
+            {this.state.mapIsLoading === true ? (
+              <img
+                src="./img/spinner.png"
+                className="spinnerLogo ml-3 mb-2"
+                alt="spinner"
+              />
+            ) : (
+              ""
+            )}{" "}
+          </div>
         ) : (
           ""
         )}
@@ -389,7 +415,7 @@ class APIGeoloc extends Component {
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
-              <div className="card mb-3">
+              <div className="mb-3">
                 <Container className="statistics ml-lg-5">
                   {this.props.parameter === "en voiture" ? (
                     <div>
