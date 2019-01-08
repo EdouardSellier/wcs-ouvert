@@ -41,11 +41,33 @@ const authChecker = {
 };
 
 class App extends Component {
-    render() {
-      return (
-        <div className="App">
-          <BrowserRouter>
-            <Switch>
+  render() {
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <Switch>
             <Route exact path="/" component={Accueil} />
             <Route path="/inscription" component={Inscription} />
             <Route path="/connexion" component={Connexion} />
+            <PrivateRoute path="/contact" component={Contact} />
+            <PrivateRoute path="/monespace" component={EspaceRH} />
+            <PrivateRoute path="/nouvelleenquete" component={NouvelleEnquete} />
+            <PrivateRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
+            <PrivateRoute path="/geolocalisation" component={Geolocalisation} />
+            <PrivateRoute path="/sondage" component={Sondage} />
+            <PrivateRoute path="/assistance" component={Assistance} />
+            <PrivateRoute path="/resultat" component={Resultat} />
+            <PrivateRoute path="/admin" component={EspaceAdmin} />
+            <PrivateRoute
+              path="/listeentreprises"
+              component={ListeEntreprises}
+            />
+            <PrivateRoute path="/listeenquetes" component={ListeEnquetes} />
+          </Switch>
+        </BrowserRouter>
+      </div>
+    );
+  }
+}
+
+export default App;
