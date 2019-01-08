@@ -90,6 +90,10 @@ const ResultBar = props => {
   );
 };
 
+const ResultText = props => {
+  return <React.Fragment />;
+};
+
 class Resultat extends Component {
   render() {
     return (
