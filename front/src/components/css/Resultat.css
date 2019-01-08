@@ -1,3 +1,62 @@
-.resultat {
-  min-height: 90vh;
+.containerBar {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 33vh;
+}
+
+.containerResultBar {
+  border-bottom: 2px black solid;
+  border-left: 2px black solid;
+}
+
+.piesContainer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.colHundred {
+  height: 33%;
+  display: flex;
+  align-items: flex-start;
+  text-align: left;
+  font-weight: bold;
+}
+
+.barTitle {
+  word-wrap: break-word;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.componentTitle {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.justifyContentRight {
+  display: flex;
+  justify-content: right;
+}
+
+.colFifty {
+  height: 33%;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-weight: bold;
+}
+
+.colZero {
+  height: 33%;
+  display: flex;
+  align-items: flex-end;
+  text-align: left;
+  font-weight: bold;
+}
+
+.dataResultText {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-left: 1%;
 }
