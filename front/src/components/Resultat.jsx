@@ -91,7 +91,46 @@ const ResultBar = props => {
 };
 
 const ResultPie = props => {
-  return <React.Fragment />;
+  return (
+    <React.Fragment>
+      <Row className="">
+        <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="">
+            {props.label}
+          </Col>
+          <Col xs={{ size: 12 }} className="">
+            <Col xs={{ size: 5 }}>
+              <Pie data={data[0]} options={options[0]} />
+            </Col>
+            <Col xl={{ size: 5 }}>
+              <Pie data={data[1]} options={options[1]} />
+            </Col>
+          </Col>
+          <Col xs={{ size: 12 }} className="">
+            <Col xl={{ size: 5 }}>
+              <Pie data={data[2]} options={options[2]} />
+            </Col>
+          </Col>
+        </Col>
+      </Row>
+      <Row className="">
+        <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="">
+            {props.label}
+          </Col>
+          <Col xs={{ size: 12 }}>
+            <Pie data={data[0]} options={options2[0]} width={100} />
+          </Col>
+          <Col xs={{ size: 12 }}>
+            <Pie data={data[1]} options={options2[1]} width={100} />
+          </Col>
+          <Col xs={{ size: 12 }}>
+            <Pie data={data[2]} options={options2[2]} width={100} />
+          </Col>
+        </Col>
+      </Row>
+    </React.Fragment>
+  );
 };
 
 const ResultText = props => {
