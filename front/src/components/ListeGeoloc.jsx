@@ -3,6 +3,7 @@ import { Container, Row, Col } from "reactstrap";
 import NotificationAlert from "react-notification-alert";
 import JsonTable from "ts-react-json-table";
 import axios from "axios";
+import { CSVLink } from "react-csv";
 import "./css/EspaceAdmin.css";
 
 const errorMsg = {
@@ -12,15 +13,17 @@ const errorMsg = {
   autoDismiss: 4
 };
 
-class ListeEnquetes extends Component {
+class ListeGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      surveyList: [],
+      geolocationList: [],
       currentPage: 1,
       nbPages: 0,
       nextPage: 0,
-      isSelected: 5
+      isSelected: 5,
+      csvData: [],
+      cellContent: []
     };
   }
 
@@ -52,14 +55,14 @@ class ListeEnquetes extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/admin/list/survey",
+      url: "http://localhost:8080/admin/list/geolocation",
       data: body
     })
       .then(res => {
         let arrayShown = res.data.data;
         let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
-          surveyList: arrayShown,
+          geolocationList: arrayShown,
           nbPages: nbPages
         });
       })
@@ -70,6 +73,25 @@ class ListeEnquetes extends Component {
 
   componentDidMount = () => {
     this.getList();
+  };
+
+  onClickCell = (e, column, item) => {
+    if (column === "id") {
+      let societyData = item.society_position;
+      let employeeData = item.employees_positions;
+      let regex = /\(/gi;
+      let society = societyData.replace(regex, ";(");
+      let employees = employeeData.replace(regex, ";(");
+      let allData = `${society},${employees}`;
+      let csvData = this.state.csvData;
+      allData.split(",").map(data => {
+        let newData = data.split(";");
+        return csvData.push(newData);
+      });
+      this.setState({
+        csvData: csvData
+      });
+    }
   };
 
   handleChangePage = currentPage => {
@@ -117,43 +139,49 @@ class ListeEnquetes extends Component {
     return this.state.currentPage < this.state.nbPages;
   };
 
-  getSocietyListPage = () => {
-    this.props.history.push("/listeentreprises");
-  };
-
-  getGeolocationListPage = () => {
-    this.props.history.push("/listegeoloc");
+  getSurveyListPage = () => {
+    this.props.history.push("/listeenquetes");
   };
 
   render() {
     let columns = [
       { key: "user_id", label: "Société" },
-      { key: "survey_name", label: "Nom de l'enquête" },
+      { key: "society_position", label: "Adresse et position de la société" },
       {
-        key: "starting_date",
-        label: "Début de l'enquête",
+        key: "employees_positions",
+        label: "Adresses et positions des salariés",
         cell: columnKey => {
-          let pattern = /[A-Z][0-9].:..:..\.[0-9]{3}[A-Z]/;
-          let date = columnKey.starting_date.replace(pattern, "");
-          let year = date[0] + date[1] + date[2] + date[3];
-          let month = date[5] + date[6];
-          let day = date[8] + date[9];
-          return <p>{day + "/" + month + "/" + year}</p>;
+          return (
+            <ul className="list-unstyled employeesList">
+              {columnKey.employees_positions.split(",").map((data, id) => {
+                return (
+                  <li key={id}>
+                    {id + 1}) {data}
+                  </li>
+                );
+              })}
+            </ul>
+          );
         }
       },
       {
-        key: "ending_date",
-        label: "Fin de l'enquête",
-        cell: columnKey => {
-          let pattern = /[A-Z][0-9].:..:..\.[0-9]{3}[A-Z]/;
-          let date = columnKey.ending_date.replace(pattern, "");
-          let year = date[0] + date[1] + date[2] + date[3];
-          let month = date[5] + date[6];
-          let day = date[8] + date[9];
-          return <p>{day + "/" + month + "/" + year}</p>;
+        key: "id",
+        label: "Exporter les données",
+        cell: () => {
+          return (
+            <CSVLink
+              data={this.state.csvData}
+              className="btn btn-sm btn-warning ml-3"
+            >
+              <b>
+                Export CSV <i className="fa fa-file-o" />
+              </b>
+            </CSVLink>
+          );
         }
       }
     ];
+
     return (
       <div className="surveyList text-white mt-3">
         <NotificationAlert ref="notificationAlertError" />
@@ -166,7 +194,7 @@ class ListeEnquetes extends Component {
             </Col>
             <Col lg={{ size: 8 }}>
               <h1>
-                <b>Liste des enquêtes</b>
+                <b>Données de géolocalisation</b>
               </h1>
             </Col>
             <Col lg={{ size: 2 }}>
@@ -191,9 +219,11 @@ class ListeEnquetes extends Component {
           <Row className="card shadow">
             <Col lg={{ size: 12 }}>
               <JsonTable
-                rows={this.state.surveyList}
+                rows={this.state.geolocationList}
                 columns={columns}
-                className="table table-striped"
+                className="table table-striped text-left"
+                onClickCell={this.onClickCell}
+                filename={"geolocation.csv"}
               />
               <div className="row justify-content-around pb-3 mt-3">
                 <button
@@ -217,30 +247,17 @@ class ListeEnquetes extends Component {
             </Col>
           </Row>
         </Container>
-        <Container className="mt-5">
-          <Row>
-            <Col lg={{ size: 3 }}>
-              <button
-                className="btn getPage mt-3 mb-3 text-white"
-                onClick={this.getSocietyListPage}
-              >
-                <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
-                <b>Consulter les entreprises</b>
-              </button>
-            </Col>
-            <Col lg={{ size: 3, offset: 6 }}>
-              <button
-                className="btn getPage mt-3 mb-3 text-white"
-                onClick={this.getGeolocationListPage}
-              >
-                <b>Consulter les géolocalisations</b>{" "}
-                <i className="fa fa-map" /> <i className="fa fa-arrow-right" />
-              </button>
-            </Col>
-          </Row>
-        </Container>
+        <Col lg={{ size: 3 }}>
+          <button
+            className="btn getPage mt-5 mb-3 text-white"
+            onClick={this.getSurveyListPage}
+          >
+            <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
+            <b>Consulter les enquêtes</b>
+          </button>
+        </Col>
       </div>
     );
   }
 }
-export default ListeEnquetes;
+export default ListeGeoloc;
