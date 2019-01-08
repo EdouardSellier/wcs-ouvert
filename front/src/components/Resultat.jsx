@@ -22,6 +22,10 @@ class Resultat extends Component {
             répondu à ce sondage.
           </Col>
         </Row>
+        {questions.map(data => {
+          switch (data.type) {
+          }
+        })}
       </div>
     );
   }
