@@ -350,6 +350,10 @@ class Resultat extends Component {
     };
   }
 
+  handleSubmit = event => {
+    event.preventDefault();
+    this.props.history.push("/monespace");
+  };
   render() {
     return (
       <div className="container-fluid mt-2">
