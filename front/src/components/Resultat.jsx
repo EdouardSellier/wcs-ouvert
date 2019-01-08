@@ -2,6 +2,19 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import "./css/Resultat.css";
 
+const StyledSquare = styled(Square)`
+  width: 100%;
+  background: linear-gradient(to left, blue 60%, white 70%, blue 100%);
+  border-radius: 8px 8px 0px 0px;
+  box-shadow: 6px 0px 8px 0px;
+  word-wrap: break-word;
+  overflow: hidden;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ResultBar = props => {
   return (
     <React.Fragment>
