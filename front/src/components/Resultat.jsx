@@ -34,6 +34,15 @@ class Resultat extends Component {
                   label={data.label}
                 />
               );
+            case "multipleOption":
+              return (
+                <ResultPie
+                  possibilities={data.possibilities}
+                  index={data.index}
+                  dataFetch={this.state.dataFetch}
+                  label={data.label}
+                />
+              );
           }
         })}
       </div>
