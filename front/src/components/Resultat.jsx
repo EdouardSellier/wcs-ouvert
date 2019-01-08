@@ -94,11 +94,11 @@ const ResultPie = props => {
   return (
     <React.Fragment>
       <Row className="">
-        <Col xs={{ size: 12 }} className="">
-          <Col xs={{ size: 12 }} className="">
+        <Col xs={{ size: 12 }} className="mb-5 pb-5">
+          <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="piesContainer">
             <Col xs={{ size: 5 }}>
               <Pie data={data[0]} options={options[0]} />
             </Col>
@@ -106,16 +106,16 @@ const ResultPie = props => {
               <Pie data={data[1]} options={options[1]} />
             </Col>
           </Col>
-          <Col xs={{ size: 12 }} className="">
+          <Col xs={{ size: 12 }} className="d-flex justify-content-center">
             <Col xl={{ size: 5 }}>
               <Pie data={data[2]} options={options[2]} />
             </Col>
           </Col>
         </Col>
       </Row>
-      <Row className="">
-        <Col xs={{ size: 12 }} className="">
-          <Col xs={{ size: 12 }} className="">
+      <Row className="d-block d-lg-none">
+        <Col xs={{ size: 12 }} className="mb-5 pb-5">
+          <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
           <Col xs={{ size: 12 }}>
