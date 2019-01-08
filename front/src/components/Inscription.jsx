@@ -98,6 +98,7 @@ class Inscription extends React.Component {
           }
         })
         .catch(error => {
+          console.log(error);
           this.alertFunctionError();
         });
     }

@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
 import { Pie } from "react-chartjs-2";
+import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
 import "./css/Resultat.css";
 
 const Square = posed.div({
@@ -32,7 +34,7 @@ const StyledSquare = styled(Square)`
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="d-flex justify-content-center">
+      <Row className="d-flex justify-content-center test">
         <Col md={{ size: 10 }} className="mb-5 pb-5  d-none d-lg-block">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
@@ -350,6 +352,51 @@ class Resultat extends Component {
     };
   }
 
+  handlePdf(imga) {
+    let newPdf = new jsPDF();
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.setFontSize(30);
+    const allImages = imga.reverse();
+
+    allImages.map(image => {
+      newPdf.addImage(image, "JPEG", 20, 10, 20, 20);
+
+      return newPdf.addPage();
+    });
+
+    let lastPage = newPdf.internal.getNumberOfPages();
+    newPdf.deletePage(lastPage);
+
+    newPdf.save("compte-rendu.pdf");
+  }
+
+  handleImg() {
+    const capture1 = document.querySelector(".test");
+    const capture2 = document.querySelector(".test");
+
+    let allCaptures = [];
+
+    allCaptures.push(capture1);
+    allCaptures.push(capture2);
+
+    let allImagesData = [];
+
+    allCaptures.map(capture => {
+      return domtoimage.toPng(capture).then(dataUrl => {
+        let imgData = new Image();
+
+        imgData = new Image(100, 100);
+
+        imgData.src = dataUrl;
+        allImagesData.push(imgData);
+        this.setState({
+          imgData: allImagesData
+        });
+        this.handlePdf(allImagesData);
+      });
+    });
+  }
+
   handleSubmit = event => {
     event.preventDefault();
     this.props.history.push("/monespace");
@@ -421,6 +468,17 @@ class Resultat extends Component {
               return false;
           }
         })}
+
+        <Row>
+          <Col xs={{ size: 12 }}>
+            <button
+              onClick={() => this.handleImg()}
+              className="mb-4 mt-3 btn btn-lg text-white pdfButton"
+            >
+              <i className="fa fa-file-pdf-o" /> Télécharger PDF
+            </button>
+          </Col>
+        </Row>
       </div>
     );
   }
