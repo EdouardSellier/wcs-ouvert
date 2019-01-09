@@ -32,6 +32,16 @@ const StyledSquare = styled(Square)`
 `;
 
 const ResultBar = props => {
+  props.possibilities.map(data => {
+    alert(
+      100 /
+        (props.dataFetch.length /
+          props.dataFetch.filter(dataFetch => dataFetch[props.index] === data)
+            .length) +
+        "%"
+    );
+  });
+
   return (
     <React.Fragment>
       <Row className="d-flex justify-content-center">
@@ -57,14 +67,14 @@ const ResultBar = props => {
                   <Col
                     xs={{ size: 12 }}
                     style={{
-                      height:
-                        100 /
+                      height: "100%",
+                      /*100 /
                           (props.dataFetch.length /
                             props.dataFetch.filter(
                               dataFetch => dataFetch[props.index] === data
                             ).length) +
-                        "%",
-                      display: "flex",
+                        "%"*/ display:
+                        "flex",
                       alignItems: "flex-end"
                     }}
                     className="px-0"
@@ -357,7 +367,7 @@ class Resultat extends Component {
 
     this.state = {
       dataFetch: [
-        {
+        /*{
           genre: "Un homme",
           age: "25 ans ou moins",
           principal_transport_one: "Voiture personnelle",
@@ -395,7 +405,7 @@ class Resultat extends Component {
           carpooling_three: "------",
           otherThanCar: "",
           commentary: ""
-        }
+        }*/
       ]
     };
   }
