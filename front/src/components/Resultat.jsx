@@ -34,8 +34,8 @@ const StyledSquare = styled(Square)`
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="d-flex justify-content-center test">
-        <Col md={{ size: 10 }} className="mb-5 pb-5  d-none d-lg-block">
+      <Row className="d-flex justify-content-center">
+        <Col md={{ size: 10 }} className="mb-5 pb-5 d-none d-lg-block">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
@@ -101,8 +101,10 @@ const ResultBar = props => {
           <Col xs={{ size: 12 }} className="px-0">
             {props.possibilities.map(data => (
               <Col xs={{ size: 12 }} className="d-flex my-2 border-bottom">
-                <Col xs={{ size: 8 }}>{data}</Col>
-                <Col xs={{ size: 4 }}>
+                <Col xs={{ size: 8 }} className="text-white">
+                  {data}
+                </Col>
+                <Col xs={{ size: 4 }} className="text-white">
                   {(
                     100 /
                     (props.dataFetch.length /
@@ -278,11 +280,11 @@ const ResultPie = props => {
   return (
     <React.Fragment>
       <Row className="d-none d-lg-block">
-        <Col xs={{ size: 12 }} className="mb-5 pb-5">
+        <Col xs={{ size: 12 }} className="mb-5 pb-5 px-5">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="piesContainer">
+          <Col xs={{ size: 12 }} className="piesContainer pt-4">
             <Col xs={{ size: 5 }}>
               <Pie data={data[0]} options={options[0]} />
             </Col>
@@ -290,8 +292,11 @@ const ResultPie = props => {
               <Pie data={data[1]} options={options[1]} />
             </Col>
           </Col>
-          <Col xs={{ size: 12 }} className="d-flex justify-content-center">
-            <Col xl={{ size: 5 }}>
+          <Col
+            xs={{ size: 12 }}
+            className="bgWhiteOpac d-flex justify-content-center pb-5"
+          >
+            <Col xl={{ size: 5 }} className="">
               <Pie data={data[2]} options={options[2]} />
             </Col>
           </Col>
@@ -302,13 +307,13 @@ const ResultPie = props => {
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }}>
+          <Col xs={{ size: 12 }} className="bgWhiteOpac">
             <Pie data={data[0]} options={options2[0]} width={100} />
           </Col>
-          <Col xs={{ size: 12 }}>
+          <Col xs={{ size: 12 }} className="bgWhiteOpac">
             <Pie data={data[1]} options={options2[1]} width={100} />
           </Col>
-          <Col xs={{ size: 12 }}>
+          <Col xs={{ size: 12 }} className="bgWhiteOpac">
             <Pie data={data[2]} options={options2[2]} width={100} />
           </Col>
         </Col>
@@ -333,7 +338,10 @@ const ResultText = props => {
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="d-flex justify-content-center">
+          <Col
+            xs={{ size: 12 }}
+            className="d-flex justify-content-center contentResultText"
+          >
             La moyenne des salariés ayant répondu est de{" "}
             <span className="dataResultText">{result}€</span>
           </Col>
@@ -348,7 +356,47 @@ class Resultat extends Component {
     super(props);
 
     this.state = {
-      dataFetch: []
+      dataFetch: [
+        {
+          genre: "Un homme",
+          age: "25 ans ou moins",
+          principal_transport_one: "Voiture personnelle",
+          principal_transport_two: "------",
+          principal_transport_three: "------",
+          ocasionaly_transport_one: "Voiture personnelle",
+          ocasionaly_transport_two: "------",
+          ocasionaly_transport_three: "------",
+          reason_transport: "Rapidité",
+          distance_klm: 0,
+          distance_min: 0,
+          distance_money: 0,
+          elements_one: "Pas d’obligation particulière",
+          elements_two: "------",
+          elements_three: "------",
+          parking_place: "Oui",
+          midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
+          frequency_midday: "Jamais",
+          transport_midday: "Voiture personnelle",
+          frequency_pro: "Je ne fais jamais de déplacements professionnels",
+          distance_pro: "Je ne fais jamais de déplacements professionnels",
+          deplacement_pro: "Voiture personnelle",
+          reason_perso_car: "Pas d’autres solutions identifiées",
+          deplacement_method_pro:
+            "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
+          commun_transport_one:
+            "J’utilise déjà souvent les transports en commun",
+          commun_transport_two: "------",
+          commun_transport_three: "------",
+          bike_one: "Je me déplace déjà souvent à vélo",
+          bike_two: "------",
+          bike_three: "------",
+          carpooling_one: "Je covoiture déjà souvent",
+          carpooling_two: "------",
+          carpooling_three: "------",
+          otherThanCar: "",
+          commentary: ""
+        }
+      ]
     };
   }
 
@@ -419,19 +467,21 @@ class Resultat extends Component {
     return (
       <div className="container-fluid mt-2">
         <Row>
-          <Col lg={{ size: 2 }}>
+          <Col lg={{ size: 2 }} className="pb-4">
             <button className="mt-2 btn text-white" onClick={this.handleSubmit}>
               Revenir à l'accueil
             </button>
           </Col>
           <Col lg={{ size: 8 }}>
-            <h3>Consulter les résultats de mon enquête</h3>
+            <h2 className="text-white">
+              <b>Consulter les résultats de mon enquête</b>
+            </h2>
           </Col>
         </Row>
         <Row>
-          <Col lg={{ size: 12 }}>
-            <b>{this.state.dataFetch.length}</b> salariés ont pour l'instant
-            répondu à ce sondage.
+          <Col lg={{ size: 12 }} className="contentTotalResult mt-5">
+            <b>{this.state.dataFetch.length}</b> salarié(s) ayant répondu au
+            sondage pour l'instant.
           </Col>
         </Row>
         {questions.map(data => {
@@ -470,7 +520,7 @@ class Resultat extends Component {
         })}
 
         <Row>
-          <Col xs={{ size: 12 }}>
+          <Col xs={{ size: 12 }} className="pb-5">
             <button
               onClick={() => this.handleImg()}
               className="mb-4 mt-3 btn btn-lg text-white pdfButton"
