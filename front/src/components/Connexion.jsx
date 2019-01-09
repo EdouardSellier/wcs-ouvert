@@ -39,6 +39,7 @@ class Connexion extends Component {
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("token", token);
         localStorage.setItem("is_admin", user.admin);
+        localStorage.setItem("has_payed", user.has_payed);
         this.props.history.push("/monespace");
         console.log("Envoyé", response.data);
       })

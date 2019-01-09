@@ -26,7 +26,12 @@ passport.use(
               if (result === true) {
                 return callback(
                   null,
-                  { id: user.id, username: user.mail, admin: user.is_admin },
+                  {
+                    id: user.id,
+                    username: user.mail,
+                    admin: user.is_admin,
+                    has_payed: user.has_payed
+                  },
                   { message: 'Logged In Successfully' }
                 );
               }
