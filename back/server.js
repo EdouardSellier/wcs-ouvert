@@ -23,6 +23,7 @@ app.use(function(req, res, next) {
   );
   next();
 });
+
 app.post("/inscription", (req, res) => {
   if (req.body) {
     bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -360,6 +361,50 @@ app.post("/admin/list/geolocation", (req, res) => {
         }
       }
     );
+  });
+});
+
+/**
+|--------------------------------------------------
+| New test for geolocation
+|--------------------------------------------------
+*/
+
+app.post("/geolocation/employee", (req, res) => {
+  const employeeData = req.body.employee;
+  const addressSociety = req.body.society;
+  let societySql = `SELECT id FROM map WHERE address = "${addressSociety}"`;
+  connection.query(societySql, (err, results) => {
+    if (err) {
+      res.status(500).send("The database crashed ! The reason is " + err);
+    } else {
+      results.map(id => {
+        employeeData.map(data => {
+          return data.push(id.id);
+        });
+      });
+      let employeeSql = "INSERT INTO maps_employee (address, map_id) VALUES ?";
+      connection.query(employeeSql, [employeeData], (err, results) => {
+        if (err) {
+          res.status(500).send("The database crashed ! The reason is " + err);
+        } else {
+          res.status(200).send("Employee SUCCESS");
+        }
+      });
+    }
+  });
+});
+
+app.post("/geolocation/society", (req, res) => {
+  const societyData = req.body;
+  console.log(societyData);
+  let societySql = "INSERT INTO map SET ?";
+  connection.query(societySql, [societyData], (err, results) => {
+    if (err) {
+      res.status(500).send("The database crashed ! The reason is " + err);
+    } else {
+      res.status(200).send("Society SUCCESS");
+    }
   });
 });
 
