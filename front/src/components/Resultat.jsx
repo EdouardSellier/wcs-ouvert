@@ -23,8 +23,8 @@ const StyledSquare = styled(Square)`
   background: linear-gradient(to left, blue 60%, white 70%, blue 100%);
   border-radius: 8px 8px 0px 0px;
   box-shadow: 6px 0px 8px 0px;
-  word-wrap: break-word;
   overflow: hidden;
+  word-wrap: break-word;
   font-weight: bold;
   display: flex;
   justify-content: center;
@@ -34,8 +34,93 @@ const StyledSquare = styled(Square)`
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="d-flex justify-content-center">
-        <Col md={{ size: 10 }} className="mb-5 pb-5 d-none d-lg-block">
+      <Row className="d-flex justify-content-center mb-5">
+        <Col
+          xs={{ size: 10 }}
+          className="bg-light d-flex justify-content-center"
+        >
+          <Col xs={{ size: 10 }} className=" mb-5 pb-5 px-5 d-none d-lg-block">
+            <Col xs={{ size: 12 }} className="py-3">
+              Le titre
+            </Col>
+            <Col xs={{ size: 12 }} className="">
+              <Row>
+                <Col xs={{ size: 8, offset: 4 }} className="d-flex px-0">
+                  <Col xs={{ size: 1 }} className="px-1 d-flex">
+                    0%
+                  </Col>
+                  <Col xs={{ size: 4 }}>25%</Col>
+                  <Col xs={{ size: 2 }}>50%</Col>
+                  <Col xs={{ size: 4 }}>75%</Col>
+                  <Col xs={{ size: 1 }} className="px-1 textAlignRight">
+                    100%
+                  </Col>
+                </Col>
+
+                <Col
+                  xs={{ size: 8, offset: 4 }}
+                  className="px-0 containerResultBar pb-1"
+                >
+                  <Col
+                    xs={{ size: 12 }}
+                    className="d-flex px-0"
+                    style={{ height: "50%" }}
+                  >
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
+                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
+                  </Col>
+                </Col>
+                <Col xs={{ size: 4 }} className="pt-2">
+                  {/**/}
+                  <Col xs={{ size: 12 }} className="alignItems">
+                    bggrherher hrehrhrehrehre hrrehehreher herhrherheer
+                    herreherherhre heherheherh hehthtrhrth htrhrthtrtrhhtrtrh
+                    rhthtr htrh trhtr htr htr hrt htr hrt htr hrt hrt htr tr
+                  </Col>
+                </Col>
+                <Col xs={{ size: 8 }} className="borderLeft pt-2 px-0">
+                  {/**/}
+                  <Col
+                    xs={{ size: 12 }}
+                    className="px-0"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      height: "100%"
+                    }}
+                  >
+                    <div
+                      className="bg-dark my-2 text-white"
+                      style={{
+                        width: "50%",
+                        display: "flex",
+                        height: "6vh",
+
+                        justifyContent: "center",
+                        alignItems: "center"
+                      }}
+                    >
+                      jjjjjjjjjjjjjjjjjj
+                    </div>
+                  </Col>
+                </Col>
+              </Row>
+            </Col>
+          </Col>
+        </Col>
+      </Row>
+      {/*<Row>
+        <Col md={{ size: 10 }} className="test mb-5 pb-5 d-none d-lg-block">
           <Col xs={{ size: 12 }} className="my-5 componentTitle">
             {props.label}
           </Col>
@@ -76,7 +161,7 @@ const ResultBar = props => {
                           props.dataFetch.filter(
                             dataFetch => dataFetch[props.index] === data
                           ).length)
-                      ).toFixed(2) + "%"}
+                      ).toFixed(1) + " %"}
                     </StyledSquare>
                   </Col>
                 </Col>
@@ -117,7 +202,7 @@ const ResultBar = props => {
             ))}
           </Col>
         </Col>
-      </Row>
+                      </Row>*/}
     </React.Fragment>
   );
 };
@@ -408,7 +493,7 @@ class Resultat extends Component {
     const allImages = imga.reverse();
 
     allImages.map(image => {
-      newPdf.addImage(image, "JPEG", 20, 10, 20, 20);
+      newPdf.addImage(image, "JPEG", 20, 20, 200, 100);
 
       return newPdf.addPage();
     });
@@ -421,12 +506,10 @@ class Resultat extends Component {
 
   handleImg() {
     const capture1 = document.querySelector(".test");
-    const capture2 = document.querySelector(".test");
 
     let allCaptures = [];
 
     allCaptures.push(capture1);
-    allCaptures.push(capture2);
 
     let allImagesData = [];
 
@@ -497,7 +580,7 @@ class Resultat extends Component {
                   label={data.label}
                 />
               );
-            case "multipleOption":
+            /*case "multipleOption":
               return (
                 <ResultPie
                   possibilities={data.possibilities}
@@ -514,7 +597,7 @@ class Resultat extends Component {
                   dataFetch={this.state.dataFetch}
                   label={data.label}
                 />
-              );
+              );*/
             default:
               return false;
           }

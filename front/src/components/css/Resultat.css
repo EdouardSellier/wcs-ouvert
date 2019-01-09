@@ -1,3 +1,7 @@
+.merde {
+  text-align: center;
+}
+
 .containerBar {
   display: flex;
   justify-content: center;
@@ -5,10 +9,30 @@
   height: 33vh;
 }
 
-.containerResultBar {
-  border-bottom: 2px black solid;
+.bingo {
+  height: 100%;
+}
+
+.flexxx {
+  display: flex;
+  justify-content: space-between;
+}
+
+.borderRight {
+  border-right: 2px black solid;
+}
+
+.borderLeft {
   border-left: 2px black solid;
-  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.textAlignRight {
+  text-align: right;
+}
+
+.containerResultBar {
+  border-top: 2px black solid;
+  border-left: 2px black solid;
 }
 
 .piesContainer {
@@ -77,4 +101,9 @@
 .contentTotalResult {
   color: white;
   font-size: 2.4em;
+}
+
+.alignItems {
+  display: flex;
+  align-items: center;
 }
