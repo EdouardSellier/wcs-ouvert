@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
+import { Map, TileLayer } from "react-leaflet";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import L from "leaflet";
@@ -49,7 +49,7 @@ class APIGeoloc extends Component {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
   };
 
-  getIsochrone = () => {
+  /*getIsochrone = () => {
     this.setState({
       mapIsLoading: true
     });
@@ -73,6 +73,7 @@ class APIGeoloc extends Component {
         let firstPolygon = [];
         let secondPolygon = [];
         let thirdPolygon = [];
+
         firstResult.map(position => {
           return position.map(latLng => {
             let realLatLng = latLng.reverse();
@@ -279,7 +280,7 @@ class APIGeoloc extends Component {
         percentOver15: Math.round(percentOver15)
       });
     }
-  };
+  };*/
 
   render() {
     const defaultPosition = [50.62925, 3.057256];
@@ -294,31 +295,12 @@ class APIGeoloc extends Component {
     return (
       <div>
         <NotificationAlert ref="notificationAlertError" />
-        {this.state.isClicked === false ? (
-          <div>
-            <button
-              className="btn mt-4 mb-4 ml-3 geolocButton"
-              onClick={this.getIsochrone}
-            >
-              Découvrir le résultat <i className={this.props.icon} />
-            </button>{" "}
-            {this.state.mapIsLoading === true ? (
-              <img
-                src="./img/spinner.png"
-                className="spinnerLogo ml-3 mb-2"
-                alt="spinner"
-              />
-            ) : (
-              ""
-            )}{" "}
-          </div>
-        ) : (
-          ""
-        )}
-
-        <Row>
-          <Col lg={{ size: 12 }}>
-            {this.props.addressSociety.length === 0 ? (
+        <Col lg={{ size: 10, offset: 1 }}>
+          <div className="card mt-5 mb-5 p-3">
+            <h1 className="mb-3 mt-3">
+              Résultat de la Géolocalisation de vos salariés
+            </h1>
+            <Col lg={{ size: 10, offset: 1 }}>
               <Map
                 center={defaultPosition}
                 zoom={10}
@@ -329,204 +311,91 @@ class APIGeoloc extends Component {
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
               </Map>
-            ) : (
-              <Map
-                center={this.props.addressSociety}
-                zoom={10}
-                className="rounded shadow mb-4"
-              >
-                <TileLayer
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-                />
-                <Marker position={this.props.addressSociety} icon={societyIcon}>
-                  <Popup>
-                    <span>Société</span>
-                  </Popup>
-                </Marker>
-                {this.state.employeesMarkers.map(marker => {
-                  return (
-                    <Marker
-                      position={marker.position}
-                      key={marker.position}
-                      icon={employeeIcon}
-                    />
-                  );
-                })}
-                <Polygon
-                  positions={[this.state.firstPolygon]}
-                  color="rgb(55, 55, 226)"
-                />
-                <Polygon
-                  positions={[this.state.secondPolygon]}
-                  color="rgb(224, 55, 26)"
-                />
-                <Polygon
-                  positions={[this.state.thirdPolygon]}
-                  color="rgb(235, 235, 8)"
-                />
-              </Map>
-            )}
-          </Col>
-        </Row>
-        <Container className="mt-3">
-          <Row>
-            <Col lg={{ size: 4 }}>
-              <div className="legend mr-lg-4">
-                <legend>Légende</legend>
-                <ul className="list-unstyled">
-                  <li>
-                    <img
-                      src="./img/societyMarker.png"
-                      alt="societyMarker"
-                      width="30"
-                      height="30"
-                      className="mb-2"
-                    />
-                    Entreprise
-                  </li>
-                  <li>
-                    <img
-                      src="./img/employeeMarker.png"
-                      alt="employeeMarker"
-                      width="30"
-                      height="30"
-                    />
-                    Salariés
-                  </li>
-                </ul>
-                <h6>
-                  {this.props.legendTitle} <i className={this.props.icon} /> :
-                </h6>
-                <ul className="list-unstyled">
-                  <li>
-                    <span className="bluePolygon mr-3">=====</span>Inférieur à 5{" "}
-                    {this.props.measure}
-                  </li>
-                  <li>
-                    <span className="redPolygon mr-3">=====</span>Entre 5 et 10
-                    {this.props.measure === "km" ? " km " : " minutes"}
-                  </li>
-                  <li>
-                    <span className="yellowPolygon mr-3">=====</span>Entre 10 et
-                    {this.props.measure === "km" ? " 20 km " : " 15 minutes"}
-                  </li>
-                </ul>
-              </div>
             </Col>
-            <Col lg={{ size: 8 }}>
-              <div className="mb-3">
-                <Container className="statistics ml-lg-5">
-                  {this.props.parameter === "en voiture" ? (
-                    <div>
-                      <p>
-                        {this.props.statTitle} domicile-lieu de travail en
-                        moyenne :
+            <Container className="mt-3">
+              <Row>
+                <Col lg={{ size: 4 }}>
+                  <div className="legend mr-lg-4">
+                    <legend>Légende</legend>
+                    <ul className="list-unstyled">
+                      <li>
+                        <img
+                          src="./img/societyMarker.png"
+                          alt="societyMarker"
+                          width="30"
+                          height="30"
+                          className="mb-2"
+                        />
+                        Entreprise
+                      </li>
+                      <li>
+                        <img
+                          src="./img/employeeMarker.png"
+                          alt="employeeMarker"
+                          width="30"
+                          height="30"
+                        />
+                        Salariés
+                      </li>
+                    </ul>
+                    <h6>
+                      Statistiques : <i className="fa fa-auto" /> :
+                    </h6>
+                    <ul className="list-unstyled">
+                      <li>
+                        <span className="bluePolygon mr-3">=====</span>Inférieur
+                        à 5 km
+                      </li>
+                      <li>
+                        <span className="redPolygon mr-3">=====</span>Entre 5 et
+                        10 km
+                      </li>
+                      <li>
+                        <span className="yellowPolygon mr-3">=====</span>Entre
+                        10 et 20 km
+                      </li>
+                    </ul>
+                  </div>
+                </Col>
+                <Col lg={{ size: 8 }}>
+                  <div className="mb-3">
+                    <Container className="statistics ml-lg-5">
+                      <div>
+                        <p>
+                          Distance domicile-lieu de travail en moyenne :
+                          <br />
+                        </p>
+                        <p>
+                          Distance domicile-lieu de travail minimale :
+                          <br />
+                        </p>
+                        <p>
+                          Distance domicile-lieu de travail maximale :
+                          <br />
+                        </p>
                         <br />
-                        <span className="stats">
-                          {this.state.average} {this.props.measure}
-                        </span>
-                      </p>
+                      </div>
+
                       <p>
-                        {this.props.statTitle} domicile-lieu de travail minimale
-                        :
-                        <br />
-                        <span className="stats">
-                          {this.state.min} {this.props.measure}
-                        </span>
+                        <img
+                          src="./img/right-arrow.png"
+                          alt="arrow"
+                          width="25"
+                          height="20"
+                          className="float-left mt-1 mr-1"
+                        />
+                        <b>
+                          Sur les 0 salariés enregistrés, 0 ont été géolocalisés
+                          :
+                        </b>
                       </p>
-                      <p>
-                        {this.props.statTitle} domicile-lieu de travail maximale
-                        :
-                        <br />
-                        <span className="stats">
-                          {this.state.max} {this.props.measure}
-                        </span>
-                      </p>
-                      <br />
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                  <p>
-                    <img
-                      src="./img/right-arrow.png"
-                      alt="arrow"
-                      width="25"
-                      height="20"
-                      className="float-left mt-1 mr-1"
-                    />
-                    <b>
-                      Sur les {this.props.addressEmployees.length} salariés
-                      enregistrés, {this.state.employeesMarkers.length} ont été
-                      géolocalisés :
-                    </b>
-                  </p>
-                  <ul className="list-unstyled">
-                    <li className="p-1">
-                      {this.state.nbPersUnder5} salarié
-                      {this.state.nbPersUnder5 > 1 ? "s" : ""} (
-                      {this.state.percentUnder5}%) habite
-                      {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
-                      {this.props.measure === "km" ? " km " : " minutes "}
-                      {this.props.parameter} de l'entreprise.
-                    </li>
-                    <li className="p-1">
-                      {this.state.nbPers5To10} salarié
-                      {this.state.nbPers5To10 > 1 ? "s" : ""} (
-                      {this.state.percent5To10}%) habite
-                      {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
-                      {this.props.measure === "km" ? " km " : " minutes "}
-                      {this.props.parameter} de l'entreprise.
-                    </li>
-                    <li className="p-1">
-                      {this.props.parameter === "en voiture"
-                        ? this.state.nbPers10To20
-                        : this.state.nbPers10To15}{" "}
-                      salarié
-                      {this.state.nbPers10To20 > 1 ||
-                      this.state.nbPers10To15 > 1
-                        ? "s"
-                        : ""}{" "}
-                      {this.props.parameter === "en voiture"
-                        ? `(${this.state.percent10To20}%)`
-                        : `(${this.state.percent10To15}%)`}{" "}
-                      habite
-                      {this.state.nbPers10To20 > 1 ||
-                      this.state.nbPers10To15 > 1
-                        ? "nt"
-                        : ""}{" "}
-                      entre 10 et
-                      {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
-                      {this.props.parameter} de l'entreprise.
-                    </li>
-                    <li className="p-1">
-                      {this.props.parameter === "en voiture"
-                        ? this.state.nbPersOver20
-                        : this.state.nbPersOver15}{" "}
-                      salarié
-                      {this.state.nbPersOver20 > 1 ||
-                      this.state.nbPersOver15 > 1
-                        ? "s"
-                        : ""}{" "}
-                      {this.props.parameter === "en voiture"
-                        ? `(${this.state.percentOver20}%)`
-                        : `(${this.state.percentOver15}%)`}{" "}
-                      habite
-                      {this.state.nbPersOver20 > 1 ||
-                      this.state.nbPersOver15 > 1
-                        ? "nt"
-                        : ""}{" "}
-                      à plus de
-                      {this.props.measure === "km" ? " 20 km " : " 15 minutes "}
-                      {this.props.parameter} de l'entreprise.
-                    </li>
-                  </ul>
-                </Container>
-              </div>
-            </Col>
-          </Row>
-        </Container>
+                    </Container>
+                  </div>
+                </Col>
+              </Row>
+            </Container>
+          </div>
+        </Col>
       </div>
     );
   }

@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-import APIGeoloc from "./APIGeoloc";
+//import APIGeoloc from "./APIGeoloc";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import NotificationAlert from "react-notification-alert";
 import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
-import domtoimage from "dom-to-image";
-import jsPDF from "jspdf";
-import ScrollAnimation from "react-animate-on-scroll";
+//import domtoimage from "dom-to-image";
+//import jsPDF from "jspdf";
+//import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
 
 const errorMsg = {
@@ -39,18 +39,15 @@ class Geolocalisation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addressEmployeeToTable: undefined,
-      addressEmployeeToArray: [],
-      isochroneCenter: [],
-      mapData: [],
-      addressSocietyToArray: [],
-      addressSocietyToLatLng: [],
-      nbSociety: "",
-      streetSociety: "",
-      zipCodeSociety: "",
-      citySociety: "",
+      employeeMapData: [],
+      societyMapData: "",
+      societyAddress: "",
+      societyLat: "",
+      societyLng: "",
       isChecked: false,
-      pdfIsLoading: false
+      addressEmployeeToTable: undefined,
+      societyIsSend: false,
+      employeeIsSend: false
     };
   }
 
@@ -85,29 +82,27 @@ class Geolocalisation extends Component {
       this.state.zipCodeSociety,
       this.state.citySociety
     ];
-    let dataStr = addressSocietyToArray.join("+").replace(" ", "+");
-    return axios
-      .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
+    let dataStr = addressSocietyToArray.join(" ");
+    const regex = / /gi;
+    let queryAddress = dataStr.replace(regex, "+");
+    axios
+      .get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`)
       .then(result => {
-        let validateAddress = result.data.features[0].properties.city.toLowerCase();
-        let query = result.data.query.toLowerCase();
-        let newData = result.data.features[0].geometry.coordinates;
-        if (query.includes(validateAddress)) {
-          this.setState({
-            addressSocietyToLatLng: newData,
-            nbSociety: "",
-            streetSociety: "",
-            zipCodeSociety: "",
-            citySociety: "",
-            addressSocietyToArray: dataStr,
-            isChecked: true
-          });
-        } else {
-          this.alertFunctionError();
-        }
+        let societyPosition = result.data.features[0].geometry.coordinates;
+        let latSociety = societyPosition[1];
+        let lngSociety = societyPosition[0];
+        let allSocietyData = {
+          address: dataStr,
+          lat: latSociety,
+          lng: lngSociety
+        };
+        this.setState({
+          societyMapData: allSocietyData,
+          isChecked: true
+        });
       })
-      .catch(err => {
-        this.alertFunctionError();
+      .catch(error => {
+        console.log(error);
       });
   };
 
@@ -117,76 +112,77 @@ class Geolocalisation extends Component {
       csv.parse(reader.result, (err, data) => {
         if (data.length < 800) {
           this.setState({
-            addressEmployeeToArray: data,
             addressEmployeeToTable: reader.result
           });
-        } else {
-          this.alertFunctionErrorLimit();
+          let employeeMapData = this.state.employeeMapData;
+          let societyMapData = this.state.societyMapData;
+          data.map(address => {
+            let allAddress = [address.join(" ")];
+            return employeeMapData.push(allAddress);
+          });
+          this.setState({ employeeMapData, societyMapData: societyMapData });
         }
       });
     };
     reader.readAsText(files[0]);
   };
 
-  handleImg = () => {
-    const capture1 = document.querySelector("#capture1");
-    const capture2 = document.querySelector("#capture2");
-    let allCaptures = [];
-    allCaptures.push(capture1, capture2);
-    let allImagesData = [];
-    this.setState({
-      pdfIsLoading: true
+  sendEmployeeDataToServer = () => {
+    let employeeMapData = this.state.employeeMapData;
+    let allEmployeeData = [];
+    employeeMapData.map(data => {
+      let addressEmployee = [data];
+      return allEmployeeData.push(addressEmployee);
     });
-    setTimeout(() => {
-      this.setState({
-        pdfIsLoading: false
-      });
-    }, 3000);
-    allCaptures.map(capture => {
-      return domtoimage.toPng(capture).then(dataUrl => {
-        let imgData = new Image();
-        if (capture.clientHeight > 800) {
-          imgData = new Image(180, 180);
+    let addressSociety = this.state.societyMapData.address;
+    const body = {
+      employee: allEmployeeData,
+      society: addressSociety
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/geolocation/employee",
+      data: body
+    })
+      .then(result => {
+        if (result.status !== 200) {
+          this.alertFunctionProblem();
         } else {
-          imgData = new Image(180, 110);
+          this.setState({ employeeIsSend: true });
         }
-        imgData.src = dataUrl;
-        allImagesData.push(imgData);
-        this.setState(
-          {
-            imgData: allImagesData
-          },
-          () => {
-            this.handlePdf();
-          }
-        );
+      })
+      .catch(error => {
+        this.alertFunctionError();
       });
-    });
   };
 
-  handlePdf = () => {
-    let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(30);
-    const allImages = this.state.imgData.reverse();
-    allImages.map(image => {
-      if (image.height >= 180) {
-        newPdf.addImage(image, "JPEG", 5, 30, 200, 180);
-      } else if (image.height < 180) {
-        newPdf.addImage(image, "JPEG", 5, 30, 200, 130);
-      }
-      return newPdf.addPage();
-    });
-    let lastPage = newPdf.internal.getNumberOfPages();
-    newPdf.deletePage(lastPage);
-    if (allImages.length === 2) {
-      newPdf.save("compte-rendu.pdf");
-    }
+  sendSocietyDataToServer = () => {
+    const body = this.state.societyMapData;
+    axios({
+      method: "post",
+      url: "http://localhost:8080/geolocation/society",
+      data: body
+    })
+      .then(result => {
+        if (result.status !== 200) {
+          this.alertFunctionProblem();
+        } else {
+          this.setState({
+            societyIsSend: true
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionError();
+      });
+  };
+
+  sendDataToServer = () => {
+    this.sendSocietyDataToServer();
+    this.sendEmployeeDataToServer();
   };
 
   render() {
-    const addressEmployees = this.state.addressEmployeeToArray;
-    const addressSociety = this.state.addressSocietyToLatLng;
     return (
       <div className="text-white">
         <div className="listAddress mt-2">
@@ -235,7 +231,6 @@ class Geolocalisation extends Component {
                         name="nbSociety"
                         id="inputNbSociety"
                         onChange={this.handleChange}
-                        value={this.state.nbSociety}
                         placeholder="N°"
                       />
                     </Col>
@@ -246,7 +241,6 @@ class Geolocalisation extends Component {
                         name="streetSociety"
                         id="inputStreetSociety"
                         onChange={this.handleChange}
-                        value={this.state.streetSociety}
                         placeholder="Nom de rue"
                       />
                     </Col>
@@ -257,7 +251,6 @@ class Geolocalisation extends Component {
                         name="zipCodeSociety"
                         id="inputZipCodeSociety"
                         onChange={this.handleChange}
-                        value={this.state.zipCodeSociety}
                         placeholder="Code postal"
                       />
                     </Col>
@@ -268,7 +261,6 @@ class Geolocalisation extends Component {
                         name="citySociety"
                         id="inputCitySociety"
                         onChange={this.handleChange}
-                        value={this.state.citySociety}
                         placeholder="Ville"
                       />
                     </Col>
@@ -310,9 +302,8 @@ class Geolocalisation extends Component {
                       </div>
                       <Col lg={{ size: 6, offset: 6 }}>
                         <p className="totalAddresses pt-1 pl-1">
-                          <b>{this.state.addressEmployeeToArray.length}</b>{" "}
-                          adresse
-                          {this.state.addressEmployeeToArray.length <= 1
+                          <b>{this.state.employeeMapData.length}</b> adresse
+                          {this.state.employeeMapData.length <= 1
                             ? " importée"
                             : "s importées"}{" "}
                           <i className="fa fa-check" />
@@ -364,88 +355,43 @@ class Geolocalisation extends Component {
                 </div>
               </Col>
             </Row>
+            <Row>
+              <Col lg={{ size: 10, offset: 1 }}>
+                <h5 className="mt-4">
+                  <img
+                    alt="step 1"
+                    src="./img/3-circle.png"
+                    className="mr-2"
+                    width="50"
+                    height="50"
+                  />
+                  Analyser la distance et les temps de trajets en voiture et à
+                  vélo :
+                </h5>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={{ size: 4, offset: 4 }}>
+                {this.state.societyIsSend === true &&
+                this.state.employeeIsSend === true ? (
+                  <p>
+                    <b>
+                      Vos données ont bien été enregistrées, vous recevrez les
+                      résultats par e-mail sous ((estimation temps))
+                    </b>
+                  </p>
+                ) : (
+                  <button
+                    className="btn text-white mb-4 mt-4"
+                    onClick={this.sendDataToServer}
+                  >
+                    Lancer la géolocalisation
+                  </button>
+                )}
+              </Col>
+            </Row>
           </Container>
-          <hr />
-          <ScrollAnimation animateIn="fadeIn">
-            <Container className="card shadow mt-5 pt-3">
-              <h5>
-                <img
-                  alt="step 1"
-                  src="./img/3-circle.png"
-                  className="mr-2"
-                  width="50"
-                  height="50"
-                />
-                Analyser la distance et les temps de trajets en voiture et à
-                vélo :
-              </h5>
-              <div id="capture1" className="m-3">
-                <APIGeoloc
-                  addressEmployees={addressEmployees}
-                  addressSociety={addressSociety}
-                  addressSocietyToArray={this.state.addressSocietyToArray}
-                  profile="driving-car"
-                  rangeType="distance"
-                  range="5000,10000,15000"
-                  parameter="en voiture"
-                  legendTitle="Distance"
-                  measure="km"
-                  statTitle="Distance"
-                  icon="fa fa-car"
-                />
-              </div>
-            </Container>
-          </ScrollAnimation>
-          <ScrollAnimation animateIn="fadeIn">
-            <Container className="card shadow mt-5 pt-3">
-              <div id="capture2" className="m-3">
-                <APIGeoloc
-                  addressEmployees={addressEmployees}
-                  addressSociety={addressSociety.reverse()}
-                  addressSocietyToArray={this.state.addressSocietyToArray}
-                  profile="cycling-regular"
-                  rangeType="time"
-                  range="300,600,900"
-                  parameter="à vélo"
-                  legendTitle="Durée du trajet"
-                  measure=" minutes "
-                  statTitle="Temps de trajet"
-                  icon="fa fa-bicycle"
-                />
-              </div>
-            </Container>
-          </ScrollAnimation>
         </div>
-        <hr />
-        <ScrollAnimation animateIn="fadeIn">
-          <div>
-            <h4>
-              <img
-                alt="step 1"
-                src="./img/4-circle.png"
-                className="mr-2"
-                width="50"
-                height="50"
-              />
-              <b>Enregistrer votre compte-rendu :</b>
-            </h4>
-            <button
-              onClick={this.handleImg}
-              className="mb-4 mt-3 btn text-white pdfButton"
-            >
-              <i className="fa fa-file-pdf-o" /> Télécharger PDF
-            </button>
-            {this.state.pdfIsLoading === true ? (
-              <img
-                src="./img/spinner.png"
-                className="spinnerLogo ml-3 mb-3"
-                alt="spinner"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </ScrollAnimation>
       </div>
     );
   }
