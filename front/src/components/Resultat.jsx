@@ -356,6 +356,7 @@ class Resultat extends Component {
     super(props);
 
     this.state = {
+      hovering: true,
       dataFetch: [
         {
           genre: "Un homme",
