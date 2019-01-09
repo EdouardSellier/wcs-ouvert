@@ -35,9 +35,10 @@ class Connexion extends Component {
     axios
       .post("http://localhost:8080/auth/connexion", this.state)
       .then(response => {
-        const { token } = response.data;
+        const { token, user } = response.data;
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("token", token);
+        localStorage.setItem("is_admin", user.admin);
         this.props.history.push("/monespace");
         console.log("Envoyé", response.data);
       })

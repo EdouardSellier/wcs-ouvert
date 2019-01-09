@@ -16,6 +16,23 @@ import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 
+const AdminRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authChecker.isAdmin() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/connexion"
+          }}
+        />
+      )
+    }
+  />
+);
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -36,7 +53,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 const authChecker = {
   getUser() {
-    return localStorage.getItem("currentUser", "token") || null;
+    return localStorage.getItem("currentUser") || null;
+  },
+  isAdmin() {
+    return localStorage.getItem("is_admin") || null;
   }
 };
 
@@ -49,7 +69,7 @@ class App extends Component {
             <Route exact path="/" component={Accueil} />
             <Route path="/inscription" component={Inscription} />
             <Route path="/connexion" component={Connexion} />
-            <PrivateRoute path="/contact" component={Contact} />
+            <Route path="/contact" component={Contact} />
             <PrivateRoute path="/monespace" component={EspaceRH} />
             <PrivateRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <PrivateRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
@@ -57,7 +77,7 @@ class App extends Component {
             <PrivateRoute path="/sondage" component={Sondage} />
             <PrivateRoute path="/assistance" component={Assistance} />
             <PrivateRoute path="/resultat" component={Resultat} />
-            <PrivateRoute path="/admin" component={EspaceAdmin} />
+            <AdminRoute path="/admin" component={EspaceAdmin} />
             <PrivateRoute
               path="/listeentreprises"
               component={ListeEntreprises}
