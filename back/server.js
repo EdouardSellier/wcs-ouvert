@@ -397,7 +397,6 @@ app.post("/geolocation/employee", (req, res) => {
 
 app.post("/geolocation/society", (req, res) => {
   const societyData = req.body;
-  console.log(societyData);
   let societySql = "INSERT INTO map SET ?";
   connection.query(societySql, [societyData], (err, results) => {
     if (err) {
