@@ -185,6 +185,16 @@ app.get('/admin/list/survey', (req, res) => {
   );
 });
 
+app.get('/admin/list/geolocation', (req, res) => {
+  connection.query('SELECT id FROM geolocation', (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
