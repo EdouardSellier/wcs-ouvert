@@ -20,7 +20,9 @@ const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      authChecker.isAdmin() ? (
+      authChecker.getUser() &&
+      authChecker.isAdmin() === "1" &&
+      authChecker.hasPayed() === "0" ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -33,11 +35,13 @@ const AdminRoute = ({ component: Component, ...rest }) => (
   />
 );
 
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const UserRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      authChecker.getUser() ? (
+      authChecker.getUser() &&
+      authChecker.isAdmin() === "0" &&
+      authChecker.hasPayed() === "1" ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -57,6 +61,9 @@ const authChecker = {
   },
   isAdmin() {
     return localStorage.getItem("is_admin") || null;
+  },
+  hasPayed() {
+    return localStorage.getItem("has_payed") || null;
   }
 };
 
@@ -70,19 +77,19 @@ class App extends Component {
             <Route path="/inscription" component={Inscription} />
             <Route path="/connexion" component={Connexion} />
             <Route path="/contact" component={Contact} />
-            <PrivateRoute path="/monespace" component={EspaceRH} />
-            <PrivateRoute path="/nouvelleenquete" component={NouvelleEnquete} />
-            <PrivateRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
-            <PrivateRoute path="/geolocalisation" component={Geolocalisation} />
-            <PrivateRoute path="/sondage" component={Sondage} />
-            <PrivateRoute path="/assistance" component={Assistance} />
-            <PrivateRoute path="/resultat" component={Resultat} />
+
+            <UserRoute path="/monespace" component={EspaceRH} />
+            <UserRoute path="/monespace" component={EspaceRH} />
+            <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
+            <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
+            <UserRoute path="/geolocalisation" component={Geolocalisation} />
+            <UserRoute path="/sondage" component={Sondage} />
+            <UserRoute path="/assistance" component={Assistance} />
+            <UserRoute path="/resultat" component={Resultat} />
+
             <AdminRoute path="/admin" component={EspaceAdmin} />
-            <PrivateRoute
-              path="/listeentreprises"
-              component={ListeEntreprises}
-            />
-            <PrivateRoute path="/listeenquetes" component={ListeEnquetes} />
+            <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
+            <AdminRoute path="/listeenquetes" component={ListeEnquetes} />
           </Switch>
         </BrowserRouter>
       </div>
