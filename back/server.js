@@ -159,6 +159,19 @@ app.post('/admin/payment', (req, res) => {
   });
 });
 
+app.get('/admin/list/society', (req, res) => {
+  connection.query(
+    'SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user WHERE is_admin = 0',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
