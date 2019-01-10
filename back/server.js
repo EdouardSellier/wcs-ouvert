@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
-const { portServer } = require('./conf');
+const { portServer, dbHandle, userTransporter } = require('./conf');
 require('./passport-strategy');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -49,7 +50,7 @@ app.post('/user/geolocation', (req, res) => {
     society_position: sendSocietyData,
     employees_positions: sendEmployeesData.toString()
   };
-  connection.query('INSERT INTO geolocation SET ?', formData, (err, results) => {
+  dbHandle.query('INSERT INTO geolocation SET ?', formData, (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -60,7 +61,7 @@ app.post('/user/geolocation', (req, res) => {
 
 app.post('/user/survey', (req, res) => {
   const formData = req.body;
-  connection.query('INSERT INTO survey SET ?', formData, (err, results) => {
+  dbHandle.query('INSERT INTO survey SET ?', formData, (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -70,7 +71,7 @@ app.post('/user/survey', (req, res) => {
 });
 
 app.get('/user/list/survey', (req, res) => {
-  connection.query('SELECT survey_name FROM survey', (err, results) => {
+  dbHandle.query('SELECT survey_name FROM survey', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -83,8 +84,8 @@ app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
-    nodemailer.createTestAccount((err, account) => {
-      let transporter = nodemailer.createTransport({
+    userTransporter.createTestAccount((err, account) => {
+      let nodemailer = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
         secure: false,
@@ -99,7 +100,7 @@ app.post('/user/send/survey', (req, res) => {
         subject: 'Sondage de mobilité ✔',
         html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
       };
-      transporter.sendMail(mailOptions, (error, info) => {
+      nodemailer.sendMail(mailOptions, (error, info) => {
         if (error) {
           res.status(500).send('An error occured during mail sending.');
         }
@@ -112,7 +113,7 @@ app.post('/user/send/survey', (req, res) => {
 app.post('/admin/payment', (req, res) => {
   const formData = req.body;
   const idSociety = req.body.id;
-  connection.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
+  dbHandle.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -160,7 +161,7 @@ app.post('/admin/payment', (req, res) => {
 });
 
 app.get('/admin/list/society', (req, res) => {
-  connection.query(
+  dbHandle.query(
     'SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user WHERE is_admin = 0',
     (err, results) => {
       if (err) {
@@ -173,7 +174,7 @@ app.get('/admin/list/society', (req, res) => {
 });
 
 app.get('/admin/list/survey', (req, res) => {
-  connection.query(
+  dbHandle.query(
     'SELECT survey_name, starting_date, ending_date, user_id FROM survey',
     (err, results) => {
       if (err) {
@@ -186,7 +187,7 @@ app.get('/admin/list/survey', (req, res) => {
 });
 
 app.get('/admin/list/geolocation', (req, res) => {
-  connection.query('SELECT id FROM geolocation', (err, results) => {
+  dbHandle.query('SELECT id FROM geolocation', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -197,7 +198,7 @@ app.get('/admin/list/geolocation', (req, res) => {
 
 app.post('/admin/list/society', (req, res) => {
   let totalCount = undefined;
-  connection.query('SELECT COUNT(*) AS TotalCount FROM user', function(err, rows) {
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM user', function(err, rows) {
     let startNum = 0;
     let limitNum = 5;
     if (err) {
@@ -207,7 +208,7 @@ app.post('/admin/list/society', (req, res) => {
       startNum = req.body.start;
       limitNum = req.body.limit;
     }
-    connection.query(
+    dbHandle.query(
       `SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
@@ -226,7 +227,7 @@ app.post('/admin/list/society', (req, res) => {
 
 app.post('/admin/list/geolocation', (req, res) => {
   let totalCount = undefined;
-  connection.query('SELECT COUNT(*) AS TotalCount FROM geolocation', function(err, rows) {
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM geolocation', function(err, rows) {
     let startNum = 0;
     let limitNum = 5;
     if (err) {
@@ -236,8 +237,37 @@ app.post('/admin/list/geolocation', (req, res) => {
       startNum = req.body.start;
       limitNum = req.body.limit;
     }
-    connection.query(
+    dbHandle.query(
       `SELECT id, society_position, employees_positions, user_id FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
+app.post('/admin/list/survey', (req, res) => {
+  let totalCount = undefined;
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM survey', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    dbHandle.query(
+      `SELECT survey_name, starting_date, ending_date, user_id FROM survey LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
           res.json(err);

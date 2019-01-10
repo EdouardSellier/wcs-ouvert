@@ -2,9 +2,7 @@ import React, { Component } from "react";
 import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Accueil from "./components/Accueil";
-import Inscription from "./components/Inscription";
-import Connexion from "./components/Connexion";
-import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
@@ -15,6 +13,7 @@ import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
+import ListeGeoloc from "./components/ListeGeoloc";
 
 const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -22,12 +21,12 @@ const AdminRoute = ({ component: Component, ...rest }) => (
     render={props =>
       authChecker.getUser() &&
       authChecker.isAdmin() === "1" &&
-      authChecker.hasPayed() === "0" ? (
+      authChecker.hasPaid() === "0" ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
-            pathname: "/connexion"
+            pathname: "/"
           }}
         />
       )
@@ -41,12 +40,12 @@ const UserRoute = ({ component: Component, ...rest }) => (
     render={props =>
       authChecker.getUser() &&
       authChecker.isAdmin() === "0" &&
-      authChecker.hasPayed() === "1" ? (
+      authChecker.hasPaid() === "1" ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
-            pathname: "/connexion",
+            pathname: "/",
             state: { from: props.location }
           }}
         />
@@ -62,8 +61,8 @@ const authChecker = {
   isAdmin() {
     return localStorage.getItem("is_admin") || null;
   },
-  hasPayed() {
-    return localStorage.getItem("has_payed") || null;
+  hasPaid() {
+    return localStorage.getItem("has_paid") || null;
   }
 };
 
@@ -74,9 +73,6 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
-            <Route path="/inscription" component={Inscription} />
-            <Route path="/connexion" component={Connexion} />
-            <Route path="/contact" component={Contact} />
 
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/monespace" component={EspaceRH} />
@@ -90,8 +86,10 @@ class App extends Component {
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
             <AdminRoute path="/listeenquetes" component={ListeEnquetes} />
+            <AdminRoute path="/listegeoloc" component={ListeGeoloc} />
           </Switch>
         </BrowserRouter>
+        <Footer />
       </div>
     );
   }

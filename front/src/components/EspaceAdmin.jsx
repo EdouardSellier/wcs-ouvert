@@ -37,8 +37,13 @@ class AccueilAdmin extends Component {
   };
 
   getSocietyStat = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/society")
+      .get("http://localhost:8080/admin/list/society/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(result => {
         let nbSociety = result.data.length;
         let societyList = result.data;
@@ -61,8 +66,13 @@ class AccueilAdmin extends Component {
   };
 
   getSurveyStat = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/survey")
+      .get("http://localhost:8080/admin/list/survey", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(result => {
         let nbSurvey = result.data.length;
         let surveyList = result.data;
@@ -87,8 +97,13 @@ class AccueilAdmin extends Component {
   };
 
   getGeolocationStat = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/geolocation")
+      .get("http://localhost:8080/admin/list/geolocation", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(result => {
         let geolocationList = result.data.length;
         this.setState({

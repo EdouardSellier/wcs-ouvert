@@ -13,7 +13,7 @@ passport.use(
     },
     (mail, password, callback) => {
       dbHandle.query(
-        `SELECT id, mail, password, lastname, firstname, is_admin, company_name, siret, company_address, phone_number, has_payed FROM user WHERE mail=${mysql.escape(
+        `SELECT id, mail, password, lastname, firstname, is_admin, company_name, siret, company_address, phone_number, has_paid FROM user WHERE mail=${mysql.escape(
           mail
         )} LIMIT 1`,
         (err, results) => {
@@ -30,7 +30,7 @@ passport.use(
                     id: user.id,
                     username: user.mail,
                     admin: user.is_admin,
-                    has_payed: user.has_payed
+                    has_paid: user.has_paid
                   },
                   { message: 'Logged In Successfully' }
                 );
