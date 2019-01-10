@@ -69,6 +69,16 @@ app.post('/user/survey', (req, res) => {
   });
 });
 
+app.get('/user/list/survey', (req, res) => {
+  connection.query('SELECT survey_name FROM survey', (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
