@@ -42,7 +42,6 @@ class Connexion extends Component {
         localStorage.setItem("token", token);
         localStorage.setItem("is_admin", user.admin);
         localStorage.setItem("has_payed", user.has_payed);
-        console.log(user.admin);
         if (user.admin === 1) {
           this.props.history.push("/admin");
         } else if (user.admin === 0 && user.has_payed === 1) {
