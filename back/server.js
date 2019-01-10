@@ -58,6 +58,17 @@ app.post('/user/geolocation', (req, res) => {
   });
 });
 
+app.post('/user/survey', (req, res) => {
+  const formData = req.body;
+  connection.query('INSERT INTO survey SET ?', formData, (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.status(200).send('SUCCESS');
+    }
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
