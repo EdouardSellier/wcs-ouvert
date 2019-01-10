@@ -50,10 +50,14 @@ class ListeEnquetes extends Component {
       start: startPage,
       limit: this.state.isSelected
     };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/admin/list/survey",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         let arrayShown = res.data.data;

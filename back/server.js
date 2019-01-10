@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
-const { dbHandle, portServer } = require('./conf');
+const { portServer, dbHandle, userTransporter } = require('./conf');
 require('./passport-strategy');
+const nodemailer = require('nodemailer');
 
 const app = express();
 
@@ -83,8 +84,8 @@ app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
-    nodemailer.createTestAccount((err, account) => {
-      let transporter = nodemailer.createTransport({
+    userTransporter.createTestAccount((err, account) => {
+      let nodemailer = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
         secure: false,
@@ -99,7 +100,7 @@ app.post('/user/send/survey', (req, res) => {
         subject: 'Sondage de mobilité ✔',
         html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
       };
-      transporter.sendMail(mailOptions, (error, info) => {
+      nodemailer.sendMail(mailOptions, (error, info) => {
         if (error) {
           res.status(500).send('An error occured during mail sending.');
         }
@@ -238,6 +239,35 @@ app.post('/admin/list/geolocation', (req, res) => {
     }
     dbHandle.query(
       `SELECT id, society_position, employees_positions, user_id FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
+app.post('/admin/list/survey', (req, res) => {
+  let totalCount = undefined;
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM survey', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    dbHandle.query(
+      `SELECT survey_name, starting_date, ending_date, user_id FROM survey LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
           res.json(err);

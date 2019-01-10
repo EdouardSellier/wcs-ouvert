@@ -66,10 +66,14 @@ class Home extends Component {
       ending_date: this.state.ending_date,
       all_mails: JSON.stringify(this.state.mailsArray)
     };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/user/survey",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         if (res.data === "SUCCESS") {
