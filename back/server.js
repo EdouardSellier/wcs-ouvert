@@ -224,6 +224,35 @@ app.post('/admin/list/society', (req, res) => {
   });
 });
 
+app.post('/admin/list/geolocation', (req, res) => {
+  let totalCount = undefined;
+  connection.query('SELECT COUNT(*) AS TotalCount FROM geolocation', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    connection.query(
+      `SELECT id, society_position, employees_positions, user_id FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
