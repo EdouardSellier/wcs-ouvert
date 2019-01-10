@@ -195,6 +195,35 @@ app.get('/admin/list/geolocation', (req, res) => {
   });
 });
 
+app.post('/admin/list/society', (req, res) => {
+  let totalCount = undefined;
+  connection.query('SELECT COUNT(*) AS TotalCount FROM user', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    connection.query(
+      `SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
