@@ -109,6 +109,56 @@ app.post('/user/send/survey', (req, res) => {
   });
 });
 
+app.post('/admin/payment', (req, res) => {
+  const formData = req.body;
+  const idSociety = req.body.id;
+  connection.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      nodemailer.createTestAccount((err, account) => {
+        let transporter = nodemailer.createTransport({
+          host: 'smtp.gmail.com',
+          port: 587,
+          secure: false,
+          auth: {
+            user: userTransporter.user,
+            pass: userTransporter.pass
+          }
+        });
+        if (formData.has_paid === 1) {
+          let mailOptions = {
+            from: '"OUVERT" <no-reply@ouvert.com>',
+            to: req.body.mail,
+            subject: 'Votre inscription est confirmée ✔',
+            html: `<h1>Bienvenue !</h1><p>Nous avons bien reçu votre règlement et vous confirmons que votre inscription a bien été prise en compte. <br/> Vous pouvez dès à présent profiter de nos services en vous connectant à votre compte : <a href='http://localhost:3000/connexion'>Cliquez sur ce lien</a></p><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              res.status(500).send('An error occured with confirmation e-mail after sign up.');
+            }
+          });
+        } else if (formData.has_paid === 0) {
+          let mailOptions = {
+            from: '"OUVERT" <no-reply@ouvert.com>',
+            to: req.body.mail,
+            subject: "Votre compte n'est plus actif",
+            html: `<h1>Désactivation de votre compte</h1><p>Sauf erreur de notre part, nous n'avons pas reçu votre règlement pour bénéficier de nos services. Nous avons ainsi désactivé votre compte. En cas de problème, vous pouvez nous contacter par e-mail ou par téléphone : <a href='http://localhost:3000/contact'>Cliquez sur ce lien</a>.</p><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              res.status(500).send('An error occured with confirmation e-mail after sign up.');
+            }
+          });
+        }
+      });
+      res.status(200).send('SUCCESS');
+    }
+  });
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
