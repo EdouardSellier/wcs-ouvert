@@ -6,7 +6,8 @@ import NotificationAlert from "react-notification-alert";
 
 const dangerMsg = {
   place: "br",
-  message: "Votre email et/ou votre mot de passe sont incorrects",
+  message:
+    "Votre email et/ou votre mot de passe sont incorrects ou il y a un problème avec votre compte. Merci de nous recontacter si le problème persiste.",
   type: "danger",
   autoDismiss: 5
 };
@@ -36,14 +37,21 @@ class Connexion extends Component {
       .post("http://localhost:8080/auth/connexion", this.state)
       .then(response => {
         const { token, user } = response.data;
-        localStorage.setItem("currentUser", this.state.mail);
+        console.log(response.data);
+        localStorage.setItem("currentUser", user.mail);
         localStorage.setItem("token", token);
         localStorage.setItem("is_admin", user.admin);
         localStorage.setItem("has_payed", user.has_payed);
-        this.props.history.push("/monespace");
-        console.log("Envoyé", response.data);
+        console.log(user.admin);
+        if (user.admin === 1) {
+          this.props.history.push("/admin");
+        } else if (user.admin === 0 && user.has_payed === 1) {
+          this.props.history.push("/monespace");
+        }
       })
-      .catch(err => console.log("Error", err));
+      .catch(error => {
+        this.alertFunctionDanger();
+      });
   };
 
   render() {
