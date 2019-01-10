@@ -172,6 +172,19 @@ app.get('/admin/list/society', (req, res) => {
   );
 });
 
+app.get('/admin/list/survey', (req, res) => {
+  connection.query(
+    'SELECT survey_name, starting_date, ending_date, user_id FROM survey',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'text/plain');
   res
