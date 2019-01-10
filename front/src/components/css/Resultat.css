@@ -18,8 +18,17 @@
   justify-content: space-between;
 }
 
+.testons {
+  display: flex;
+  align-items: flex-end;
+}
+
 .borderRight {
   border-right: 2px black solid;
+}
+
+.hhh {
+  height: 100%;
 }
 
 .borderLeft {
@@ -31,8 +40,8 @@
 }
 
 .containerResultBar {
-  border-top: 2px black solid;
   border-left: 2px black solid;
+  border-bottom: 2px black solid;
 }
 
 .piesContainer {
@@ -62,7 +71,6 @@
 .componentTitle {
   font-weight: bold;
   font-size: 1.5em;
-  color: white;
 }
 
 .justifyContentRight {
@@ -94,7 +102,7 @@
 }
 
 .contentResultText {
-  color: white;
+  color: black;
   font-size: 1.2em;
 }
 
@@ -104,6 +112,25 @@
 }
 
 .alignItems {
+  text-align: right;
+}
+
+.align {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.alignItemss {
+  display: flex;
+  text-align: left;
+}
+
+.ccc {
+  height: 3vh;
+}
+
+.bidule {
   display: flex;
   align-items: center;
 }

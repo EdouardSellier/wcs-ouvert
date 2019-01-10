@@ -34,175 +34,90 @@ const StyledSquare = styled(Square)`
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="d-flex justify-content-center mb-5">
-        <Col
-          xs={{ size: 10 }}
-          className="bg-light d-flex justify-content-center"
-        >
-          <Col xs={{ size: 10 }} className=" mb-5 pb-5 px-5 d-none d-lg-block">
-            <Col xs={{ size: 12 }} className="py-3">
-              Le titre
-            </Col>
-            <Col xs={{ size: 12 }} className="">
-              <Row>
-                <Col xs={{ size: 8, offset: 4 }} className="d-flex px-0">
-                  <Col xs={{ size: 1 }} className="px-1 d-flex">
-                    0%
-                  </Col>
-                  <Col xs={{ size: 4 }}>25%</Col>
-                  <Col xs={{ size: 2 }}>50%</Col>
-                  <Col xs={{ size: 4 }}>75%</Col>
-                  <Col xs={{ size: 1 }} className="px-1 textAlignRight">
-                    100%
-                  </Col>
-                </Col>
-
-                <Col
-                  xs={{ size: 8, offset: 4 }}
-                  className="px-0 containerResultBar pb-1"
-                >
-                  <Col
-                    xs={{ size: 12 }}
-                    className="d-flex px-0"
-                    style={{ height: "50%" }}
-                  >
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-2" />
-                    <Col xs={{ size: 1 }} className="borderRight pt-3" />
-                  </Col>
-                </Col>
-                <Col xs={{ size: 4 }} className="pt-2">
-                  {/**/}
-                  <Col xs={{ size: 12 }} className="alignItems">
-                    bggrherher hrehrhrehrehre hrrehehreher herhrherheer
-                    herreherherhre heherheherh hehthtrhrth htrhrthtrtrhhtrtrh
-                    rhthtr htrh trhtr htr htr hrt htr hrt htr hrt hrt htr tr
-                  </Col>
-                </Col>
-                <Col xs={{ size: 8 }} className="borderLeft pt-2 px-0">
-                  {/**/}
-                  <Col
-                    xs={{ size: 12 }}
-                    className="px-0"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      height: "100%"
-                    }}
-                  >
-                    <div
-                      className="bg-dark my-2 text-white"
-                      style={{
-                        width: "50%",
-                        display: "flex",
-                        height: "6vh",
-
-                        justifyContent: "center",
-                        alignItems: "center"
-                      }}
-                    >
-                      jjjjjjjjjjjjjjjjjj
-                    </div>
-                  </Col>
-                </Col>
-              </Row>
-            </Col>
-          </Col>
-        </Col>
-      </Row>
-      {/*<Row>
-        <Col md={{ size: 10 }} className="test mb-5 pb-5 d-none d-lg-block">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
+      <Col
+        lg={{ size: 6 }}
+        className="d-flex bidule justify-content-center mt-5"
+      >
+        <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+          <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="d-flex containerResultBar px-0">
-            <Col xs={{ size: 1 }} className="px-0">
-              <Col xs={{ size: 12 }} className="colHundred pl-1">
-                100%
-              </Col>
-              <Col xs={{ size: 12 }} className="colFifty pl-1">
-                50%
-              </Col>
-              <Col xs={{ size: 12 }} className="colZero  pl-1">
-                0%
-              </Col>
-            </Col>
-            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
+          <Col xs={{ size: 12 }} className="px-0">
+            <Row id={props.number}>
               {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="containerBar">
-                  <Col
-                    xs={{ size: 12 }}
-                    style={{
-                      height:
-                        100 /
+                <React.Fragment>
+                  <Col xs={{ size: 4 }} className="pt-2 pr-0 bidule">
+                    {/**/}
+                    <Col xs={{ size: 12 }} className="alignItems pr-1">
+                      {data}
+                    </Col>
+                  </Col>
+                  <Col xs={{ size: 7 }} className="borderLeft pt-2 px-0">
+                    {/**/}
+                    <Col
+                      xs={{ size: 12 }}
+                      className="px-0"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        height: "100%"
+                      }}
+                    >
+                      <div
+                        className="bg-dark text-white"
+                        style={{
+                          width:
+                            100 /
+                              (props.dataFetch.length /
+                                props.dataFetch.filter(
+                                  dataFetch => dataFetch[props.index] === data
+                                ).length) +
+                            "%",
+                          display: "flex",
+                          height: "3vh",
+
+                          justifyContent: "center",
+                          alignItems: "center",
+                          overflow: "hidden"
+                        }}
+                      >
+                        {100 /
                           (props.dataFetch.length /
                             props.dataFetch.filter(
                               dataFetch => dataFetch[props.index] === data
                             ).length) +
-                        "%",
-                      display: "flex",
-                      alignItems: "flex-end"
-                    }}
-                    className="px-0"
-                  >
-                    <StyledSquare pose={props.hovering ? "end" : "start"}>
-                      {(
-                        100 /
-                        (props.dataFetch.length /
-                          props.dataFetch.filter(
-                            dataFetch => dataFetch[props.index] === data
-                          ).length)
-                      ).toFixed(1) + " %"}
-                    </StyledSquare>
+                          "%"}
+                      </div>
+                    </Col>
                   </Col>
-                </Col>
+                </React.Fragment>
               ))}
-            </Col>
-          </Col>
-          <Col xs={{ size: 12 }} className="px-0 justifyContentRight">
-            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
-              {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="barTitle">
-                  {data}
-                </Col>
-              ))}
-            </Col>
-          </Col>
-        </Col>
-
-        <Col xs={{ size: 10 }} className="mb-5 pb-5 d-block d-lg-none">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col xs={{ size: 12 }} className="px-0">
-            {props.possibilities.map(data => (
-              <Col xs={{ size: 12 }} className="d-flex my-2 border-bottom">
-                <Col xs={{ size: 8 }} className="text-white">
-                  {data}
-                </Col>
-                <Col xs={{ size: 4 }} className="text-white">
-                  {(
-                    100 /
-                    (props.dataFetch.length /
-                      props.dataFetch.filter(
-                        dataFetch => dataFetch[props.index] === data
-                      ).length)
-                  ).toFixed(2) + "%"}
+              <Col
+                xs={{ size: 7, offset: 4 }}
+                className="px-0 containerResultBar"
+              >
+                <Col xs={{ size: 12 }} className="d-flex px-0 pt-2">
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
                 </Col>
               </Col>
-            ))}
+              <Col xs={{ size: 7, offset: 4 }} className="d-flex px-0">
+                <Col xs={{ size: 1 }} className="px-1 d-flex">
+                  0%
+                </Col>
+                <Col xs={{ size: 4 }}>25%</Col>
+                <Col xs={{ size: 2 }}>50%</Col>
+                <Col xs={{ size: 4 }}>75%</Col>
+                <Col xs={{ size: 1 }} className="px-1 textAlignRight">
+                  100%
+                </Col>
+              </Col>
+            </Row>
           </Col>
         </Col>
-                      </Row>*/}
+      </Col>
     </React.Fragment>
   );
 };
@@ -213,7 +128,7 @@ const ResultPie = props => {
   possibilities.push("------");
 
   let pies = { pie1: [], pie2: [], pie3: [] };
-  props.possibilities.map(data =>
+  possibilities.map(data =>
     pies.pie1.push(
       props.dataFetch.filter(state => state[props.index + "one"] === data)
         .length
@@ -240,7 +155,7 @@ const ResultPie = props => {
 
   let color = [
     "#aad7a9",
-    "#348b5",
+    "#348b54",
     "#3cd74b",
     "#fd62d9",
     "#cda889",
@@ -290,51 +205,6 @@ const ResultPie = props => {
         fontSize: 13
       },
       legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    },
-    {
-      title: {
-        display: true,
-        text: "Priorité 2.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    },
-    {
-      title: {
-        display: true,
-        text: "Priorité 3.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    }
-  ];
-
-  const options2 = [
-    {
-      title: {
-        display: true,
-        text: "Priorité 1.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
         display: false
       }
     },
@@ -362,48 +232,113 @@ const ResultPie = props => {
     }
   ];
 
+  let idTab = 0;
   return (
-    <React.Fragment>
-      <Row className="d-none d-lg-block">
-        <Col xs={{ size: 12 }} className="mb-5 pb-5 px-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
+    /*<React.Fragment>
+      <Col xs={{ size: 12 }} className="d-flex justify-content-center my-5">
+        <Col xs={{ size: 12 }} className="bg-light pb-5 px-4">
+          <Col xs={{ size: 12 }} className="mt-4 componentTitle">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="piesContainer pt-4">
-            <Col xs={{ size: 5 }}>
+          <Col xs={{ size: 12 }} className="mt-5 mb-4  px-5">
+            <Row className="d-flex justify-content-left">
+              {tabName.map(data => {
+                idTab += 1;
+
+                return (
+                  <Col lg={{ size: 6 }}>
+                    <Col xs={{ size: 12 }} className="d-flex vbn my-1">
+                      <Col xs={{ size: 4 }} className="align">
+                        <Col
+                          xs={{ size: 8 }}
+                          className="border ccc"
+                          style={{ backgroundColor: color[idTab - 1] }}
+                        >
+                          {" "}
+                        </Col>
+                      </Col>
+                      <Col xs={{ size: 8 }} className="alignItemss">
+                        {data}
+                      </Col>
+                    </Col>
+                  </Col>
+                );
+              })}
+            </Row>
+          </Col>
+          <Row>
+            <Col lg={{ size: 4 }} className="">
               <Pie data={data[0]} options={options[0]} />
             </Col>
-            <Col xl={{ size: 5 }}>
+            <Col lg={{ size: 4 }} className="">
               <Pie data={data[1]} options={options[1]} />
             </Col>
-          </Col>
-          <Col
-            xs={{ size: 12 }}
-            className="bgWhiteOpac d-flex justify-content-center pb-5"
-          >
-            <Col xl={{ size: 5 }} className="">
+            <Col lg={{ size: 4 }} className="">
               <Pie data={data[2]} options={options[2]} />
             </Col>
-          </Col>
+          </Row>
         </Col>
-      </Row>
-      <Row className="d-block d-lg-none">
-        <Col xs={{ size: 12 }} className="mb-5 pb-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[0]} options={options2[0]} width={100} />
-          </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[1]} options={options2[1]} width={100} />
-          </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[2]} options={options2[2]} width={100} />
-          </Col>
+      </Col>
+    </React.Fragment>*/
+    <Col lg={{ size: 6 }} className="d-flex justify-content-center mt-5">
+      <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+        <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
+          {props.label}
         </Col>
-      </Row>
-    </React.Fragment>
+        <Row id={props.number}>
+          <Col xs={{ size: 8 }}>
+            {tabName.map(data => {
+              idTab += 1;
+
+              return (
+                <Col lg={{ size: 12 }}>
+                  <Col xs={{ size: 12 }} className="d-flex vbn my-1">
+                    <Col xs={{ size: 4 }} className="align">
+                      <Col
+                        xs={{ size: 8 }}
+                        className="border ccc"
+                        style={{ backgroundColor: color[idTab - 1] }}
+                      >
+                        {" "}
+                      </Col>
+                    </Col>
+                    <Col xs={{ size: 8 }} className="alignItemss">
+                      {data}
+                    </Col>
+                  </Col>
+                </Col>
+              );
+            })}
+          </Col>
+          <Col xs={{ size: 4 }}>
+            <Col lg={{ size: 12 }}>
+              <Pie
+                data={data[0]}
+                options={options[0]}
+                width={100}
+                height={100}
+              />
+            </Col>
+            <Col lg={{ size: 12 }}>
+              <Pie
+                data={data[1]}
+                options={options[1]}
+                width={100}
+                height={100}
+              />
+            </Col>
+            <Col lg={{ size: 12 }} className="">
+              <Pie
+                data={data[2]}
+                options={options[2]}
+                width={100}
+                height={100}
+              />
+            </Col>
+          </Col>
+        </Row>
+      </Col>
+    </Col>
   );
 };
 
@@ -418,20 +353,19 @@ const ResultText = props => {
 
   return (
     <React.Fragment>
-      <Row>
-        <Col xs={{ size: 12 }} className="mb-5 pb-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col
-            xs={{ size: 12 }}
-            className="d-flex justify-content-center contentResultText"
-          >
-            La moyenne des salariés ayant répondu est de{" "}
-            <span className="dataResultText">{result}€</span>
-          </Col>
+      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light">
+        <Col xs={{ size: 12 }} className="my-5 componentTitle">
+          {props.label}
         </Col>
-      </Row>
+        <Col
+          xs={{ size: 12 }}
+          className="d-flex justify-content-center contentResultText"
+          id={props.number}
+        >
+          La moyenne des salariés ayant répondu est de{" "}
+          <span className="dataResultText">{result}€</span>
+        </Col>
+      </Col>
     </React.Fragment>
   );
 };
@@ -481,6 +415,45 @@ class Resultat extends Component {
           carpooling_three: "------",
           otherThanCar: "",
           commentary: ""
+        },
+        {
+          genre: "Une femme",
+          age: "25 ans ou moins",
+          principal_transport_one: "Voiture personnelle",
+          principal_transport_two: "------",
+          principal_transport_three: "------",
+          ocasionaly_transport_one: "Voiture personnelle",
+          ocasionaly_transport_two: "------",
+          ocasionaly_transport_three: "------",
+          reason_transport: "Rapidité",
+          distance_klm: 0,
+          distance_min: 0,
+          distance_money: 0,
+          elements_one: "Pas d’obligation particulière",
+          elements_two: "------",
+          elements_three: "------",
+          parking_place: "Oui",
+          midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
+          frequency_midday: "Jamais",
+          transport_midday: "Voiture personnelle",
+          frequency_pro: "Je ne fais jamais de déplacements professionnels",
+          distance_pro: "Je ne fais jamais de déplacements professionnels",
+          deplacement_pro: "Voiture personnelle",
+          reason_perso_car: "Pas d’autres solutions identifiées",
+          deplacement_method_pro:
+            "Je connais des alternatives à la voiture individuelle, j’essaye de les utiliser lorsque c’est possible et j’envisage de les utiliser davantage",
+          commun_transport_one:
+            "J’utilise déjà souvent les transports en commun",
+          commun_transport_two: "------",
+          commun_transport_three: "------",
+          bike_one: "Je me déplace déjà souvent à vélo",
+          bike_two: "------",
+          bike_three: "------",
+          carpooling_one: "Je covoiture déjà souvent",
+          carpooling_two: "------",
+          carpooling_three: "------",
+          otherThanCar: "",
+          commentary: ""
         }
       ]
     };
@@ -489,35 +462,218 @@ class Resultat extends Component {
   handlePdf(imga) {
     let newPdf = new jsPDF();
     newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(30);
-    const allImages = imga.reverse();
+    const allImages = imga;
+    newPdf.setFontSize(10);
+    newPdf.text(90, 30, "Vous êtes :");
+    newPdf.addImage(allImages[3], "JPEG", 0, 35, -100, 40);
+    newPdf.text(90, 95, "Vous avez :");
+    newPdf.addImage(allImages[6], "JPEG", 0, 100, -100, 40);
 
-    allImages.map(image => {
-      newPdf.addImage(image, "JPEG", 20, 20, 200, 100);
+    newPdf.text(
+      38,
+      165,
+      `        Quels modes de déplacements utilisez-vous pour venir travailler ?
+    Si vous utilisez plusieurs modes de déplacements au cours de votre trajet 
+    domicile-travail, veuillez les renseigner dans l'ordre dimportance qu'ils ont 
+        dans votre parcours (en termes de temps et de distance)`
+    );
 
-      return newPdf.addPage();
-    });
+    newPdf.addImage(allImages[18], "JPEG", 25, 185, 150, 100);
 
-    let lastPage = newPdf.internal.getNumberOfPages();
-    newPdf.deletePage(lastPage);
+    newPdf.addPage();
+
+    newPdf.text(
+      42,
+      15,
+      `                Peut-être utilisez-vous occasionnellement d'autres modes 
+      de déplacements en fonction du jour de la semaine,  de vos horaires,
+                                                  de la météo...`
+    );
+
+    newPdf.addImage(allImages[19], "JPEG", 25, 30, 150, 100);
+
+    newPdf.text(
+      42,
+      170,
+      `Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ? `
+    );
+
+    newPdf.addImage(allImages[12], "JPEG", 25, 180, 150, 100);
+
+    newPdf.addPage();
+
+    newPdf.text(64, 15, `Quelle distance (en km) parcourez-vous pour :`);
+
+    newPdf.addImage(allImages[0], "JPEG", -58, 20, 320, 10);
+
+    newPdf.text(60, 50, `Combien de temps (en minutes) mettez-vous pour :`);
+
+    newPdf.addImage(allImages[2], "JPEG", -57, 55, 320, 10);
+
+    newPdf.text(65, 85, `Quel budget (en euros) dépensez-vous pour :`);
+
+    newPdf.addImage(allImages[1], "JPEG", -57, 90, 320, 10);
+
+    newPdf.text(
+      35,
+      135,
+      `Quels éléments prenez-vous en compte pour organiser vos déplacements domicile-travail ?`
+    );
+
+    newPdf.addImage(allImages[16], "JPEG", 25, 150, 150, 100);
+
+    newPdf.addPage();
+
+    newPdf.text(
+      25,
+      15,
+      "Si vous vous rendez en voiture sur votre lieu de travail, y-trouvez-vous facilement une place de parking ?"
+    );
+
+    newPdf.addImage(allImages[4], "JPEG", 0, 22, -100, 40);
+
+    newPdf.text(65, 83, "Où déjeunez-vous le plus souvent le midi ?");
+
+    newPdf.addImage(allImages[5], "JPEG", 0, 90, -100, 40);
+
+    newPdf.text(
+      45,
+      152,
+      "En moyenne, à quelle fréquence effectuez-vous des déplacements le midi ?"
+    );
+
+    newPdf.addImage(allImages[7], "JPEG", 0, 159, -100, 40);
+
+    newPdf.text(
+      45,
+      220,
+      "Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?"
+    );
+
+    newPdf.addImage(allImages[13], "JPEG", 0, 227, -100, 40);
+
+    newPdf.addPage();
+
+    newPdf.text(
+      50,
+      15,
+      "A quelle fréquence effectuez-vous des déplacements professionnels ?"
+    );
+    newPdf.addImage(allImages[8], "JPEG", 0, 22, -100, 40);
+
+    newPdf.text(
+      47,
+      80,
+      `A quelle distance (aller ou retour, en km) vous déplacez-vous en moyenne 
+                         pour les déplacements professionnels ?`
+    );
+    newPdf.addImage(allImages[9], "JPEG", 0, 87, -100, 40);
+
+    newPdf.text(
+      47,
+      130,
+      `Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?`
+    );
+    newPdf.addImage(allImages[14], "JPEG", 0, 137, -100, 40);
+
+    newPdf.text(
+      47,
+      180,
+      `Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?`
+    );
+    newPdf.addImage(allImages[10], "JPEG", 0, 187, -100, 40);
+
+    newPdf.addPage();
+
+    newPdf.text(
+      10,
+      30,
+      `Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont 
+              vous vous déplacez pour vous rendre sur votre lieu de travail ?`
+    );
+    newPdf.addImage(allImages[11], "JPEG", 0, 35, -100, 40);
+
+    newPdf.text(
+      38,
+      165,
+      `Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?`
+    );
+
+    newPdf.addImage(allImages[15], "JPEG", 25, 185, 150, 100);
+
+    newPdf.addPage();
+    newPdf.text(
+      38,
+      10,
+      `Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?`
+    );
+
+    newPdf.addImage(allImages[20], "JPEG", 25, 20, 150, 100);
+
+    newPdf.text(
+      38,
+      180,
+      `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`
+    );
+
+    newPdf.addImage(allImages[17], "JPEG", 25, 190, 150, 100);
 
     newPdf.save("compte-rendu.pdf");
   }
 
   handleImg() {
-    const capture1 = document.querySelector(".test");
+    const capture1 = document.getElementById("1");
+    const capture2 = document.getElementById("2");
+    const capture3 = document.getElementById("3");
+    const capture4 = document.getElementById("4");
+    const capture5 = document.getElementById("5");
+    const capture6 = document.getElementById("6");
+    const capture7 = document.getElementById("7");
+    const capture8 = document.getElementById("8");
+    const capture9 = document.getElementById("9");
+    const capture10 = document.getElementById("10");
+    const capture11 = document.getElementById("11");
+    const capture12 = document.getElementById("12");
+    const capture13 = document.getElementById("13");
+    const capture14 = document.getElementById("14");
+    const capture15 = document.getElementById("15");
+    const capture16 = document.getElementById("16");
+    const capture17 = document.getElementById("17");
+    const capture18 = document.getElementById("18");
+    const capture19 = document.getElementById("19");
+    const capture20 = document.getElementById("20");
+    const capture21 = document.getElementById("21");
 
     let allCaptures = [];
 
     allCaptures.push(capture1);
-
+    allCaptures.push(capture2);
+    allCaptures.push(capture3);
+    allCaptures.push(capture4);
+    allCaptures.push(capture5);
+    allCaptures.push(capture6);
+    allCaptures.push(capture7);
+    allCaptures.push(capture8);
+    allCaptures.push(capture9);
+    allCaptures.push(capture10);
+    allCaptures.push(capture11);
+    allCaptures.push(capture12);
+    allCaptures.push(capture13);
+    allCaptures.push(capture14);
+    allCaptures.push(capture15);
+    allCaptures.push(capture16);
+    allCaptures.push(capture17);
+    allCaptures.push(capture18);
+    allCaptures.push(capture19);
+    allCaptures.push(capture20);
+    allCaptures.push(capture21);
     let allImagesData = [];
 
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
 
-        imgData = new Image(100, 100);
+        imgData = new Image(1000, 1000);
 
         imgData.src = dataUrl;
         allImagesData.push(imgData);
@@ -568,43 +724,47 @@ class Resultat extends Component {
             sondage pour l'instant.
           </Col>
         </Row>
-        {questions.map(data => {
-          switch (data.type) {
-            case "option":
-              return (
-                <ResultBar
-                  hovering={this.state.hovering}
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
-            /*case "multipleOption":
-              return (
-                <ResultPie
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
-            case "number":
-              return (
-                <ResultText
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );*/
-            default:
-              return false;
-          }
-        })}
-
+        <Row className="px-5 mt-5 d-flex justify-content-center">
+          {questions.map(data => {
+            switch (data.type) {
+              case "option":
+                return (
+                  <ResultBar
+                    hovering={this.state.hovering}
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              case "multipleOption":
+                return (
+                  <ResultPie
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              case "number":
+                return (
+                  <ResultText
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              default:
+                return false;
+            }
+          })}
+        </Row>
         <Row>
-          <Col xs={{ size: 12 }} className="pb-5">
+          <Col xs={{ size: 12 }} className="pb-5 mt-5">
             <button
               onClick={() => this.handleImg()}
               className="mb-4 mt-3 btn btn-lg text-white pdfButton"
