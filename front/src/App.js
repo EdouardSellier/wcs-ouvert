@@ -15,6 +15,7 @@ import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
+import Footer from "./components/Footer";
 
 const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -22,12 +23,12 @@ const AdminRoute = ({ component: Component, ...rest }) => (
     render={props =>
       authChecker.getUser() &&
       authChecker.isAdmin() === "1" &&
-      authChecker.hasPayed() === "0" ? (
+      authChecker.hasPaid() === "0" ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
-            pathname: "/connexion"
+            pathname: "/"
           }}
         />
       )
@@ -41,12 +42,12 @@ const UserRoute = ({ component: Component, ...rest }) => (
     render={props =>
       authChecker.getUser() &&
       authChecker.isAdmin() === "0" &&
-      authChecker.hasPayed() === "1" ? (
+      authChecker.hasPaid() === "1" ? (
         <Component {...props} />
       ) : (
         <Redirect
           to={{
-            pathname: "/connexion",
+            pathname: "/",
             state: { from: props.location }
           }}
         />
@@ -62,8 +63,8 @@ const authChecker = {
   isAdmin() {
     return localStorage.getItem("is_admin") || null;
   },
-  hasPayed() {
-    return localStorage.getItem("has_payed") || null;
+  hasPaid() {
+    return localStorage.getItem("has_paid") || null;
   }
 };
 
@@ -92,6 +93,7 @@ class App extends Component {
             <AdminRoute path="/listeenquetes" component={ListeEnquetes} />
           </Switch>
         </BrowserRouter>
+        <Footer />
       </div>
     );
   }

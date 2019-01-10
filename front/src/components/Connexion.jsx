@@ -33,18 +33,22 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
+    const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:8080/auth/connexion", this.state)
+      .post("http://localhost:8080/auth/connexion", this.state, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(response => {
         const { token, user } = response.data;
-        console.log(response.data);
-        localStorage.setItem("currentUser", user.mail);
         localStorage.setItem("token", token);
+        localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("is_admin", user.admin);
-        localStorage.setItem("has_payed", user.has_payed);
+        localStorage.setItem("has_paid", user.has_paid);
         if (user.admin === 1) {
           this.props.history.push("/admin");
-        } else if (user.admin === 0 && user.has_payed === 1) {
+        } else if (user.admin === 0 && user.has_paid === 1) {
           this.props.history.push("/monespace");
         }
       })

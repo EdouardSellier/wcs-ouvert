@@ -90,12 +90,11 @@ class Inscription extends React.Component {
       app
         .post("http://localhost:8080/auth/inscription", body)
         .then(res => {
-          if (res.data === "SUCCESS") {
+          if (res.data === "Signup successful") {
             this.alertFunctionSuccess();
           }
         })
         .catch(error => {
-          console.log(error);
           this.alertFunctionError();
         });
     }
