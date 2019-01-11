@@ -86,18 +86,15 @@ class Inscription extends React.Component {
       fields["confirmPassword"] = "";
       fields["nb_sites"] = "";
       this.setState({ fields: fields });
-      axios({
-        method: "post",
-        url: "http://localhost:8080/inscription",
-        data: body
-      })
+      let app = axios;
+      app
+        .post("http://localhost:8080/auth/inscription", body)
         .then(res => {
-          if (res.data === "SUCCESS") {
+          if (res.data === "Signup successful") {
             this.alertFunctionSuccess();
           }
         })
         .catch(error => {
-          console.log(error);
           this.alertFunctionError();
         });
     }

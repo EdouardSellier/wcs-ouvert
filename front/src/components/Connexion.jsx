@@ -6,7 +6,8 @@ import NotificationAlert from "react-notification-alert";
 
 const dangerMsg = {
   place: "br",
-  message: "Votre email et/ou votre mot de passe sont incorrects",
+  message:
+    "Votre email et/ou votre mot de passe sont incorrects ou il y a un problème avec votre compte. Merci de nous recontacter si le problème persiste.",
   type: "danger",
   autoDismiss: 5
 };
@@ -20,29 +21,34 @@ class Connexion extends Component {
     };
   }
 
-  alertFunctionDanger = () => {
-    this.refs.notificationAlert.notificationAlert(dangerMsg);
-  };
-
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
     });
   };
 
+  alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
+  };
+
   isLoggedIn = event => {
     event.preventDefault();
-    let body = {
-      mail: this.state.mail,
-      password: this.state.password
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/connexion",
-      data: body
-    })
-      .then(res => {
-        if (res.status === 200) {
+    const token = localStorage.getItem("token");
+    axios
+      .post("http://localhost:8080/auth/connexion", this.state, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        const { token, user } = response.data;
+        localStorage.setItem("token", token);
+        localStorage.setItem("currentUser", this.state.mail);
+        localStorage.setItem("is_admin", user.admin);
+        localStorage.setItem("has_paid", user.has_paid);
+        if (user.admin === 1) {
+          this.props.history.push("/admin");
+        } else if (user.admin === 0 && user.has_paid === 1) {
           this.props.history.push("/monespace");
         }
       })

@@ -74,10 +74,14 @@ class ListeEntreprises extends Component {
       start: startPage,
       limit: this.state.isSelected
     };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/admin/list/society",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         let arrayShown = res.data.data;
@@ -155,10 +159,14 @@ class ListeEntreprises extends Component {
         has_paid: 0
       };
     }
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/admin/payment",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         if (res.data === "SUCCESS") {
