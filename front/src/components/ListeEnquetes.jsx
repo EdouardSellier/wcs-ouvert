@@ -173,11 +173,6 @@ class ListeEnquetes extends Component {
                 <b>Liste des enquêtes</b>
               </h1>
             </Col>
-            <Col lg={{ size: 2 }}>
-              <button className="btn btn-danger" onClick={this.handleSubmit}>
-                <i className="fa fa-power-off" /> Déconnexion
-              </button>
-            </Col>
           </Row>
           <Row className="mt-5 mb-2">
             <Col lg={{ size: 2, offset: 10 }}>

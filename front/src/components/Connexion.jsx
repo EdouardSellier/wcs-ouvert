@@ -45,7 +45,6 @@ class Connexion extends Component {
         localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("id", user.id);
         localStorage.setItem("token", token);
-        localStorage.setItem("currentUser", this.state.mail);
         localStorage.setItem("is_admin", user.admin);
         localStorage.setItem("has_paid", user.has_paid);
         if (user.admin === 1) {
