@@ -1,29 +1,82 @@
-.homeSlogan {
-  font-size: 1.5em;
-  padding-top: 5px;
-  color: #474b4d;
-}
-
-.homeImage {
-  width: 100%;
-  height: 82vh;
-  opacity: 0.6;
-}
-
 .backgroundImage {
-  background: black;
+  background: rgb(105, 96, 96);
+  text-align: center;
+  color: white;
 }
 
-.home {
-  min-height: 80vh;
+.centered {
+  color: white;
+  font-size: 3em;
+  font-weight: bold;
+  padding-top: 150px;
+  height: 95vh;
 }
 
 .homeCard {
-  height: 250px;
+  height: 260px;
   margin-top: 20px;
   margin-bottom: 30px;
 }
 
-h4 {
+.homeCard:hover {
+  transform: scale(1.05);
+}
+
+.modalHeader {
+  font-size: 1.2em;
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  cursor: pointer;
   font-weight: bold;
+  color: #38909d;
+}
+
+.formContainer {
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 50px;
+  margin-bottom: 100px;
+}
+
+.errorMsg {
+  color: #cc0000;
+  font-style: italic;
+  text-align: left;
+  padding-bottom: 20px;
+  padding-left: 10px;
+}
+
+.emptyMsg {
+  color: #cc0000;
+  font-style: italic;
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.inscriptionForm {
+  text-align: left;
+}
+
+.input-group-text {
+  width: 40px;
+}
+
+.input-group {
+  width: 80%;
+  margin: auto;
+}
+
+.loginButton {
+  margin: auto;
+}
+
+.passwordIcon {
+  font-size: 1.2em;
+}
+
+.contact {
+  margin-top: 50px;
 }

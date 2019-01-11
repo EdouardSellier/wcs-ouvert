@@ -1,10 +1,19 @@
 import React, { Component } from "react";
-import "./css/NouvelleEnquete.css";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import ReactFileReader from "react-file-reader";
+import NotificationAlert from "react-notification-alert";
 import csv from "csv";
 import axios from "axios";
+import "./css/EnqueteRH.css";
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Vous devez compléter tous les champs avant de passer à l'étape suivante.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class Home extends Component {
   constructor(props) {
@@ -17,6 +26,10 @@ class Home extends Component {
       nbMails: 0
     };
   }
+
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
 
   handleSubmit = event => {
     event.preventDefault();
@@ -53,10 +66,14 @@ class Home extends Component {
       ending_date: this.state.ending_date,
       all_mails: JSON.stringify(this.state.mailsArray)
     };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/rh/survey",
-      data: body
+      url: "http://localhost:8080/user/survey",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         if (res.data === "SUCCESS") {
@@ -73,15 +90,15 @@ class Home extends Component {
         }
       })
       .catch(error => {
-        console.log("Fail: " + error);
+        this.alertFunctionError();
       });
   };
 
   render() {
     return (
       <div>
-        <hr />
         <div className="card shadow m-5 pt-3">
+          <NotificationAlert ref="notificationAlertError" />
           <Container className="mt-2">
             <Row>
               <Col lg={{ size: 2 }}>
@@ -93,24 +110,17 @@ class Home extends Component {
                 </button>
               </Col>
               <Col lg={{ size: 8 }}>
-                <h3>Commencer une nouvelle enquête</h3>
+                <h1>Commencer une nouvelle enquête</h1>
               </Col>
             </Row>
           </Container>
           <Container>
-            <Row className="mt-4 mb-3 description">
-              <Col md={{ size: 10, offset: 1 }}>
-                Depuis cette page, vous pouvez consulter et diffuser une enquête
-                pour mieux comprendre leurs habitudes de déplacement. <br />
-                Cela vous permettra par la suite d’élaborer un plan d’actions
-                pertinent pour réduire la part d’utilisation de la voiture
-                individuelle dans les déplacements quotidiens de vos salariés.
-              </Col>
-            </Row>
             <form onSubmit={this.handleForm} className="m-5 pt-3 pb-3 pr-3">
               <Row>
                 <Col md={{ size: 3 }}>
-                  <label className="mt-2">Nom de l'enquête</label>
+                  <label className="mt-2">
+                    <b>Nom de l'enquête</b>
+                  </label>
                 </Col>
                 <Col md={{ size: 3 }}>
                   <input
@@ -123,7 +133,9 @@ class Home extends Component {
                   />
                 </Col>
                 <Col md={{ size: 3 }}>
-                  <label className="mt-2">Date de fin de l'enquête</label>
+                  <label className="mt-2">
+                    <b>Date de fin de l'enquête</b>
+                  </label>
                 </Col>
                 <Col md={{ size: 3 }}>
                   <input
@@ -138,7 +150,9 @@ class Home extends Component {
               </Row>
               <Row className="mt-5">
                 <Col md={{ size: 10, offset: 1 }}>
-                  <label>Importer les adresses e-mail de mes salariés</label>
+                  <label className="mb-3">
+                    <b>Importer les adresses e-mail de mes salariés</b>
+                  </label>
                   <ReactFileReader
                     fileTypes={[".csv"]}
                     handleFiles={this.handleFiles}
@@ -175,7 +189,8 @@ class Home extends Component {
               </Row>
               <Col md={{ size: 3, offset: 9 }}>
                 <button className="btn text-white mt-4 mb-3">
-                  Suivant <i className="fa fa-arrow-right" />
+                  Consulter le sondage avant envoi{" "}
+                  <i className="fa fa-arrow-right" />
                 </button>
               </Col>
             </form>

@@ -2,14 +2,36 @@
   min-height: 80vh;
 }
 
-.card {
-  border-top-width: 3px;
-  border-color: #cfdbe2;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
-  border-radius: 0.25rem;
+.cardIcon {
+  border-radius: 50%;
+  font-size: 1.88rem;
+  line-height: 90px;
+  margin-top: -90px;
 }
 
-.card-header {
-  background-color: #fff;
-  border-bottom: 0;
+.rhCard {
+  height: 320px;
+}
+
+.rhCard:hover {
+  transform: scale(1.05);
+}
+
+.linkTo:hover {
+  text-decoration: none;
+}
+
+.surveyCard {
+  text-align: left;
+}
+
+.confirmationMsg {
+  color: #38909d;
+  padding: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.surveyTextArea {
+  width: 60%;
 }

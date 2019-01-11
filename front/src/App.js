@@ -1,50 +1,92 @@
 import React, { Component } from "react";
-import { Route, BrowserRouter, Switch } from "react-router-dom";
-import { Col } from "reactstrap";
+import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import Accueil from "./components/Accueil";
-import Inscription from "./components/Inscription";
-import Connexion from "./components/Connexion";
-import Contact from "./components/Contact";
+import Footer from "./components/Footer";
 import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
 import Geolocalisation from "./components/Geolocalisation";
-import SondageRH from "./components/SondageRH";
+import Sondage from "./components/Sondage";
 import Resultat from "./components/Resultat";
 import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
-import Sondage from "./components/Sondage";
-import Footer from "./components/Footer";
+import ListeGeoloc from "./components/ListeGeoloc";
+
+const AdminRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authChecker.getUser() &&
+      authChecker.isAdmin() === "1" &&
+      authChecker.hasPaid() === "0" ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/"
+          }}
+        />
+      )
+    }
+  />
+);
+
+const UserRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props =>
+      authChecker.getUser() &&
+      authChecker.isAdmin() === "0" &&
+      authChecker.hasPaid() === "1" ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/",
+            state: { from: props.location }
+          }}
+        />
+      )
+    }
+  />
+);
+
+const authChecker = {
+  getUser() {
+    return localStorage.getItem("currentUser") || null;
+  },
+  isAdmin() {
+    return localStorage.getItem("is_admin") || null;
+  },
+  hasPaid() {
+    return localStorage.getItem("has_paid") || null;
+  }
+};
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Col lg={{ size: 8, offset: 2 }}>
-          <p className="homeSlogan">
-            <b>MOV'R : Enquête de mobilité pour vos salariés</b>
-          </p>
-        </Col>
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
-            <Route path="/inscription" component={Inscription} />
-            <Route path="/connexion" component={Connexion} />
-            <Route path="/contact" component={Contact} />
-            <Route path="/monespace" component={EspaceRH} />
-            <Route path="/nouvelleenquete" component={NouvelleEnquete} />
-            <Route path="/listeenquetesrh" component={ListeEnquetesRH} />
-            <Route path="/geolocalisation" component={Geolocalisation} />
-            <Route path="/sondageRH" component={SondageRH} />
-            <Route path="/resultat" component={Resultat} />
-            <Route path="/assistance" component={Assistance} />
-            <Route path="/admin" component={EspaceAdmin} />
-            <Route path="/listeentreprises" component={ListeEntreprises} />
-            <Route path="/listeenquetes" component={ListeEnquetes} />
-            <Route path="/sondage" component={Sondage} />
+
+            <UserRoute path="/monespace" component={EspaceRH} />
+            <UserRoute path="/monespace" component={EspaceRH} />
+            <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
+            <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
+            <UserRoute path="/geolocalisation" component={Geolocalisation} />
+            <UserRoute path="/sondage" component={Sondage} />
+            <UserRoute path="/assistance" component={Assistance} />
+            <UserRoute path="/resultat" component={Resultat} />
+
+            <AdminRoute path="/admin" component={EspaceAdmin} />
+            <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
+            <AdminRoute path="/listeenquetes" component={ListeEnquetes} />
+            <AdminRoute path="/listegeoloc" component={ListeGeoloc} />
           </Switch>
         </BrowserRouter>
         <Footer />

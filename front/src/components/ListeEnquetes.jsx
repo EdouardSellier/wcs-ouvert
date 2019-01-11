@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import "./css/ListeEnquetes.css";
 import { Container, Row, Col } from "reactstrap";
-import axios from "axios";
-import JsonTable from "ts-react-json-table";
 import NotificationAlert from "react-notification-alert";
+import JsonTable from "ts-react-json-table";
+import axios from "axios";
+import "./css/EspaceAdmin.css";
 
 const errorMsg = {
   place: "tr",
-  message: "La liste ne peut pas être affichée.",
+  message: "La liste ne peut pas être affichée pour l'instant.",
   type: "danger",
   autoDismiss: 4
 };
@@ -18,8 +18,8 @@ class ListeEnquetes extends Component {
     this.state = {
       surveyList: [],
       currentPage: 1,
-      nbPages: 1,
-      changePage: false,
+      nbPages: 0,
+      nextPage: 0,
       isSelected: 5
     };
   }
@@ -45,99 +45,88 @@ class ListeEnquetes extends Component {
   };
 
   getList = () => {
-    axios
-      .get("http://localhost:8080/admin/list/survey")
-      .then(result => {
-        let arrayShown = result.data;
-        let nbPages = Math.ceil(arrayShown.length / this.state.isSelected);
-        arrayShown = arrayShown.slice(
-          this.state.currentPage * this.state.isSelected,
-          this.state.currentPage * this.state.isSelected + this.state.isSelected
-        );
-        /*switch (this.state.currentPage) {
-          case 1:
-            arrayShown = arrayShown.slice(
-              this.state.currentPage * this.state.isSelected,
-              this.state.currentPage * this.state.isSelected +
-                this.state.isSelected
-            );
-            break;
-          case 2:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected,
-              this.state.isSelected * 2
-            );
-            break;
-          case 3:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 4:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          case 5:
-            arrayShown = arrayShown.slice(
-              this.state.isSelected + this.state.isSelected,
-              this.state.isSelected + this.state.isSelected * 2
-            );
-            break;
-          default:
-            arrayShown = arrayShown.slice(0, this.state.isSelected);
-        }*/
-
+    let startPage = 0 + this.state.nextPage;
+    let body = {
+      start: startPage,
+      limit: this.state.isSelected
+    };
+    const token = localStorage.getItem("token");
+    axios({
+      method: "post",
+      url: "http://localhost:8080/admin/list/survey",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        let arrayShown = res.data.data;
+        let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
           surveyList: arrayShown,
           nbPages: nbPages
         });
       })
-      .catch(err => {
+      .catch(error => {
         this.alertFunctionError();
       });
-  };
-
-  changePageUp = () => {
-    if (
-      this.state.currentPage >= 1 &&
-      this.state.currentPage < this.state.nbPages
-    ) {
-      this.setState({
-        currentPage: this.state.currentPage + 1
-      });
-      this.getList();
-    }
-  };
-
-  isDisabledUpButton = () => {
-    return this.state.currentPage !== 1;
-  };
-
-  changePageDown = () => {
-    if (
-      this.state.currentPage >= 2 &&
-      this.state.currentPage <= this.state.nbPages
-    ) {
-      this.setState({
-        currentPage: this.state.currentPage - 1
-      });
-      this.getList();
-    }
-  };
-
-  isDisabledDownButton = () => {
-    return this.state.currentPage !== this.state.nbPages;
   };
 
   componentDidMount = () => {
     this.getList();
   };
 
+  handleChangePage = currentPage => {
+    this.getList(currentPage);
+    this.setState({
+      currentPage
+    });
+  };
+
+  changePageUp = () => {
+    let newPage =
+      parseInt(this.state.nextPage) + parseInt(this.state.isSelected);
+    this.setState(
+      {
+        currentPage: this.state.currentPage + 1,
+        nextPage: newPage
+      },
+      () => {
+        this.getList();
+      }
+    );
+  };
+
+  isDisabledUpButton = () => {
+    return this.state.currentPage > 1;
+  };
+
+  changePageDown = () => {
+    let newPage =
+      parseInt(this.state.nextPage) - parseInt(this.state.isSelected);
+    if (this.state.currentPage > 1) {
+      this.setState(
+        {
+          currentPage: this.state.currentPage - 1,
+          nextPage: newPage
+        },
+        () => {
+          this.getList();
+        }
+      );
+    }
+  };
+
+  isDisabledDownButton = () => {
+    return this.state.currentPage < this.state.nbPages;
+  };
+
   getSocietyListPage = () => {
     this.props.history.push("/listeentreprises");
+  };
+
+  getGeolocationListPage = () => {
+    this.props.history.push("/listegeoloc");
   };
 
   render() {
@@ -170,8 +159,7 @@ class ListeEnquetes extends Component {
       }
     ];
     return (
-      <div className="surveyList">
-        <hr />
+      <div className="surveyList text-white mt-3">
         <NotificationAlert ref="notificationAlertError" />
         <Container>
           <Row>
@@ -181,7 +169,9 @@ class ListeEnquetes extends Component {
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
-              <h2>Liste des enquêtes</h2>
+              <h1>
+                <b>Liste des enquêtes</b>
+              </h1>
             </Col>
             <Col lg={{ size: 2 }}>
               <button className="btn btn-danger" onClick={this.handleSubmit}>
@@ -202,14 +192,14 @@ class ListeEnquetes extends Component {
               </select>
             </Col>
           </Row>
-          <Row>
+          <Row className="card shadow">
             <Col lg={{ size: 12 }}>
               <JsonTable
                 rows={this.state.surveyList}
                 columns={columns}
                 className="table table-striped"
               />
-              <div className="row justify-content-around pb-3 mb-5 mt-3">
+              <div className="row justify-content-around pb-3 mt-3">
                 <button
                   className="btn arrowLeft"
                   onClick={this.changePageDown}
@@ -231,15 +221,28 @@ class ListeEnquetes extends Component {
             </Col>
           </Row>
         </Container>
-        <Col lg={{ size: 3 }}>
-          <button
-            className="btn getSocietyPage mb-3"
-            onClick={this.getSocietyListPage}
-          >
-            <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
-            Consulter les entreprises
-          </button>
-        </Col>
+        <Container className="mt-5">
+          <Row>
+            <Col lg={{ size: 3 }}>
+              <button
+                className="btn getPage mt-3 mb-3 text-white"
+                onClick={this.getSocietyListPage}
+              >
+                <i className="fa fa-arrow-left" /> <i className="fa fa-users" />{" "}
+                <b>Consulter les entreprises</b>
+              </button>
+            </Col>
+            <Col lg={{ size: 3, offset: 6 }}>
+              <button
+                className="btn getPage mt-3 mb-3 text-white"
+                onClick={this.getGeolocationListPage}
+              >
+                <b>Consulter les géolocalisations</b>{" "}
+                <i className="fa fa-map" /> <i className="fa fa-arrow-right" />
+              </button>
+            </Col>
+          </Row>
+        </Container>
       </div>
     );
   }
