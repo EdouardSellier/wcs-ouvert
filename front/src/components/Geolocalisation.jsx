@@ -1,14 +1,14 @@
 import React, { Component } from "react";
-//import APIGeoloc from "./APIGeoloc";
+import APIGeoloc from "./APIGeoloc";
 import { Container, Row, Col } from "reactstrap";
 import { CsvToHtmlTable } from "react-csv-to-table";
 import NotificationAlert from "react-notification-alert";
 import ReactFileReader from "react-file-reader";
 import axios from "axios";
 import csv from "csv";
-//import domtoimage from "dom-to-image";
-//import jsPDF from "jspdf";
-//import ScrollAnimation from "react-animate-on-scroll";
+import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
+import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
 
 const errorMsg = {
@@ -47,7 +47,11 @@ class Geolocalisation extends Component {
       isChecked: false,
       addressEmployeeToTable: undefined,
       societyIsSend: false,
-      employeeIsSend: false
+      employeeIsSend: false,
+      pdfIsLoading: false,
+      isReady: false,
+      displayMap: false,
+      addressReady: []
     };
   }
 
@@ -91,10 +95,12 @@ class Geolocalisation extends Component {
         let societyPosition = result.data.features[0].geometry.coordinates;
         let latSociety = societyPosition[1];
         let lngSociety = societyPosition[0];
+        const userId = localStorage.getItem("id");
         let allSocietyData = {
           address: dataStr,
           lat: latSociety,
-          lng: lngSociety
+          lng: lngSociety,
+          user_id: userId
         };
         this.setState({
           societyMapData: allSocietyData,
@@ -135,14 +141,20 @@ class Geolocalisation extends Component {
       return allEmployeeData.push(addressEmployee);
     });
     let addressSociety = this.state.societyMapData.address;
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
     const body = {
       employee: allEmployeeData,
-      society: addressSociety
+      society: addressSociety,
+      user_id: userId
     };
     axios({
       method: "post",
       url: "http://localhost:8080/geolocation/employee",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(result => {
         if (result.status !== 200) {
@@ -158,10 +170,14 @@ class Geolocalisation extends Component {
 
   sendSocietyDataToServer = () => {
     const body = this.state.societyMapData;
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/geolocation/society",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(result => {
         if (result.status !== 200) {
@@ -180,6 +196,105 @@ class Geolocalisation extends Component {
   sendDataToServer = () => {
     this.sendSocietyDataToServer();
     this.sendEmployeeDataToServer();
+  };
+
+  scriptIsFinished = () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
+    const body = {
+      user_id: userId
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/geolocation/results",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        let isReady = result.data[0].is_ready;
+        let addressIsReady = result.data[0].address;
+        let allAddresses = this.state.addressReady;
+        if (isReady === 1) {
+          let results = { address: addressIsReady, ready: true };
+          allAddresses.push(results);
+          this.setState({
+            allAddresses
+          });
+          console.log(allAddresses);
+        }
+      })
+      .catch(error => {
+        this.alertFunctionError();
+      });
+  };
+
+  displayMap = address => {
+    console.log(address);
+    this.setState({
+      displayMap: true
+    });
+  };
+
+  componentDidMount = () => {
+    this.scriptIsFinished();
+  };
+
+  handleImg = () => {
+    const capture1 = document.querySelector("#capture1");
+    const capture2 = document.querySelector("#capture2");
+    let allCaptures = [];
+    allCaptures.push(capture1, capture2);
+    let allImagesData = [];
+    this.setState({
+      pdfIsLoading: true
+    });
+    setTimeout(() => {
+      this.setState({
+        pdfIsLoading: false
+      });
+    }, 3000);
+    allCaptures.map(capture => {
+      return domtoimage.toPng(capture).then(dataUrl => {
+        let imgData = new Image();
+        if (capture.clientHeight > 800) {
+          imgData = new Image(180, 180);
+        } else {
+          imgData = new Image(180, 110);
+        }
+        imgData.src = dataUrl;
+        allImagesData.push(imgData);
+        this.setState(
+          {
+            imgData: allImagesData
+          },
+          () => {
+            this.handlePdf();
+          }
+        );
+      });
+    });
+  };
+
+  handlePdf = () => {
+    let newPdf = new jsPDF();
+    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.setFontSize(30);
+    const allImages = this.state.imgData.reverse();
+    allImages.map(image => {
+      if (image.height >= 180) {
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 180);
+      } else if (image.height < 180) {
+        newPdf.addImage(image, "JPEG", 5, 30, 200, 130);
+      }
+      return newPdf.addPage();
+    });
+    let lastPage = newPdf.internal.getNumberOfPages();
+    newPdf.deletePage(lastPage);
+    if (allImages.length === 2) {
+      newPdf.save("compte-rendu.pdf");
+    }
   };
 
   render() {
@@ -376,8 +491,8 @@ class Geolocalisation extends Component {
                 this.state.employeeIsSend === true ? (
                   <p>
                     <b>
-                      Vos données ont bien été enregistrées, vous recevrez les
-                      résultats par e-mail sous ((estimation temps))
+                      Vos données ont bien été enregistrées, vous recevrez un
+                      e-mail une fois l'analyse terminée.
                     </b>
                   </p>
                 ) : (
@@ -391,6 +506,88 @@ class Geolocalisation extends Component {
               </Col>
             </Row>
           </Container>
+          <hr />
+          <Container>
+            <Row>
+              <Col lg={{ size: 12 }}>
+                <select>
+                  <option>Sélectionner une adresse</option>
+                  {this.state.addressReady.map(address => {
+                    return (
+                      <option
+                        key={address.address}
+                        onClick={() => {
+                          this.displayMap(address.address);
+                        }}
+                      >
+                        {address.address}{" "}
+                      </option>
+                    );
+                  })}
+                </select>
+              </Col>
+            </Row>
+          </Container>
+          {this.state.displayMap === false ? (
+            ""
+          ) : (
+            <div>
+              <ScrollAnimation animateIn="fadeIn">
+                <Container className="card shadow mt-5">
+                  <div id="capture1" className="m-3">
+                    <APIGeoloc
+                      icon="fa fa-car"
+                      legendTitle="Distance en voiture"
+                      measure="km"
+                      mapTitle="Analyse de la distance en voiture"
+                    />
+                  </div>
+                </Container>
+              </ScrollAnimation>
+              <ScrollAnimation animateIn="fadeIn">
+                <Container className="card shadow mt-5">
+                  <div id="capture2" className="m-3">
+                    <APIGeoloc
+                      icon="fa fa-bicycle"
+                      legendTitle="Durée du trajet à vélo"
+                      measure=" minutes "
+                      mapTitle="Analyse du temps de trajet à vélo"
+                    />
+                  </div>
+                </Container>
+              </ScrollAnimation>
+              <hr />
+              <ScrollAnimation animateIn="fadeIn">
+                <div>
+                  <h4>
+                    <img
+                      alt="step 1"
+                      src="./img/4-circle.png"
+                      className="mr-2"
+                      width="50"
+                      height="50"
+                    />
+                    <b>Enregistrer votre compte-rendu :</b>
+                  </h4>
+                  <button
+                    onClick={this.handleImg}
+                    className="mb-4 mt-3 btn text-white pdfButton"
+                  >
+                    <i className="fa fa-file-pdf-o" /> Télécharger PDF
+                  </button>
+                  {this.state.pdfIsLoading === true ? (
+                    <img
+                      src="./img/spinner.png"
+                      className="spinnerLogo ml-3 mb-3"
+                      alt="spinner"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </ScrollAnimation>
+            </div>
+          )}
         </div>
       </div>
     );

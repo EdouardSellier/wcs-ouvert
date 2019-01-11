@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Map, TileLayer } from "react-leaflet";
 import NotificationAlert from "react-notification-alert";
-import axios from "axios";
-import L from "leaflet";
+//import axios from "axios";
+//import L from "leaflet";
 import "./css/Geolocalisation.css";
 
 const errorMsg = {
@@ -284,27 +284,27 @@ class APIGeoloc extends Component {
 
   render() {
     const defaultPosition = [50.62925, 3.057256];
-    const societyIcon = L.icon({
+    /*const societyIcon = L.icon({
       iconUrl: "./img/societyMarker.png",
       iconSize: [30, 30]
     });
     const employeeIcon = L.icon({
       iconUrl: "./img/employeeMarker.png",
       iconSize: [30, 30]
-    });
+    });*/
     return (
       <div>
         <NotificationAlert ref="notificationAlertError" />
         <Col lg={{ size: 10, offset: 1 }}>
-          <div className="card mt-5 mb-5 p-3">
-            <h1 className="mb-3 mt-3">
-              Résultat de la Géolocalisation de vos salariés
-            </h1>
-            <Col lg={{ size: 10, offset: 1 }}>
+          <div className="mt-3 mb-5">
+            <h4>
+              {this.props.mapTitle} <i className={this.props.icon} />
+            </h4>
+            <Col lg={{ size: 12 }}>
               <Map
                 center={defaultPosition}
                 zoom={10}
-                className="rounded shadow mb-4"
+                className="rounded shadow mt-5 mb-4"
               >
                 <TileLayer
                   attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -312,54 +312,59 @@ class APIGeoloc extends Component {
                 />
               </Map>
             </Col>
-            <Container className="mt-3">
-              <Row>
-                <Col lg={{ size: 4 }}>
-                  <div className="legend mr-lg-4">
-                    <legend>Légende</legend>
-                    <ul className="list-unstyled">
-                      <li>
-                        <img
-                          src="./img/societyMarker.png"
-                          alt="societyMarker"
-                          width="30"
-                          height="30"
-                          className="mb-2"
-                        />
-                        Entreprise
-                      </li>
-                      <li>
-                        <img
-                          src="./img/employeeMarker.png"
-                          alt="employeeMarker"
-                          width="30"
-                          height="30"
-                        />
-                        Salariés
-                      </li>
-                    </ul>
-                    <h6>
-                      Statistiques : <i className="fa fa-auto" /> :
-                    </h6>
-                    <ul className="list-unstyled">
-                      <li>
-                        <span className="bluePolygon mr-3">=====</span>Inférieur
-                        à 5 km
-                      </li>
-                      <li>
-                        <span className="redPolygon mr-3">=====</span>Entre 5 et
-                        10 km
-                      </li>
-                      <li>
-                        <span className="yellowPolygon mr-3">=====</span>Entre
-                        10 et 20 km
-                      </li>
-                    </ul>
-                  </div>
-                </Col>
-                <Col lg={{ size: 8 }}>
-                  <div className="mb-3">
-                    <Container className="statistics ml-lg-5">
+            <Row>
+              <Col lg={{ size: 4 }}>
+                <div className="legend mr-lg-4">
+                  <legend>Légende</legend>
+                  <ul className="list-unstyled">
+                    <li>
+                      <img
+                        src="./img/societyMarker.png"
+                        alt="societyMarker"
+                        width="30"
+                        height="30"
+                        className="mb-2"
+                      />
+                      Entreprise
+                    </li>
+                    <li>
+                      <img
+                        src="./img/employeeMarker.png"
+                        alt="employeeMarker"
+                        width="30"
+                        height="30"
+                      />
+                      Salariés
+                    </li>
+                  </ul>
+                  <h6>
+                    {this.props.legendTitle} <i className={this.props.icon} /> :
+                  </h6>
+                  <ul className="list-unstyled pt-2">
+                    <li>
+                      <span className="bluePolygon mr-3">=====</span>
+                      Inférieur à{" "}
+                      {this.props.measure === "km" ? " 5 km" : "10 minutes"}
+                    </li>
+                    <li>
+                      <span className="redPolygon mr-3">=====</span>Entre{" "}
+                      {this.props.measure === "km"
+                        ? " 5 et 10 km "
+                        : " 10 et 20 minutes"}
+                    </li>
+                    <li>
+                      <span className="yellowPolygon mr-3">=====</span>Entre
+                      {this.props.measure === "km"
+                        ? " 10 et 20 km "
+                        : " 20 et 30 minutes"}
+                    </li>
+                  </ul>
+                </div>
+              </Col>
+              <Col lg={{ size: 8 }}>
+                <div className="mb-3">
+                  <Container className="statistics ml-lg-5">
+                    {this.props.measure === "km" ? (
                       <div>
                         <p>
                           Distance domicile-lieu de travail en moyenne :
@@ -375,25 +380,64 @@ class APIGeoloc extends Component {
                         </p>
                         <br />
                       </div>
-
-                      <p>
-                        <img
-                          src="./img/right-arrow.png"
-                          alt="arrow"
-                          width="25"
-                          height="20"
-                          className="float-left mt-1 mr-1"
-                        />
-                        <b>
-                          Sur les 0 salariés enregistrés, 0 ont été géolocalisés
-                          :
-                        </b>
-                      </p>
-                    </Container>
-                  </div>
-                </Col>
-              </Row>
-            </Container>
+                    ) : (
+                      ""
+                    )}
+                    <p>
+                      <img
+                        src="./img/right-arrow.png"
+                        alt="arrow"
+                        width="25"
+                        height="20"
+                        className="float-left mt-1 mr-1"
+                      />
+                      <b>
+                        Sur les 0 salariés enregistrés, 0 ont été géolocalisés :
+                      </b>
+                    </p>
+                    {this.props.measure === "km" ? (
+                      <div>
+                        <p>
+                          0 salarié habite à moins de 5 km en voiture de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite entre 5 et 10 km en voiture de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite entre 10 et 20 km en voiture de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite à plus de 20 km en voiture de son
+                          lieu de travail.
+                        </p>
+                      </div>
+                    ) : (
+                      <div>
+                        <p>
+                          0 salarié habite à moins de 10 minutes à vélo de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite entre 10 et 20 minutes à vélo de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite entre 20 et 30 minutes à vélo de son
+                          lieu de travail.
+                        </p>
+                        <p>
+                          0 salarié habite à plus de 30 minutes à vélo de son
+                          lieu de travail.
+                        </p>
+                      </div>
+                    )}
+                  </Container>
+                </div>
+              </Col>
+            </Row>
           </div>
         </Col>
       </div>
