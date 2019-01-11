@@ -5,9 +5,7 @@ import Zoom from "react-reveal/Zoom";
 import "./css/EspaceRH.css";
 
 class EspaceRH extends Component {
-  handleSubmit = event => {
-    event.preventDefault();
-    const token = localStorage.getItem("token", "has_paid");
+  handleSubmit = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
     this.props.history.push("/");

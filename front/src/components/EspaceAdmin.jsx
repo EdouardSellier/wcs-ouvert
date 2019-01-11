@@ -29,7 +29,6 @@ class AccueilAdmin extends Component {
   }
 
   handleSubmit = () => {
-    const token = localStorage.getItem("token", "has_paid");
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
     this.props.history.push("/");
