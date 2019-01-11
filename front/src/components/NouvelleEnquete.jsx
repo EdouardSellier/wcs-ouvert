@@ -61,10 +61,12 @@ class Home extends Component {
 
   handleForm = event => {
     event.preventDefault();
+    const id = localStorage.getItem("id");
     let body = {
       survey_name: this.state.survey_name,
       ending_date: this.state.ending_date,
-      all_mails: JSON.stringify(this.state.mailsArray)
+      all_mails: JSON.stringify(this.state.mailsArray),
+      user_id: id
     };
     const token = localStorage.getItem("token");
     axios({
