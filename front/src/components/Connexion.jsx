@@ -42,9 +42,10 @@ class Connexion extends Component {
       })
       .then(response => {
         const { token, user } = response.data;
-        localStorage.setItem("token", token);
         localStorage.setItem("currentId", user.id);
         localStorage.setItem("currentUser", this.state.mail);
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("token", token);
         localStorage.setItem("is_admin", user.admin);
         localStorage.setItem("has_paid", user.has_paid);
         if (user.admin === 1) {

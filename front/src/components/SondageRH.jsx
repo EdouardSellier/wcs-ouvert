@@ -33,29 +33,27 @@ const MultipleOption = props => {
         <div className="m-3">
           <div className="">
             <span>1.</span>
-            <select id={props.data.id} className="">
+            <ul id={props.data.id} className="">
               {props.data.possibilities.map(content => {
-                return <option key={content}>{content}</option>;
+                return <li key={content}>{content}</li>;
               })}
-            </select>
+            </ul>
           </div>
           <div className="">
             <span>2.</span>
-            <select id={props.data.id} className="">
-              <option>------</option>
+            <ul id={props.data.id} className="">
               {props.data.possibilities.map(content => {
-                return <option key={content}>{content}</option>;
+                return <li key={content}>{content}</li>;
               })}
-            </select>
+            </ul>
           </div>
           <div className="">
             <span>3.</span>
-            <select id={props.data.id} className="">
-              <option>------</option>
+            <ul id={props.data.id} className="">
               {props.data.possibilities.map(content => {
-                return <option key={content}>{content}</option>;
+                return <li key={content}>{content}</li>;
               })}
-            </select>
+            </ul>
           </div>
         </div>
       </div>
@@ -70,7 +68,7 @@ const Text = props => {
         {props.data.number}) {props.data.label}
       </label>
       <br />
-      <textarea className="surveyTextArea" />
+      <div className="surveyTextArea p-3" />
       <p />
     </React.Fragment>
   );
@@ -83,11 +81,11 @@ const Option = props => {
         {props.data.number}) {props.data.label}
       </label>
       <br />
-      <select className="m-4" id={props.data.id}>
+      <ul className="m-4" id={props.data.id}>
         {props.data.possibilities.map(content => {
-          return <option key={content}>{content}</option>;
+          return <li key={content}>{content}</li>;
         })}
-      </select>
+      </ul>
       <p />
     </React.Fragment>
   );
@@ -100,7 +98,9 @@ const Number = props => {
         {props.data.number}) {props.data.label}
       </label>
       <br />
-      <input className="m-4" placeholder="0" type="number" id={props.data.id} />
+      <p className="mt-2 ml-4" id={props.data.id}>
+        <em>0</em>
+      </p>
       <br />
     </React.Fragment>
   );
@@ -178,7 +178,7 @@ class SondageRH extends Component {
               </button>
             </Col>
             <Col lg={{ size: 8 }}>
-              <h1>Consulter et diffuser l'enquête à mes salariés</h1>
+              <h1>Consulter et diffuser l'enquête à vos salariés</h1>
             </Col>
           </Row>
           <Row>
@@ -203,7 +203,6 @@ class SondageRH extends Component {
               </div>
             </Col>
           </Row>
-
           {this.state.isSend === false ? (
             <Row>
               <Col lg={{ size: 8, offset: 2 }}>

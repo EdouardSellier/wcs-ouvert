@@ -1,8 +1,43 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
+import axios from "axios";
 
 class Assistance extends Component {
-  handleSubmit = event => {
+  constructor() {
+    super();
+    this.state = {
+      fields: {
+        email: "",
+        message: ""
+      }
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    let body = {
+      email: this.state.fields.email,
+      message: this.state.fields.message
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/assistance",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
+  handleBack = event => {
     event.preventDefault();
     this.props.history.push("/listeenquetesrh");
   };
@@ -15,7 +50,7 @@ class Assistance extends Component {
               <Col lg={{ size: 2 }}>
                 <button
                   className="mt-2 btn text-white"
-                  onClick={this.handleSubmit}
+                  onClick={this.handleBack}
                 >
                   <i className="fa fa-arrow-left" /> Précédent
                 </button>
@@ -34,21 +69,30 @@ class Assistance extends Component {
                 par mail via le formulaire ci-dessous ou à nous joindre par
                 téléphone au <i className="fa fa-phone" /> 03.20.61.90.89.
               </p>
-              <form method="post" action="" className="mt-2">
+              <form
+                onSubmit={this.handleSubmit}
+                method="post"
+                action=""
+                className="mt-2"
+              >
                 <div className="form-group">
                   <input
                     type="email"
+                    name="email"
                     className="form-control"
                     id="inputEmailContact"
                     placeholder="Adresse e-mail"
+                    onChange={this.handleChange}
                   />
                 </div>
                 <div className="form-group">
                   <textarea
                     type="text"
+                    name="message"
                     className="form-control"
                     id="inputMessageContact"
                     placeholder="Votre message..."
+                    onChange={this.handleChange}
                   />
                 </div>
                 <button type="submit" className="btn text-white">

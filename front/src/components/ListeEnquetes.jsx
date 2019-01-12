@@ -131,7 +131,7 @@ class ListeEnquetes extends Component {
 
   render() {
     let columns = [
-      { key: "user_id", label: "Société" },
+      { key: "company_name", label: "Société" },
       { key: "survey_name", label: "Nom de l'enquête" },
       {
         key: "starting_date",
@@ -172,11 +172,6 @@ class ListeEnquetes extends Component {
               <h1>
                 <b>Liste des enquêtes</b>
               </h1>
-            </Col>
-            <Col lg={{ size: 2 }}>
-              <button className="btn btn-danger" onClick={this.handleSubmit}>
-                <i className="fa fa-power-off" /> Déconnexion
-              </button>
             </Col>
           </Row>
           <Row className="mt-5 mb-2">

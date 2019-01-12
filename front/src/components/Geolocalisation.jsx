@@ -22,7 +22,7 @@ const errorMsg = {
 const errorLimitMsg = {
   place: "tr",
   message:
-    "Vous avez dépassé la limite des 800 salariés, nous vous invitons à contacter l'assistance. Merci de votre compréhension.",
+    "Vous avez dépassé la limite des 1000 salariés, nous vous invitons à contacter l'assistance. Merci de votre compréhension.",
   type: "danger",
   autoDismiss: 4
 };
@@ -30,7 +30,23 @@ const errorLimitMsg = {
 const problemMsg = {
   place: "tr",
   message:
-    "Nous avons rencontré un problème lors de l'enregistrement de votre adresse, nous vous remercions de bien vouloir recommencer",
+    "Nous avons rencontré un problème lors de l'enregistrement de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorAddress = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de la récupération de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorResult = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de l'affichage de vos résultats, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
   type: "danger",
   autoDismiss: 4
 };
@@ -39,18 +55,31 @@ class Geolocalisation extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      addressEmployeeToTable: undefined,
-      addressEmployeeToArray: [],
-      isochroneCenter: [],
-      mapData: [],
-      addressSocietyToArray: [],
-      addressSocietyToLatLng: [],
-      nbSociety: "",
-      streetSociety: "",
-      zipCodeSociety: "",
-      citySociety: "",
+      employeeMapData: [],
+      lengthEmployee: undefined,
+      societyMapData: "",
+      societyAddress: "",
+      societyLat: "",
+      societyLng: "",
       isChecked: false,
-      pdfIsLoading: false
+      addressEmployeeToTable: undefined,
+      societyIsSend: false,
+      employeeIsSend: false,
+      pdfIsLoading: false,
+      isReady: false,
+      displayMap: false,
+      addressReady: [],
+      ready: "",
+      notReady: "",
+      employeePosition: [],
+      employeeStats: [],
+      societyPosition: [],
+      isochrone5_auto: undefined,
+      isochrone10_auto: undefined,
+      isochrone20_auto: undefined,
+      isochrone5_cycle: undefined,
+      isochrone10_cycle: undefined,
+      isochrone15_cycle: undefined
     };
   }
 
@@ -64,6 +93,14 @@ class Geolocalisation extends Component {
 
   alertFunctionProblem = () => {
     this.refs.notificationAlertError.notificationAlert(problemMsg);
+  };
+
+  alertFunctionErrorAddress = () => {
+    this.refs.notificationAlertError.notificationAlert(errorAddress);
+  };
+
+  alertFunctionErrorResult = () => {
+    this.refs.notificationAlertError.notificationAlert(errorResult);
   };
 
   handleChange = e => {
@@ -85,28 +122,28 @@ class Geolocalisation extends Component {
       this.state.zipCodeSociety,
       this.state.citySociety
     ];
-    let dataStr = addressSocietyToArray.join("+").replace(" ", "+");
-    return axios
-      .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
+    let dataStr = addressSocietyToArray.join(" ");
+    const regex = / /gi;
+    let queryAddress = dataStr.replace(regex, "+");
+    axios
+      .get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`)
       .then(result => {
-        let validateAddress = result.data.features[0].properties.city.toLowerCase();
-        let query = result.data.query.toLowerCase();
-        let newData = result.data.features[0].geometry.coordinates;
-        if (query.includes(validateAddress)) {
-          this.setState({
-            addressSocietyToLatLng: newData,
-            nbSociety: "",
-            streetSociety: "",
-            zipCodeSociety: "",
-            citySociety: "",
-            addressSocietyToArray: dataStr,
-            isChecked: true
-          });
-        } else {
-          this.alertFunctionError();
-        }
+        let societyPosition = result.data.features[0].geometry.coordinates;
+        let latSociety = societyPosition[1];
+        let lngSociety = societyPosition[0];
+        const userId = localStorage.getItem("id");
+        let allSocietyData = {
+          address: dataStr,
+          lat: latSociety,
+          lng: lngSociety,
+          user_id: userId
+        };
+        this.setState({
+          societyMapData: allSocietyData,
+          isChecked: true
+        });
       })
-      .catch(err => {
+      .catch(error => {
         this.alertFunctionError();
       });
   };
@@ -115,17 +152,180 @@ class Geolocalisation extends Component {
     const reader = new FileReader();
     reader.onload = e => {
       csv.parse(reader.result, (err, data) => {
-        if (data.length < 800) {
+        if (data.length < 1000) {
           this.setState({
-            addressEmployeeToArray: data,
             addressEmployeeToTable: reader.result
           });
+          let employeeMapData = this.state.employeeMapData;
+          let societyMapData = this.state.societyMapData;
+          data.map(address => {
+            let allAddress = [address.join(" ")];
+            return employeeMapData.push(allAddress);
+          });
+          this.setState({ employeeMapData, societyMapData: societyMapData });
         } else {
           this.alertFunctionErrorLimit();
         }
       });
     };
     reader.readAsText(files[0]);
+  };
+
+  sendEmployeeDataToServer = () => {
+    let employeeMapData = this.state.employeeMapData;
+    let allEmployeeData = [];
+    employeeMapData.map(data => {
+      let addressEmployee = [data];
+      return allEmployeeData.push(addressEmployee);
+    });
+    let addressSociety = this.state.societyMapData.address;
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
+    const body = {
+      employee: allEmployeeData,
+      society: addressSociety,
+      user_id: userId
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/geolocation/employee",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        if (result.status !== 200) {
+          this.alertFunctionProblem();
+        } else {
+          this.setState({ employeeIsSend: true });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionProblem();
+      });
+  };
+
+  sendSocietyDataToServer = () => {
+    const body = this.state.societyMapData;
+    const token = localStorage.getItem("token");
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/geolocation/society",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        if (result.status !== 200) {
+          this.alertFunctionProblem();
+        } else {
+          this.setState({
+            societyIsSend: true
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionProblem();
+      });
+  };
+
+  sendDataToServer = () => {
+    this.sendSocietyDataToServer();
+    this.sendEmployeeDataToServer();
+  };
+
+  getAddressesFromDb = () => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
+    const body = {
+      user_id: userId
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/geolocation/list",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        let allData = result.data;
+        let allAddresses = this.state.addressReady;
+        allData.map(data => {
+          return allAddresses.push(data);
+        });
+        this.setState({
+          addressReady: allAddresses
+        });
+      })
+      .catch(error => {
+        this.alertFunctionErrorAddress();
+      });
+  };
+
+  displayResults = address => {
+    const token = localStorage.getItem("token");
+    let addressSociety = address.split(":");
+    const userId = localStorage.getItem("id");
+    const body = {
+      user_id: userId,
+      address: addressSociety.slice(0, 1)
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/geolocation/results",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        if (result.data === "In progress") {
+          this.setState({
+            notReady:
+              "Les résultats ne sont pas encore prêts, merci d'attendre l'e-mail de confirmation",
+            displayMap: false
+          });
+        } else {
+          let employeeMapData = result.data.employeeData;
+          let societyMapData = result.data.societyData;
+          let lengthEmployee = result.data.employeeLength;
+          let employeesMarkers = this.state.employeePosition;
+          employeeMapData.position.map(position => {
+            let positionInArray = position.split(",");
+            let lat = parseFloat(positionInArray[0]);
+            let lng = parseFloat(positionInArray[1]);
+            return employeesMarkers.push([lat, lng]);
+          });
+          let employeeStats = {
+            distance: employeeMapData.distance,
+            duration: employeeMapData.duration
+          };
+          this.setState({
+            employeePosition: employeesMarkers,
+            employeeStats: employeeStats,
+            societyPosition: [societyMapData.lat, societyMapData.lng],
+            isochrone5_auto: societyMapData.isochrone5_auto,
+            isochrone10_auto: societyMapData.isochrone10_auto,
+            isochrone20_auto: societyMapData.isochrone20_auto,
+            isochrone5_cycle: societyMapData.isochrone5_cycle,
+            isochrone10_cycle: societyMapData.isochrone10_cycle,
+            isochrone15_cycle: societyMapData.isochrone15_cycle,
+            displayMap: true,
+            isReady: true,
+            lengthEmployee: lengthEmployee
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionErrorResult();
+      });
+  };
+
+  componentDidMount = () => {
+    this.getAddressesFromDb();
   };
 
   handleImg = () => {
@@ -145,10 +345,10 @@ class Geolocalisation extends Component {
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
-        if (capture.clientHeight > 800) {
+        if (capture.clientHeight > 900) {
           imgData = new Image(180, 180);
         } else {
-          imgData = new Image(180, 110);
+          imgData = new Image(180, 100);
         }
         imgData.src = dataUrl;
         allImagesData.push(imgData);
@@ -166,8 +366,6 @@ class Geolocalisation extends Component {
 
   handlePdf = () => {
     let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(30);
     const allImages = this.state.imgData.reverse();
     allImages.map(image => {
       if (image.height >= 180) {
@@ -185,8 +383,6 @@ class Geolocalisation extends Component {
   };
 
   render() {
-    const addressEmployees = this.state.addressEmployeeToArray;
-    const addressSociety = this.state.addressSocietyToLatLng;
     return (
       <div className="text-white">
         <div className="listAddress mt-2">
@@ -206,11 +402,13 @@ class Geolocalisation extends Component {
                 </h1>
                 <NotificationAlert ref="notificationAlertError" />
                 <NotificationAlert ref="notificationAlertErrorLimit" />
+                <NotificationAlert ref="notificationAlertErrorAddress" />
+                <NotificationAlert ref="notificationAlertErrorResult" />
                 <NotificationAlert ref="notificationAlertProblem" />
               </Col>
             </Row>
           </Container>
-          <Container className="card shadow p-3 mt-5 mb-5">
+          <Container className="card shadow p-3 mt-5 mb-lg-5">
             <Row>
               <Col md={{ size: 5, offset: 1 }}>
                 <h5 className="text-left">
@@ -235,7 +433,6 @@ class Geolocalisation extends Component {
                         name="nbSociety"
                         id="inputNbSociety"
                         onChange={this.handleChange}
-                        value={this.state.nbSociety}
                         placeholder="N°"
                       />
                     </Col>
@@ -246,7 +443,6 @@ class Geolocalisation extends Component {
                         name="streetSociety"
                         id="inputStreetSociety"
                         onChange={this.handleChange}
-                        value={this.state.streetSociety}
                         placeholder="Nom de rue"
                       />
                     </Col>
@@ -257,7 +453,6 @@ class Geolocalisation extends Component {
                         name="zipCodeSociety"
                         id="inputZipCodeSociety"
                         onChange={this.handleChange}
-                        value={this.state.zipCodeSociety}
                         placeholder="Code postal"
                       />
                     </Col>
@@ -268,7 +463,6 @@ class Geolocalisation extends Component {
                         name="citySociety"
                         id="inputCitySociety"
                         onChange={this.handleChange}
-                        value={this.state.citySociety}
                         placeholder="Ville"
                       />
                     </Col>
@@ -285,7 +479,7 @@ class Geolocalisation extends Component {
                   </div>
                 )}
               </Col>
-              <div className="separator mr-5" />
+              <div className="separator mr-lg-5" />
               <Col md={{ size: 5 }}>
                 <h5>
                   <img
@@ -310,9 +504,8 @@ class Geolocalisation extends Component {
                       </div>
                       <Col lg={{ size: 6, offset: 6 }}>
                         <p className="totalAddresses pt-1 pl-1">
-                          <b>{this.state.addressEmployeeToArray.length}</b>{" "}
-                          adresse
-                          {this.state.addressEmployeeToArray.length <= 1
+                          <b>{this.state.employeeMapData.length}</b> adresse
+                          {this.state.employeeMapData.length <= 1
                             ? " importée"
                             : "s importées"}{" "}
                           <i className="fa fa-check" />
@@ -364,88 +557,181 @@ class Geolocalisation extends Component {
                 </div>
               </Col>
             </Row>
+            <Row>
+              <Col lg={{ size: 10, offset: 1 }}>
+                <h5 className="mt-4">
+                  <img
+                    alt="step 1"
+                    src="./img/3-circle.png"
+                    className="mr-2"
+                    width="50"
+                    height="50"
+                  />
+                  Analyser la distance et les temps de trajets en voiture et à
+                  vélo :
+                </h5>
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={{ size: 4, offset: 4 }}>
+                {this.state.societyIsSend === true &&
+                this.state.employeeIsSend === true ? (
+                  <p>
+                    <b>
+                      Vos données ont bien été enregistrées, vous recevrez un
+                      e-mail une fois l'analyse terminée.
+                    </b>
+                  </p>
+                ) : (
+                  <button
+                    className="btn text-white mb-4 mt-4"
+                    onClick={this.sendDataToServer}
+                  >
+                    Lancer la géolocalisation <i className="fa fa-map" />
+                  </button>
+                )}
+              </Col>
+            </Row>
+            <Row>
+              <Col lg={{ size: 12 }}>
+                <hr />
+              </Col>
+            </Row>
+            <ScrollAnimation animateIn="fadeIn">
+              <Row className="mt-4 mb-4">
+                <Col lg={{ size: 12 }}>
+                  <h5>
+                    <img
+                      alt="step 1"
+                      src="./img/4-circle.png"
+                      className="mr-2"
+                      width="50"
+                      height="50"
+                    />
+                    Sélectionner une adresse et consulter les résultats
+                  </h5>
+                  <select
+                    className="mt-3"
+                    onChange={e => {
+                      this.displayResults(e.target.value);
+                    }}
+                  >
+                    <option>Sélectionner une adresse</option>
+                    {this.state.addressReady.map(address => {
+                      let isReady = "";
+                      if (address.is_ready === 1) {
+                        isReady = "Terminée";
+                      } else {
+                        isReady = "En cours";
+                      }
+                      return (
+                        <option
+                          key={address.address}
+                          //onChange={() => {
+                          //  this.displayResults(address.address);
+                          //}}
+                        >
+                          {address.address} : {isReady}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {this.state.displayMap === false ? (
+                    <p className="mt-3">
+                      <b>{this.state.notReady}</b>
+                    </p>
+                  ) : (
+                    <div className="mt-4">
+                      <img
+                        src="./img/arrow-down.png"
+                        alt="down"
+                        height="90"
+                        width="90"
+                      />
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </ScrollAnimation>
           </Container>
-          <hr />
-          <ScrollAnimation animateIn="fadeIn">
-            <Container className="card shadow mt-5 pt-3">
-              <h5>
-                <img
-                  alt="step 1"
-                  src="./img/3-circle.png"
-                  className="mr-2"
-                  width="50"
-                  height="50"
-                />
-                Analyser la distance et les temps de trajets en voiture et à
-                vélo :
-              </h5>
-              <div id="capture1" className="m-3">
-                <APIGeoloc
-                  addressEmployees={addressEmployees}
-                  addressSociety={addressSociety}
-                  addressSocietyToArray={this.state.addressSocietyToArray}
-                  profile="driving-car"
-                  rangeType="distance"
-                  range="5000,10000,15000"
-                  parameter="en voiture"
-                  legendTitle="Distance"
-                  measure="km"
-                  statTitle="Distance"
-                  icon="fa fa-car"
-                />
-              </div>
-            </Container>
-          </ScrollAnimation>
-          <ScrollAnimation animateIn="fadeIn">
-            <Container className="card shadow mt-5 pt-3">
-              <div id="capture2" className="m-3">
-                <APIGeoloc
-                  addressEmployees={addressEmployees}
-                  addressSociety={addressSociety.reverse()}
-                  addressSocietyToArray={this.state.addressSocietyToArray}
-                  profile="cycling-regular"
-                  rangeType="time"
-                  range="300,600,900"
-                  parameter="à vélo"
-                  legendTitle="Durée du trajet"
-                  measure=" minutes "
-                  statTitle="Temps de trajet"
-                  icon="fa fa-bicycle"
-                />
-              </div>
-            </Container>
-          </ScrollAnimation>
+          {this.state.displayMap === true ? (
+            <div>
+              <hr />
+              <ScrollAnimation animateIn="fadeIn">
+                <Container className="card shadow mt-5">
+                  <div id="capture1" className="m-3">
+                    <APIGeoloc
+                      icon="fa fa-car"
+                      legendTitle="Distance en voiture"
+                      measure="km"
+                      mapTitle="Analyse de la distance en voiture"
+                      employeesPositions={this.state.employeePosition}
+                      employeeStats={this.state.employeeStats}
+                      societyPosition={this.state.societyPosition}
+                      firstPolygon={this.state.isochrone5_auto}
+                      secondPolygon={this.state.isochrone10_auto}
+                      thirdPolygon={this.state.isochrone20_auto}
+                      isReady={this.state.isReady}
+                      lengthEmployee={this.state.lengthEmployee}
+                    />
+                  </div>
+                </Container>
+              </ScrollAnimation>
+              <ScrollAnimation animateIn="fadeIn">
+                <Container className="card shadow mt-5">
+                  <div id="capture2" className="m-3">
+                    <APIGeoloc
+                      icon="fa fa-bicycle"
+                      legendTitle="Durée du trajet à vélo"
+                      measure=" minutes "
+                      mapTitle="Analyse du temps de trajet à vélo"
+                      employeesPositions={this.state.employeePosition}
+                      employeeStats={this.state.employeeStats}
+                      societyPosition={this.state.societyPosition}
+                      firstPolygon={this.state.isochrone5_cycle}
+                      secondPolygon={this.state.isochrone10_cycle}
+                      thirdPolygon={this.state.isochrone15_cycle}
+                      isReady={this.state.isReady}
+                      lengthEmployee={this.state.lengthEmployee}
+                    />
+                  </div>
+                </Container>
+              </ScrollAnimation>
+              <hr className="mt-5 mb-4" />
+              <ScrollAnimation animateIn="fadeIn">
+                <div>
+                  <h4>
+                    <img
+                      alt="step 1"
+                      src="./img/5-circle.png"
+                      className="mr-2"
+                      width="40"
+                      height="40"
+                    />
+                    <b>Enregistrer votre compte-rendu :</b>
+                  </h4>
+                  <button
+                    onClick={this.handleImg}
+                    className="mb-4 mt-3 btn text-white pdfButton"
+                  >
+                    <i className="fa fa-file-pdf-o" /> Télécharger PDF
+                  </button>
+                  {this.state.pdfIsLoading === true ? (
+                    <img
+                      src="./img/spinner.png"
+                      className="spinnerLogo ml-3 mb-3"
+                      alt="spinner"
+                    />
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </ScrollAnimation>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-        <hr />
-        <ScrollAnimation animateIn="fadeIn">
-          <div>
-            <h4>
-              <img
-                alt="step 1"
-                src="./img/4-circle.png"
-                className="mr-2"
-                width="50"
-                height="50"
-              />
-              <b>Enregistrer votre compte-rendu :</b>
-            </h4>
-            <button
-              onClick={this.handleImg}
-              className="mb-4 mt-3 btn text-white pdfButton"
-            >
-              <i className="fa fa-file-pdf-o" /> Télécharger PDF
-            </button>
-            {this.state.pdfIsLoading === true ? (
-              <img
-                src="./img/spinner.png"
-                className="spinnerLogo ml-3 mb-3"
-                alt="spinner"
-              />
-            ) : (
-              ""
-            )}
-          </div>
-        </ScrollAnimation>
       </div>
     );
   }

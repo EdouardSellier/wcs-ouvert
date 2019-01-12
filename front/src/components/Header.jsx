@@ -8,7 +8,7 @@ class Header extends Component {
         <header>
           <nav className="navbar navbar-expand-lg navbar-light">
             <a className="navbar-brand text-white" href="/">
-              MOV'R
+              MOUV'R
             </a>
             <button
               className="navbar-toggler"
