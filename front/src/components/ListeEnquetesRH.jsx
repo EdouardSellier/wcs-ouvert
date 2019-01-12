@@ -33,6 +33,7 @@ class ListeEnquetesRH extends Component {
   };
 
   changeSurveyName = event => {
+    alert(event.target.value);
     if (event.target.value !== "Sélectionner une enquête") {
       this.setState({
         surveyNameSelected: event.target.value

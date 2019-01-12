@@ -61,7 +61,7 @@ class Home extends Component {
 
   handleForm = event => {
     event.preventDefault();
-    const id = localStorage.getItem("id");
+    //const id = localStorage.getItem("id");
     let body = {
       survey_name: this.state.survey_name,
       ending_date: this.state.ending_date,

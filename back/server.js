@@ -126,83 +126,84 @@ app.post('/employee/send/sondage', (req, res) => {
 });
 
 app.get('/user/list/survey', (req, res) => {
-  const userId = req.body.user_id;
-  dbHandle.query('SELECT survey_name, user_id FROM survey', (err, results) => {
-    dbHandle.query(`SELECT survey_name FROM survey WHERE user_id = ${userId}`, (err, results) => {
+  //const userId = req.body.user_id;
+
+  dbHandle.query(`SELECT survey_name, user_id FROM survey`, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.get('/user/resultat', (req, res) => {
+  dbHandle.query(
+    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response',
+    (err, results) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
-        res.json(results);
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.get('/employee/list/:token', (req, res) => {
+  dbHandle.query(
+    `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.post('/user/send/survey', (req, res) => {
+  const mailsArray = req.body.mails;
+  mailsArray.map(mail => {
+    let tokenSurvey = uuidv4();
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: userTransporter.user,
+        pass: userTransporter.pass
       }
     });
-  });
 
-  app.get('/user/resultat', (req, res) => {
+    let mailOptions = {
+      from: '"OUVERT" <no-reply@ouvert.com>',
+      to: mail,
+      subject: 'Sondage de mobilité ✔',
+      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        res.status(500).send('An error occured during mail sending.');
+      }
+    });
+
     dbHandle.query(
-      'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three FROM response',
-      (err, results) => {
+      `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
+        req.body.survey_name
+      }','${req.body.user_id}')`,
+      function(err) {
         if (err) {
           res.status(500).send('The database crashed ! The reason is ' + err);
-        } else {
-          res.status(200).json(results);
         }
       }
     );
   });
-
-  app.get('/employee/list/:token', (req, res) => {
-    dbHandle.query(
-      `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
-      (err, results) => {
-        if (err) {
-          res.status(500).send('The database crashed ! The reason is ' + err);
-        } else {
-          res.status(200).json(results);
-        }
-      }
-    );
-  });
-
-  app.post('/user/send/survey', (req, res) => {
-    const mailsArray = req.body.mails;
-    mailsArray.map(mail => {
-      let tokenSurvey = uuidv4();
-      let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: userTransporter.user,
-          pass: userTransporter.pass
-        }
-      });
-  
-      let mailOptions = {
-        from: '"OUVERT" <no-reply@ouvert.com>',
-        to: mail,
-        subject: 'Sondage de mobilité ✔',
-        html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
-      };
-  
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          res.status(500).send('An error occured during mail sending.');
-        }
-      });
-  
-      dbHandle.query(
-        `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
-          req.body.survey_name
-        }','${req.body.user_id}')`,
-        function(err) {
-          if (err) {
-            res.status(500).send('The database crashed ! The reason is ' + err);
-          }
-        }
-      );
-    });
-    res.status(200).send('SUCCESS');
-  });
+  res.status(200).send('SUCCESS');
+});
 
 app.post('/user/geolocation/employee', (req, res) => {
   const employeeData = req.body.employee;
@@ -227,7 +228,6 @@ app.post('/user/geolocation/employee', (req, res) => {
       });
     }
   });
-  res.status(200).send('SUCCESS');
 });
 
 app.post('/user/geolocation/society', (req, res) => {
