@@ -21,7 +21,7 @@ class Contact extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  async handleSubmit(e) {
+  handleSubmit(e) {
     e.preventDefault();
     let body = {
       email: this.state.fields.email,
