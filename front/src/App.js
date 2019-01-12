@@ -15,7 +15,6 @@ import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 import ListeGeoloc from "./components/ListeGeoloc";
-import SondageRH from "./components/SondageRH";
 
 const AdminRoute = ({ component: Component, ...rest }) => (
   <Route

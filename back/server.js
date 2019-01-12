@@ -176,18 +176,20 @@ app.get('/user/list/survey', (req, res) => {
           pass: userTransporter.pass
         }
       });
+  
       let mailOptions = {
         from: '"OUVERT" <no-reply@ouvert.com>',
         to: mail,
         subject: 'Sondage de mobilité ✔',
-        html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+        html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
       };
+  
       transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
           res.status(500).send('An error occured during mail sending.');
         }
       });
-
+  
       dbHandle.query(
         `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
           req.body.survey_name
@@ -198,11 +200,9 @@ app.get('/user/list/survey', (req, res) => {
           }
         }
       );
-
-      res.status(200).send('SUCCESS');
     });
+    res.status(200).send('SUCCESS');
   });
-});
 
 app.post('/user/geolocation/employee', (req, res) => {
   const employeeData = req.body.employee;
