@@ -257,7 +257,7 @@ class Geolocalisation extends Component {
           return allAddresses.push(data);
         });
         this.setState({
-          allAddresses
+          addressReady: allAddresses
         });
       })
       .catch(error => {
@@ -267,10 +267,11 @@ class Geolocalisation extends Component {
 
   displayResults = address => {
     const token = localStorage.getItem("token");
+    let addressSociety = address.split(":");
     const userId = localStorage.getItem("id");
     const body = {
       user_id: userId,
-      address: address
+      address: addressSociety.slice(0, 1)
     };
     axios({
       method: "post",
@@ -609,7 +610,12 @@ class Geolocalisation extends Component {
                     />
                     Sélectionner une adresse et consulter les résultats
                   </h5>
-                  <select className="mt-3">
+                  <select
+                    className="mt-3"
+                    onChange={e => {
+                      this.displayResults(e.target.value);
+                    }}
+                  >
                     <option>Sélectionner une adresse</option>
                     {this.state.addressReady.map(address => {
                       let isReady = "";
@@ -621,9 +627,9 @@ class Geolocalisation extends Component {
                       return (
                         <option
                           key={address.address}
-                          onClick={() => {
-                            this.displayResults(address.address);
-                          }}
+                          //onChange={() => {
+                          //  this.displayResults(address.address);
+                          //}}
                         >
                           {address.address} : {isReady}
                         </option>

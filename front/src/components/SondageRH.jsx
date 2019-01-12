@@ -158,7 +158,6 @@ class SondageRH extends Component {
         &times;
       </button>
     );
-    console.log(localStorage.getItem("currentUser"));
     return (
       <div className="text-white">
         <NotificationAlert ref="notificationAlertError" />

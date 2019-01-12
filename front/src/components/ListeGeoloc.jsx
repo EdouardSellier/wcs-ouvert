@@ -64,22 +64,9 @@ class ListeGeoloc extends Component {
     })
       .then(res => {
         let arrayShown = res.data.tableData;
-        let displayResult = [];
-        arrayShown.map(row => {
-          let positionSociety = {
-            companyName: row.companyName,
-            societyPosition: `${row.societyAddress} (${row.societyLat} - ${
-              row.societyLng
-            })`,
-            addressEmployee: row.employeeAddress,
-            positionEmployee: row.employeePosition,
-            id: row.id
-          };
-          return displayResult.push(positionSociety);
-        });
         let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
-          geolocationList: displayResult,
+          geolocationList: arrayShown,
           nbPages: nbPages
         });
       })
@@ -96,9 +83,9 @@ class ListeGeoloc extends Component {
     if (column === "id") {
       let regex = /,/gi;
       let societyName = item.companyName;
-      let societyColumn = item.societyPosition.replace(regex, " - ");
-      let employeeAddressColumn = item.addressEmployee.replace(regex, " - ");
-      let employeePositionColumn = item.positionEmployee.replace(regex, " - ");
+      let societyColumn = item.societyAddress.replace(regex, " - ");
+      let employeeAddressColumn = item.employeeAddress.replace(regex, " - ");
+      let employeePositionColumn = item.employeePosition.replace(regex, " - ");
       let allData = `${societyName}; ${societyColumn}; ${employeeAddressColumn}; ${employeePositionColumn}`;
       this.setState({
         csvData: allData
@@ -158,14 +145,14 @@ class ListeGeoloc extends Component {
   render() {
     let columns = [
       { key: "companyName", label: "Société" },
-      { key: "societyPosition", label: "Adresse et position de la société" },
+      { key: "societyAddress", label: "Adresse et position de la société" },
       {
         key: "addressEmployee",
         label: "Adresses des salariés",
         cell: columnKey => {
           return (
             <ul className="list-unstyled employeesList">
-              {columnKey.addressEmployee.split(",").map((data, id) => {
+              {columnKey.employeeAddress.split(",").map((data, id) => {
                 return (
                   <li key={id}>
                     {id + 1}) {data}
@@ -178,19 +165,23 @@ class ListeGeoloc extends Component {
       },
       {
         key: "positionEmployee",
-        label: "Position des salariés",
+        label: "Positions des salariés",
         cell: columnKey => {
-          return (
-            <ul className="list-unstyled employeesList">
-              {columnKey.positionEmployee.split(",").map((data, id) => {
-                return (
-                  <li key={id}>
-                    {id + 1}) {data}
-                  </li>
-                );
-              })}
-            </ul>
-          );
+          if (columnKey.employeePosition === null) {
+            return <p>En cours de traitement</p>;
+          } else {
+            return (
+              <ul className="list-unstyled employeesList">
+                {columnKey.employeePosition.split(",").map((data, id) => {
+                  return (
+                    <li key={id}>
+                      {id + 1}) {data.replace("-", ", ")}
+                    </li>
+                  );
+                })}
+              </ul>
+            );
+          }
         }
       },
       {
