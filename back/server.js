@@ -135,7 +135,6 @@ app.post('/user/send/survey', (req, res) => {
 
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(error);
         res.status(500).send('An error occured during mail sending.');
       }
     });
@@ -144,15 +143,14 @@ app.post('/user/send/survey', (req, res) => {
       `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
         req.body.survey_name
       }','${req.body.user_id}')`,
-      function(err, result) {
+      function(err) {
         if (err) {
-          console.log(err);
+          res.status(500).send('The database crashed ! The reason is ' + err);
         }
       }
     );
-
-    res.status(200).send('SUCCESS');
   });
+  res.status(200).send('SUCCESS');
 });
 
 app.post('/admin/payment', (req, res) => {
