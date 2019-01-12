@@ -202,7 +202,12 @@ const questions = [
       "A l’extérieur"
     ],
     index: "midday",
-    number: 11
+    number: 11,
+    contentPDF: `Où déjeunez-vous le plus souvent le midi ?`,
+    coordinateTitle: [65, 83],
+    coordinateImg: [0, 90, -100, 40],
+    indexImgPdf: 5,
+    pageAdded: false
   },
   {
     id: "frequencyMidday",
@@ -217,7 +222,12 @@ const questions = [
       "Tous les jours"
     ],
     index: "frequency_midday",
-    number: 12
+    number: 12,
+    contentPDF: `En moyenne, à quelle fréquence effectuez-vous des déplacements le midi ?`,
+    coordinateTitle: [45, 152],
+    coordinateImg: [0, 159, -100, 40],
+    indexImgPdf: 7,
+    pageAdded: false
   },
   {
     id: "transportMidday",
@@ -238,7 +248,12 @@ const questions = [
       "Marche à pied"
     ],
     index: "transport_midday",
-    number: 13
+    number: 13,
+    contentPDF: `Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?`,
+    coordinateTitle: [45, 220],
+    coordinateImg: [0, 227, -100, 49],
+    indexImgPdf: 13,
+    pageAdded: true
   },
   {
     id: "frequencyPro",
