@@ -376,86 +376,7 @@ class Resultat extends Component {
 
     this.state = {
       hovering: true,
-      dataFetch: [
-        {
-          genre: "Un homme",
-          age: "25 ans ou moins",
-          principal_transport_one: "Voiture personnelle",
-          principal_transport_two: "------",
-          principal_transport_three: "------",
-          ocasionaly_transport_one: "Voiture personnelle",
-          ocasionaly_transport_two: "------",
-          ocasionaly_transport_three: "------",
-          reason_transport: "Rapidité",
-          distance_klm: 0,
-          distance_min: 0,
-          distance_money: 0,
-          elements_one: "Pas d’obligation particulière",
-          elements_two: "------",
-          elements_three: "------",
-          parking_place: "Oui",
-          midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
-          frequency_midday: "Jamais",
-          transport_midday: "Voiture personnelle",
-          frequency_pro: "Je ne fais jamais de déplacements professionnels",
-          distance_pro: "Je ne fais jamais de déplacements professionnels",
-          deplacement_pro: "Voiture personnelle",
-          reason_perso_car: "Pas d’autres solutions identifiées",
-          deplacement_method_pro:
-            "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
-          commun_transport_one:
-            "J’utilise déjà souvent les transports en commun",
-          commun_transport_two: "------",
-          commun_transport_three: "------",
-          bike_one: "Je me déplace déjà souvent à vélo",
-          bike_two: "------",
-          bike_three: "------",
-          carpooling_one: "Je covoiture déjà souvent",
-          carpooling_two: "------",
-          carpooling_three: "------",
-          otherThanCar: "",
-          commentary: ""
-        },
-        {
-          genre: "Une femme",
-          age: "25 ans ou moins",
-          principal_transport_one: "Voiture personnelle",
-          principal_transport_two: "------",
-          principal_transport_three: "------",
-          ocasionaly_transport_one: "Voiture personnelle",
-          ocasionaly_transport_two: "------",
-          ocasionaly_transport_three: "------",
-          reason_transport: "Rapidité",
-          distance_klm: 0,
-          distance_min: 0,
-          distance_money: 0,
-          elements_one: "Pas d’obligation particulière",
-          elements_two: "------",
-          elements_three: "------",
-          parking_place: "Oui",
-          midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
-          frequency_midday: "Jamais",
-          transport_midday: "Voiture personnelle",
-          frequency_pro: "Je ne fais jamais de déplacements professionnels",
-          distance_pro: "Je ne fais jamais de déplacements professionnels",
-          deplacement_pro: "Voiture personnelle",
-          reason_perso_car: "Pas d’autres solutions identifiées",
-          deplacement_method_pro:
-            "Je connais des alternatives à la voiture individuelle, j’essaye de les utiliser lorsque c’est possible et j’envisage de les utiliser davantage",
-          commun_transport_one:
-            "J’utilise déjà souvent les transports en commun",
-          commun_transport_two: "------",
-          commun_transport_three: "------",
-          bike_one: "Je me déplace déjà souvent à vélo",
-          bike_two: "------",
-          bike_three: "------",
-          carpooling_one: "Je covoiture déjà souvent",
-          carpooling_two: "------",
-          carpooling_three: "------",
-          otherThanCar: "",
-          commentary: ""
-        }
-      ]
+      dataFetch: []
     };
   }
 
@@ -691,13 +612,23 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:8080/states", {
-      method: "POST"
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:8080/user/resultat", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(results => results.json())
       .then(data => {
+        let dataFetch = data.filter(
+          survey =>
+            survey.id_rh === this.props.location.state.currentId &&
+            survey.survey_name === this.props.location.state.surveyNameSelected
+        );
+
         this.setState({
-          dataFetch: data,
+          dataFetch: dataFetch,
           hovering: true
         });
       });

@@ -76,11 +76,10 @@ app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
 
   dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${req.body.token_employee}'`,
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
     formData,
     (err, results) => {
       if (err) {
-        console.log(err);
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
         res.status(200).send('SUCCESS');
@@ -95,6 +94,17 @@ app.get('/user/list/survey', (req, res) => {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
       res.json(results);
+    }
+  });
+});
+
+app.get('/user/resultat', (req, res) => {
+  dbHandle.query('SELECT * FROM response', (err, results) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.status(200).json(results);
     }
   });
 });

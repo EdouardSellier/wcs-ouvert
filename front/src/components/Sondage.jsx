@@ -116,6 +116,7 @@ class Sondage extends Component {
     super(props);
     this.state = {
       statesForm: {
+        token_employee: null,
         genre: "Un homme",
         age: "25 ans ou moins",
         principal_transport_one: "Voiture personnelle",
@@ -185,7 +186,7 @@ class Sondage extends Component {
       }
     })
       .then(res => {
-        alert("ca marche");
+        this.props.history.push("/");
       })
       .catch(error => {
         alert("pas");
@@ -209,6 +210,12 @@ class Sondage extends Component {
         } else {
           if (res.data[0].date_response !== null) {
             this.props.history.push("/");
+          } else {
+            let statesForm = this.state.statesForm;
+            statesForm.token_employee = this.props.match.params.token;
+            this.setState({
+              statesForm: statesForm
+            });
           }
         }
       })

@@ -33,9 +33,11 @@ class ListeEnquetesRH extends Component {
   };
 
   changeSurveyName = event => {
-    this.setState({
-      surveyNameSelected: event.target.value
-    });
+    if (event.target.value !== "Sélectionner une enquête") {
+      this.setState({
+        surveyNameSelected: event.target.value
+      });
+    }
   };
 
   getSurveyName = () => {
@@ -90,10 +92,11 @@ class ListeEnquetesRH extends Component {
         <Container className="mt-5">
           <NotificationAlert ref="notificationAlertError" />
           <Col lg={{ size: 6, offset: 3 }}>
-            <select className="form-control surveySelect">
-              <option onChange={event => this.changeSurveyName(event)}>
-                Sélectionner une enquête
-              </option>
+            <select
+              onChange={event => this.changeSurveyName(event)}
+              className="form-control surveySelect"
+            >
+              <option>Sélectionner une enquête</option>
               {this.state.allSurveyName.map(survey => {
                 return (
                   <option key={survey.survey_name}>{survey.survey_name}</option>
