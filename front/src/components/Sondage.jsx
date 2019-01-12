@@ -174,12 +174,13 @@ class Sondage extends Component {
 
   submit = event => {
     event.preventDefault();
+    let statesForm = this.state.statesForm;
 
     const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/employee/send/sondage",
-      data: this.state.statesForm,
+      data: statesForm,
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -197,8 +198,7 @@ class Sondage extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "get",
-      url:
-        "http://localhost:8080/employee/list/" + this.props.match.params.token,
+      url: "http://localhost:8080/employee/list/" + this.state.token_employee,
       headers: {
         Authorization: `Bearer ${token}`
       }

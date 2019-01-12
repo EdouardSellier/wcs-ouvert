@@ -74,18 +74,22 @@ app.post('/user/survey', (req, res) => {
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
 
-  dbHandle.query('UPDATE response SET ?', formData, (err, results) => {
-    if (err) {
-      console.log(err);
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.status(200).send('SUCCESS');
+  dbHandle.query(
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${req.body.token_employee}'`,
+    formData,
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).send('SUCCESS');
+      }
     }
-  });
+  );
 });
 
 app.get('/user/list/survey', (req, res) => {
-  dbHandle.query('SELECT survey_name, user_id FROM survey', (err, results) => {
+  dbHandle.query('SELECT survey_name FROM survey', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -99,6 +103,7 @@ app.get('/employee/list/:token', (req, res) => {
     `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
     (err, results) => {
       if (err) {
+        console.log(err);
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
         res.json(results);
