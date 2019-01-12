@@ -104,10 +104,9 @@ app.get('/employee/list/:token', (req, res) => {
     `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
     (err, results) => {
       if (err) {
-        console.log(err);
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
-        res.json(results);
+        res.status(200).json(results);
       }
     }
   );
