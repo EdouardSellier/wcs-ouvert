@@ -307,7 +307,7 @@ class Resultat extends Component {
 
   handlePdf(imga) {
     let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
+    newPdf.text(15, 15, "Résultat de votre enquête :");
     const allImages = imga;
     newPdf.setFontSize(10);
     newPdf.text(90, 30, "Vous êtes :");
@@ -396,7 +396,7 @@ class Resultat extends Component {
       "Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?"
     );
 
-    newPdf.addImage(allImages[13], "JPEG", 0, 227, -100, 40);
+    newPdf.addImage(allImages[13], "JPEG", 0, 227, -100, 49);
 
     newPdf.addPage();
 
@@ -408,61 +408,61 @@ class Resultat extends Component {
     newPdf.addImage(allImages[8], "JPEG", 0, 22, -100, 40);
 
     newPdf.text(
-      47,
+      46,
       80,
       `A quelle distance (aller ou retour, en km) vous déplacez-vous en moyenne 
                          pour les déplacements professionnels ?`
     );
-    newPdf.addImage(allImages[9], "JPEG", 0, 87, -100, 40);
+    newPdf.addImage(allImages[9], "JPEG", 0, 90, -100, 40);
 
     newPdf.text(
-      47,
-      130,
+      25,
+      148,
       `Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?`
     );
-    newPdf.addImage(allImages[14], "JPEG", 0, 137, -100, 40);
+    newPdf.addImage(allImages[14], "JPEG", 0, 155, -100, 49);
 
     newPdf.text(
-      47,
-      180,
+      27,
+      224,
       `Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?`
     );
-    newPdf.addImage(allImages[10], "JPEG", 0, 187, -100, 40);
+    newPdf.addImage(allImages[10], "JPEG", 0, 229, -100, 47);
 
     newPdf.addPage();
 
     newPdf.text(
-      10,
+      42,
       30,
       `Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont 
               vous vous déplacez pour vous rendre sur votre lieu de travail ?`
     );
-    newPdf.addImage(allImages[11], "JPEG", 0, 35, -100, 40);
+    newPdf.addImage(allImages[11], "JPEG", 0, 40, -100, 67);
 
     newPdf.text(
-      38,
-      165,
+      28,
+      138,
       `Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?`
     );
 
-    newPdf.addImage(allImages[15], "JPEG", 25, 185, 150, 100);
+    newPdf.addImage(allImages[15], "JPEG", 25, 153, 150, 116);
 
     newPdf.addPage();
     newPdf.text(
       38,
-      10,
+      21,
       `Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?`
     );
 
-    newPdf.addImage(allImages[20], "JPEG", 25, 20, 150, 100);
+    newPdf.addImage(allImages[20], "JPEG", 25, 31, 150, 100);
 
     newPdf.text(
       38,
-      180,
+      164,
       `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`
     );
 
-    newPdf.addImage(allImages[17], "JPEG", 25, 190, 150, 100);
+    newPdf.addImage(allImages[17], "JPEG", 25, 173, 150, 100);
 
     newPdf.save("compte-rendu.pdf");
   }
