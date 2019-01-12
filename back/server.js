@@ -65,7 +65,7 @@ app.post('/user/send/survey', (req, res) => {
       from: '"OUVERT" <no-reply@ouvert.com>',
       to: mail,
       subject: 'Sondage de mobilité ✔',
-      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -73,190 +73,6 @@ app.post('/user/send/survey', (req, res) => {
       }
       res.status(200).send('SUCCESS');
     });
-  });
-});
-
-app.post('/admin/payment', (req, res) => {
-  const formData = req.body;
-  const idSociety = req.body.id;
-  dbHandle.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: userTransporter.user,
-          pass: userTransporter.pass
-        }
-      });
-      if (formData.has_paid === 1) {
-        let mailOptions = {
-          from: '"OUVERT" <no-reply@ouvert.com>',
-          to: req.body.mail,
-          subject: 'Votre inscription est confirmée ✔',
-          html: `<h1>Bienvenue !</h1><p>Nous avons bien reçu votre règlement et vous confirmons que votre inscription a bien été prise en compte. <br/> Vous pouvez dès à présent profiter de nos services en vous connectant à votre compte : <a href='http://localhost:3000/connexion'>Cliquez sur ce lien</a></p><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            res.status(500).send('An error occured with confirmation e-mail after sign up.');
-          }
-        });
-      } else if (formData.has_paid === 0) {
-        let mailOptions = {
-          from: '"OUVERT" <no-reply@ouvert.com>',
-          to: req.body.mail,
-          subject: "Votre compte n'est plus actif",
-          html: `<h1>Désactivation de votre compte</h1><p>Sauf erreur de notre part, nous n'avons pas reçu votre règlement pour bénéficier de nos services. Nous avons ainsi désactivé votre compte. En cas de problème, vous pouvez nous contacter par e-mail ou par téléphone : <a href='http://localhost:3000/contact'>Cliquez sur ce lien</a>.</p><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            res.status(500).send('An error occured with confirmation e-mail after sign up.');
-          }
-        });
-      }
-      res.status(200).send('SUCCESS');
-    }
-  });
-});
-
-app.get('/admin/list/society', (req, res) => {
-  dbHandle.query(
-    'SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user WHERE is_admin = 0',
-    (err, results) => {
-      if (err) {
-        res.status(500).send('The database crashed ! The reason is ' + err);
-      } else {
-        res.json(results);
-      }
-    }
-  );
-});
-
-app.get('/admin/list/survey', (req, res) => {
-  dbHandle.query(
-    'SELECT survey_name, starting_date, ending_date, user_id FROM survey',
-    (err, results) => {
-      if (err) {
-        res.status(500).send('The database crashed ! The reason is ' + err);
-      } else {
-        res.json(results);
-      }
-    }
-  );
-});
-
-app.get('/admin/list/geolocation', (req, res) => {
-  dbHandle.query('SELECT id FROM map', (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.json(results);
-    }
-  });
-});
-
-app.post('/admin/list/society', (req, res) => {
-  let totalCount = undefined;
-  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM user', function(err, rows) {
-    let startNum = 0;
-    let limitNum = 5;
-    if (err) {
-      return err;
-    } else {
-      totalCount = rows[0].TotalCount;
-      startNum = req.body.start;
-      limitNum = req.body.limit;
-    }
-    dbHandle.query(
-      `SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user LIMIT ${limitNum} OFFSET ${startNum}`,
-      function(err, result) {
-        if (err) {
-          res.json(err);
-        } else {
-          const allData = {
-            totalCount: totalCount,
-            data: result
-          };
-          res.status(200).json(allData);
-        }
-      }
-    );
-  });
-});
-
-app.post('/admin/list/geolocation', (req, res) => {
-  let totalCount = undefined;
-  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM map', function(err, rows) {
-    let startNum = 0;
-    let limitNum = 5;
-    if (err) {
-      return err;
-    } else {
-      totalCount = rows[0].TotalCount;
-      startNum = req.body.start;
-      limitNum = req.body.limit;
-      let allMapData = [];
-      dbHandle.query(
-        `SELECT map.id AS id, map.lat AS society_lat, map.lng AS society_lng, map.address AS society_address, map.user_id, map.id AS map_id, user.company_name AS company_name, maps_employee.map_id AS emp_id, GROUP_CONCAT(maps_employee.address) AS employeeAddress, GROUP_CONCAT('(',maps_employee.lat, '-', maps_employee.lng, ')') AS employeePosition FROM map INNER JOIN user ON map.user_id = user.id INNER JOIN maps_employee ON map.id = maps_employee.map_id GROUP BY maps_employee.map_id LIMIT ${limitNum} OFFSET ${startNum}`,
-        function(err, result) {
-          if (err) {
-            res.json(err);
-          } else {
-            result.map(data => {
-              let tableData = {
-                companyName: data.company_name,
-                societyAddress: data.society_address,
-                societyLat: data.society_lat,
-                societyLng: data.society_lng,
-                employeeAddress: data.employeeAddress,
-                employeePosition: data.employeePosition,
-                id: data.id
-              };
-              allMapData.push(tableData);
-            });
-            let allData = {
-              totalCount: totalCount,
-              tableData: allMapData
-            };
-            res.status(200).json(allData);
-          }
-        }
-      );
-    }
-  });
-});
-
-app.post('/admin/list/survey', (req, res) => {
-  let totalCount = undefined;
-  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM survey', function(err, rows) {
-    let startNum = 0;
-    let limitNum = 5;
-    if (err) {
-      return err;
-    } else {
-      totalCount = rows[0].TotalCount;
-      startNum = req.body.start;
-      limitNum = req.body.limit;
-    }
-    dbHandle.query(
-      `SELECT survey.survey_name, survey.starting_date, survey.ending_date, survey.user_id, user.company_name FROM survey INNER JOIN user ON survey.user_id = user.id LIMIT ${limitNum} OFFSET ${startNum}`,
-      function(err, result) {
-        if (err) {
-          res.json(err);
-        } else {
-          const allData = {
-            totalCount: totalCount,
-            data: result
-          };
-          res.status(200).json(allData);
-        }
-      }
-    );
   });
 });
 
@@ -391,9 +207,204 @@ app.post('/user/geolocation/results', (req, res) => {
   );
 });
 
+app.post('/admin/payment', (req, res) => {
+  const formData = req.body;
+  const idSociety = req.body.id;
+  dbHandle.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+          user: userTransporter.user,
+          pass: userTransporter.pass
+        }
+      });
+      if (formData.has_paid === 1) {
+        let mailOptions = {
+          from: '"OUVERT" <no-reply@ouvert.com>',
+          to: req.body.mail,
+          subject: 'Votre inscription est confirmée ✔',
+          html: `<h1>Bienvenue !</h1><p>Nous avons bien reçu votre règlement et vous confirmons que votre inscription a bien été prise en compte. <br/> Vous pouvez dès à présent profiter de nos services en vous connectant à votre compte : <a href='http://localhost:3000/connexion'>Cliquez sur ce lien</a></p><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            res.status(500).send('An error occured with confirmation e-mail after sign up.');
+          }
+        });
+      } else if (formData.has_paid === 0) {
+        let mailOptions = {
+          from: '"OUVERT" <no-reply@ouvert.com>',
+          to: req.body.mail,
+          subject: "Votre compte n'est plus actif",
+          html: `<h1>Désactivation de votre compte</h1><p>Sauf erreur de notre part, nous n'avons pas reçu votre règlement pour bénéficier de nos services. Nous avons ainsi désactivé votre compte. En cas de problème, vous pouvez nous contacter par e-mail ou par téléphone : <a href='http://localhost:3000/contact'>Cliquez sur ce lien</a>.</p><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) {
+            res.status(500).send('An error occured with confirmation e-mail after sign up.');
+          }
+        });
+      }
+      res.status(200).send('SUCCESS');
+    }
+  });
+});
+
+app.get('/admin/list/society', (req, res) => {
+  dbHandle.query(
+    'SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user WHERE is_admin = 0',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.get('/admin/list/survey', (req, res) => {
+  dbHandle.query(
+    'SELECT survey_name, starting_date, ending_date, user_id FROM survey',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
+app.get('/admin/list/geolocation', (req, res) => {
+  dbHandle.query('SELECT id FROM map', (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+app.post('/admin/list/society', (req, res) => {
+  let totalCount = undefined;
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM user', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    dbHandle.query(
+      `SELECT company_name, siret, lastname, firstname, mail, company_address, phone_number, has_paid, id FROM user LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
+app.post('/admin/list/geolocation', (req, res) => {
+  let totalCount = undefined;
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM map', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+      let allMapData = [];
+      dbHandle.query(
+        `SELECT map.id AS id, map.lat AS society_lat, map.lng AS society_lng, map.address AS society_address, map.user_id, map.id AS map_id, user.company_name AS company_name, maps_employee.map_id AS emp_id, GROUP_CONCAT(maps_employee.address) AS employeeAddress, GROUP_CONCAT(maps_employee.lat, '-', maps_employee.lng) AS employeePosition FROM map INNER JOIN user ON map.user_id = user.id INNER JOIN maps_employee ON map.id = maps_employee.map_id GROUP BY maps_employee.map_id LIMIT ${limitNum} OFFSET ${startNum}`,
+        function(err, result) {
+          if (err) {
+            res.json(err);
+          } else {
+            result.map(data => {
+              let societyPosition = `${data.society_address} - ${data.society_lat}, ${
+                data.society_lng
+              }`;
+              if (data.employeeAddress === null && data.employeePosition === null) {
+                let tableData = {
+                  companyName: data.company_name,
+                  societyAddress: societyPosition,
+                  employeeAddress: 'En cours',
+                  employeePosition: 'En cours',
+                  id: data.id
+                };
+                allMapData.push(tableData);
+              } else {
+                let tableData = {
+                  companyName: data.company_name,
+                  societyAddress: societyPosition,
+                  employeeAddress: data.employeeAddress,
+                  employeePosition: data.employeePosition,
+                  id: data.id
+                };
+                allMapData.push(tableData);
+              }
+            });
+            let allData = {
+              totalCount: totalCount,
+              tableData: allMapData
+            };
+            res.status(200).json(allData);
+          }
+        }
+      );
+    }
+  });
+});
+
+app.post('/admin/list/survey', (req, res) => {
+  let totalCount = undefined;
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM survey', function(err, rows) {
+    let startNum = 0;
+    let limitNum = 5;
+    if (err) {
+      return err;
+    } else {
+      totalCount = rows[0].TotalCount;
+      startNum = req.body.start;
+      limitNum = req.body.limit;
+    }
+    dbHandle.query(
+      `SELECT survey.survey_name, survey.starting_date, survey.ending_date, survey.user_id, user.company_name FROM survey INNER JOIN user ON survey.user_id = user.id LIMIT ${limitNum} OFFSET ${startNum}`,
+      function(err, result) {
+        if (err) {
+          res.json(err);
+        } else {
+          const allData = {
+            totalCount: totalCount,
+            data: result
+          };
+          res.status(200).json(allData);
+        }
+      }
+    );
+  });
+});
+
 app.listen(portServer, err => {
   if (err) {
     throw new Error('Something bad happened...');
   }
-  console.log(`Server is listening on ${portServer}`);
 });
