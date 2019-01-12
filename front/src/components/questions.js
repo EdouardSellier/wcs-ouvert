@@ -5,7 +5,12 @@ const questions = [
     label: "Vous êtes :",
     possibilities: ["Un homme", "Une femme", "Je ne souhaite pas répondre"],
     index: "genre",
-    number: 1
+    number: 1,
+    contentPDF: `Vous êtes :`,
+    coordinateTitle: [90, 30],
+    coordinateImg: [0, 35, -100, 40],
+    indexImgPdf: 3,
+    pageAdded: false
   },
   {
     id: "age",
@@ -19,7 +24,12 @@ const questions = [
       "Je ne souhaite pas répondre"
     ],
     index: "age",
-    number: 2
+    number: 2,
+    contentPDF: `Vous avez :`,
+    coordinateTitle: [90, 95],
+    coordinateImg: [0, 100, -100, 40],
+    indexImgPdf: 6,
+    pageAdded: false
   },
   {
     id: "principalTransport",
@@ -39,7 +49,15 @@ const questions = [
       "Marche à pied"
     ],
     index: "principal_transport_",
-    number: 3
+    number: 3,
+    contentPDF: `        Quels modes de déplacements utilisez-vous pour venir travailler ?
+    Si vous utilisez plusieurs modes de déplacements au cours de votre trajet 
+    domicile-travail, veuillez les renseigner dans l'ordre dimportance qu'ils ont 
+        dans votre parcours (en termes de temps et de distance)`,
+    coordinateTitle: [38, 165],
+    coordinateImg: [25, 185, 150, 100],
+    indexImgPdf: 18,
+    pageAdded: true
   },
   {
     id: "ocasionalyTransport",
@@ -59,7 +77,14 @@ const questions = [
       "Marche à pied"
     ],
     index: "ocasionaly_transport_",
-    number: 4
+    number: 4,
+    contentPDF: `                Peut-être utilisez-vous occasionnellement d'autres modes 
+    de déplacements en fonction du jour de la semaine,  de vos horaires,
+                                                de la météo...`,
+    coordinateTitle: [42, 15],
+    coordinateImg: [25, 30, 150, 100],
+    indexImgPdf: 19,
+    pageAdded: false
   },
   {
     id: "reasonTransport",
@@ -79,7 +104,12 @@ const questions = [
       "Autre raison"
     ],
     index: "reason_transport",
-    number: 5
+    number: 5,
+    contentPDF: `Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ? `,
+    coordinateTitle: [42, 170],
+    coordinateImg: [25, 180, 150, 100],
+    indexImgPdf: 12,
+    pageAdded: true
   },
 
   {
@@ -88,7 +118,12 @@ const questions = [
     label: "Quelle distance (en km) parcourez-vous pour :",
     possibilities: [],
     index: "distance_klm",
-    number: 6
+    number: 6,
+    contentPDF: `Quelle distance (en km) parcourez-vous pour :`,
+    coordinateTitle: [64, 15],
+    coordinateImg: [-58, 20, 320, 10],
+    indexImgPdf: 0,
+    pageAdded: false
   },
   {
     id: "distanceMin",
@@ -96,7 +131,12 @@ const questions = [
     label: "Combien de temps (en minutes) mettez-vous pour :",
     possibilities: [],
     index: "distance_min",
-    number: 7
+    number: 7,
+    contentPDF: `Combien de temps (en minutes) mettez-vous pour :`,
+    coordinateTitle: [60, 50],
+    coordinateImg: [-57, 55, 320, 10],
+    indexImgPdf: 2,
+    pageAdded: false
   },
 
   {
@@ -105,7 +145,12 @@ const questions = [
     label: "Quel budget (en euros) dépensez-vous pour :",
     possibilities: [],
     index: "distance_money",
-    number: 8
+    number: 8,
+    contentPDF: `Quel budget (en euros) dépensez-vous pour :`,
+    coordinateTitle: [65, 85],
+    coordinateImg: [-57, 90, 320, 10],
+    indexImgPdf: 1,
+    pageAdded: false
   },
   {
     id: "elements",
@@ -121,7 +166,12 @@ const questions = [
       "Autre"
     ],
     index: "elements_",
-    number: 9
+    number: 9,
+    contentPDF: `Quels éléments prenez-vous en compte pour organiser vos déplacements domicile-travail ?`,
+    coordinateTitle: [35, 135],
+    coordinateImg: [25, 150, 150, 100],
+    indexImgPdf: 16,
+    pageAdded: true
   },
   {
     id: "parkingPlace",
@@ -134,7 +184,12 @@ const questions = [
       "Je ne me rends pas sur mon lieu de travail en voiture"
     ],
     index: "parking_place",
-    number: 10
+    number: 10,
+    contentPDF: `Si vous vous rendez en voiture sur votre lieu de travail, y-trouvez-vous facilement une place de parking ?`,
+    coordinateTitle: [25, 15],
+    coordinateImg: [0, 22, -100, 40],
+    indexImgPdf: 4,
+    pageAdded: false
   },
   {
     id: "midday",
