@@ -23,40 +23,7 @@ app.get('/authrequired', (req, res) => {
 });
 
 app.get('/monespace', (req, res) => {
-  console.log(`Request for 'GET /monespace'`);
   res.status(200).send('Mon espace');
-});
-
-app.post('/user/geolocation', (req, res) => {
-  let positionSociety = req.body.society_position.position.reverse().toString();
-  let addressSociety = req.body.society_position.address.toString();
-  const regex = /\+/g;
-  let correctAddressSociety = addressSociety.replace(regex, ' ');
-  let correctPositionSociety = positionSociety.replace(',', ' - ');
-  let sendSocietyData = `${correctAddressSociety} - (${correctPositionSociety})`;
-  const employeesPositions = req.body.employees_positions;
-  const sendEmployeesData = [];
-  employeesPositions.map(data => {
-    let correctPositionEmployee = data.position
-      .reverse()
-      .toString()
-      .replace(',', ' - ');
-    let addressEmployee = data.address.toString();
-    let correctAddressEmployee = addressEmployee.replace(regex, ' ');
-    let finalData = `${correctAddressEmployee} - (${correctPositionEmployee})`;
-    sendEmployeesData.push(finalData);
-  });
-  const formData = {
-    society_position: sendSocietyData,
-    employees_positions: sendEmployeesData.toString()
-  };
-  dbHandle.query('INSERT INTO geolocation SET ?', formData, (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.status(200).send('SUCCESS');
-    }
-  });
 });
 
 app.post('/user/survey', (req, res) => {
@@ -184,7 +151,7 @@ app.get('/admin/list/survey', (req, res) => {
 });
 
 app.get('/admin/list/geolocation', (req, res) => {
-  dbHandle.query('SELECT id FROM geolocation', (err, results) => {
+  dbHandle.query('SELECT id FROM map', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -224,7 +191,7 @@ app.post('/admin/list/society', (req, res) => {
 
 app.post('/admin/list/geolocation', (req, res) => {
   let totalCount = undefined;
-  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM geolocation', function(err, rows) {
+  dbHandle.query('SELECT COUNT(*) AS TotalCount FROM map', function(err, rows) {
     let startNum = 0;
     let limitNum = 5;
     if (err) {
@@ -233,21 +200,34 @@ app.post('/admin/list/geolocation', (req, res) => {
       totalCount = rows[0].TotalCount;
       startNum = req.body.start;
       limitNum = req.body.limit;
-    }
-    dbHandle.query(
-      `SELECT id, society_position, employees_positions, user_id FROM geolocation LIMIT ${limitNum} OFFSET ${startNum}`,
-      function(err, result) {
-        if (err) {
-          res.json(err);
-        } else {
-          const allData = {
-            totalCount: totalCount,
-            data: result
-          };
-          res.status(200).json(allData);
+      let allMapData = [];
+      dbHandle.query(
+        `SELECT map.id AS id, map.lat AS society_lat, map.lng AS society_lng, map.address AS society_address, map.user_id, map.id AS map_id, user.company_name AS company_name, maps_employee.map_id AS emp_id, GROUP_CONCAT(maps_employee.address) AS employeeAddress, GROUP_CONCAT('(',maps_employee.lat, '-', maps_employee.lng, ')') AS employeePosition FROM map INNER JOIN user ON map.user_id = user.id INNER JOIN maps_employee ON map.id = maps_employee.map_id GROUP BY maps_employee.map_id LIMIT ${limitNum} OFFSET ${startNum}`,
+        function(err, result) {
+          if (err) {
+            res.json(err);
+          } else {
+            result.map(data => {
+              let tableData = {
+                companyName: data.company_name,
+                societyAddress: data.society_address,
+                societyLat: data.society_lat,
+                societyLng: data.society_lng,
+                employeeAddress: data.employeeAddress,
+                employeePosition: data.employeePosition,
+                id: data.id
+              };
+              allMapData.push(tableData);
+            });
+            let allData = {
+              totalCount: totalCount,
+              tableData: allMapData
+            };
+            res.status(200).json(allData);
+          }
         }
-      }
-    );
+      );
+    }
   });
 });
 
@@ -264,7 +244,7 @@ app.post('/admin/list/survey', (req, res) => {
       limitNum = req.body.limit;
     }
     dbHandle.query(
-      `SELECT survey_name, starting_date, ending_date, user_id FROM survey LIMIT ${limitNum} OFFSET ${startNum}`,
+      `SELECT survey.survey_name, survey.starting_date, survey.ending_date, survey.user_id, user.company_name FROM survey INNER JOIN user ON survey.user_id = user.id LIMIT ${limitNum} OFFSET ${startNum}`,
       function(err, result) {
         if (err) {
           res.json(err);
@@ -280,13 +260,7 @@ app.post('/admin/list/survey', (req, res) => {
   });
 });
 
-/**
-|--------------------------------------------------
-| New test for geolocation
-|--------------------------------------------------
-*/
-
-app.post('/geolocation/employee', (req, res) => {
+app.post('/user/geolocation/employee', (req, res) => {
   const employeeData = req.body.employee;
   const addressSociety = req.body.society;
   let societySql = `SELECT id FROM map WHERE address = "${addressSociety}"`;
@@ -311,7 +285,7 @@ app.post('/geolocation/employee', (req, res) => {
   });
 });
 
-app.post('/geolocation/society', (req, res) => {
+app.post('/user/geolocation/society', (req, res) => {
   const societyData = req.body;
   let societySql = 'INSERT INTO map SET ?';
   dbHandle.query(societySql, [societyData], (err, results) => {
@@ -323,16 +297,95 @@ app.post('/geolocation/society', (req, res) => {
   });
 });
 
-app.post('/geolocation/results', (req, res) => {
+app.post('/user/geolocation/list', (req, res) => {
   const userId = req.body.user_id;
+  let query = `SELECT address, is_ready FROM map WHERE user_id = ${userId}`;
+  dbHandle.query(query, (err, results) => {
+    if (err) {
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.status(200).json(results);
+    }
+  });
+});
+
+app.post('/user/geolocation/results', (req, res) => {
+  const userId = req.body.user_id;
+  const address = req.body.address;
   dbHandle.query(
-    `SELECT is_ready, address FROM map WHERE map.user_id = ${userId}`,
+    `SELECT is_ready FROM map WHERE map.user_id = ${userId} AND address = "${address}"`,
     (err, results) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
-        console.log(results);
-        res.json(results);
+        results.map(result => {
+          let isReady = result.is_ready;
+          if (isReady === 1) {
+            dbHandle.query(
+              `SELECT maps_employee.id AS emp_id, concat(maps_employee.lat, ",", maps_employee.lng) AS employeesPositions, maps_employee.distance AS emp_distance, maps_employee.duration AS emp_duration, maps_employee.map_id AS emp_map_id, map.lat AS map_lat, map.lng AS map_lng, map.isochrone5_auto, map.isochrone10_auto, map.isochrone20_auto, map.isochrone5_cycle, map.isochrone10_cycle, map.isochrone15_cycle FROM maps_employee INNER JOIN map ON maps_employee.map_id = map.id WHERE map.user_id = "${userId}" AND map.address = "${address}"`,
+              (err, results) => {
+                if (err) {
+                  res.status(500).send('The database crashed ! The reason is ' + err);
+                } else {
+                  let allResults = {};
+                  let societyData = {};
+                  let employeeData = {};
+                  let employeeId = [];
+                  let employeesPositions = [];
+                  let employeeDistance = [];
+                  let employeeDuration = [];
+                  results.map(result => {
+                    let allId = [];
+                    allId.push(result.emp_id);
+                    allId.map(id => {
+                      employeeId.push(id);
+                    });
+                    let allEmployeesPositions = [];
+                    allEmployeesPositions.push(result.employeesPositions);
+                    allEmployeesPositions.map(position => {
+                      employeesPositions.push(position);
+                    });
+                    let allDistance = [];
+                    allDistance.push(result.emp_distance);
+                    allDistance.map(distance => {
+                      employeeDistance.push(distance);
+                    });
+                    let allDuration = [];
+                    allDuration.push(result.emp_duration);
+                    allDuration.map(duration => {
+                      employeeDuration.push(duration);
+                    });
+                    employeeData = {
+                      id: employeeId,
+                      position: employeesPositions,
+                      distance: employeeDistance,
+                      duration: employeeDuration,
+                      map_id: result.emp_map_id
+                    };
+                    societyData = {
+                      lat: result.map_lat,
+                      lng: result.map_lng,
+                      isochrone5_auto: result.isochrone5_auto,
+                      isochrone10_auto: result.isochrone10_auto,
+                      isochrone20_auto: result.isochrone20_auto,
+                      isochrone5_cycle: result.isochrone5_cycle,
+                      isochrone10_cycle: result.isochrone10_cycle,
+                      isochrone15_cycle: result.isochrone15_cycle
+                    };
+                  });
+                  allResults = {
+                    employeeData: employeeData,
+                    employeeLength: employeeData.position.length,
+                    societyData: societyData
+                  };
+                  res.json(allResults);
+                }
+              }
+            );
+          } else {
+            res.status(200).send('In progress');
+          }
+        });
       }
     }
   );
