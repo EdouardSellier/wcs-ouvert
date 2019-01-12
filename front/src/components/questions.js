@@ -358,7 +358,13 @@ const questions = [
       "Je n’ai pas envie de changer mes habitudes de déplacements"
     ],
     index: "deplacement_method_pro",
-    number: 18
+    number: 18,
+    contentPDF: `Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont 
+    vous vous déplacez pour vous rendre sur votre lieu de travail ?`,
+    coordinateTitle: [42, 30],
+    coordinateImg: [0, 40, -100, 67],
+    indexImgPdf: 11,
+    pageAdded: false
   },
   {
     id: "communTransport",
@@ -373,7 +379,12 @@ const questions = [
       "Autre"
     ],
     index: "commun_transport_",
-    number: 19
+    number: 19,
+    contentPDF: `Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?`,
+    coordinateTitle: [28, 138],
+    coordinateImg: [25, 153, 150, 116],
+    indexImgPdf: 15,
+    pageAdded: true
   },
   {
     id: "bike",
@@ -393,7 +404,12 @@ const questions = [
       "Rien, je ne souhaite pas pédaler"
     ],
     index: "bike_",
-    number: 20
+    number: 20,
+    contentPDF: `Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?`,
+    coordinateTitle: [38, 21],
+    coordinateImg: [25, 31, 150, 100],
+    indexImgPdf: 20,
+    pageAdded: false
   },
   {
     id: "carpooling",
@@ -409,7 +425,12 @@ const questions = [
       "Rien, je ne souhaite pas covoiturer "
     ],
     index: "carpooling_",
-    number: 21
+    number: 21,
+    contentPDF: `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`,
+    coordinateTitle: [38, 164],
+    coordinateImg: [25, 173, 150, 100],
+    indexImgPdf: 17,
+    pageAdded: false
   },
   {
     id: "otherThanCar",

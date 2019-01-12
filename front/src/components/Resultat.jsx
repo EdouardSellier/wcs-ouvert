@@ -312,31 +312,6 @@ class Resultat extends Component {
     newPdf.setFontSize(10);
 
     newPdf.text(
-      42,
-      30,
-      `Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont 
-              vous vous déplacez pour vous rendre sur votre lieu de travail ?`
-    );
-    newPdf.addImage(allImages[11], "JPEG", 0, 40, -100, 67);
-
-    newPdf.text(
-      28,
-      138,
-      `Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?`
-    );
-
-    newPdf.addImage(allImages[15], "JPEG", 25, 153, 150, 116);
-
-    newPdf.addPage();
-    newPdf.text(
-      38,
-      21,
-      `Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?`
-    );
-
-    newPdf.addImage(allImages[20], "JPEG", 25, 31, 150, 100);
-
-    newPdf.text(
       38,
       164,
       `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`
