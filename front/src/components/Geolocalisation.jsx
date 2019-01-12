@@ -22,7 +22,7 @@ const errorMsg = {
 const errorLimitMsg = {
   place: "tr",
   message:
-    "Vous avez dépassé la limite des 800 salariés, nous vous invitons à contacter l'assistance. Merci de votre compréhension.",
+    "Vous avez dépassé la limite des 1000 salariés, nous vous invitons à contacter l'assistance. Merci de votre compréhension.",
   type: "danger",
   autoDismiss: 4
 };
@@ -30,7 +30,23 @@ const errorLimitMsg = {
 const problemMsg = {
   place: "tr",
   message:
-    "Nous avons rencontré un problème lors de l'enregistrement de votre adresse, nous vous remercions de bien vouloir recommencer",
+    "Nous avons rencontré un problème lors de l'enregistrement de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorAddress = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de la récupération de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorResult = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de l'affichage de vos résultats, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
   type: "danger",
   autoDismiss: 4
 };
@@ -40,6 +56,7 @@ class Geolocalisation extends Component {
     super(props);
     this.state = {
       employeeMapData: [],
+      lengthEmployee: undefined,
       societyMapData: "",
       societyAddress: "",
       societyLat: "",
@@ -51,7 +68,18 @@ class Geolocalisation extends Component {
       pdfIsLoading: false,
       isReady: false,
       displayMap: false,
-      addressReady: []
+      addressReady: [],
+      ready: "",
+      notReady: "",
+      employeePosition: [],
+      employeeStats: [],
+      societyPosition: [],
+      isochrone5_auto: undefined,
+      isochrone10_auto: undefined,
+      isochrone20_auto: undefined,
+      isochrone5_cycle: undefined,
+      isochrone10_cycle: undefined,
+      isochrone15_cycle: undefined
     };
   }
 
@@ -65,6 +93,14 @@ class Geolocalisation extends Component {
 
   alertFunctionProblem = () => {
     this.refs.notificationAlertError.notificationAlert(problemMsg);
+  };
+
+  alertFunctionErrorAddress = () => {
+    this.refs.notificationAlertError.notificationAlert(errorAddress);
+  };
+
+  alertFunctionErrorResult = () => {
+    this.refs.notificationAlertError.notificationAlert(errorResult);
   };
 
   handleChange = e => {
@@ -108,7 +144,7 @@ class Geolocalisation extends Component {
         });
       })
       .catch(error => {
-        console.log(error);
+        this.alertFunctionError();
       });
   };
 
@@ -116,7 +152,7 @@ class Geolocalisation extends Component {
     const reader = new FileReader();
     reader.onload = e => {
       csv.parse(reader.result, (err, data) => {
-        if (data.length < 800) {
+        if (data.length < 1000) {
           this.setState({
             addressEmployeeToTable: reader.result
           });
@@ -127,6 +163,8 @@ class Geolocalisation extends Component {
             return employeeMapData.push(allAddress);
           });
           this.setState({ employeeMapData, societyMapData: societyMapData });
+        } else {
+          this.alertFunctionErrorLimit();
         }
       });
     };
@@ -150,7 +188,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/geolocation/employee",
+      url: "http://localhost:8080/user/geolocation/employee",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -164,7 +202,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        this.alertFunctionError();
+        this.alertFunctionProblem();
       });
   };
 
@@ -173,7 +211,7 @@ class Geolocalisation extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/geolocation/society",
+      url: "http://localhost:8080/user/geolocation/society",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -189,7 +227,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        this.alertFunctionError();
+        this.alertFunctionProblem();
       });
   };
 
@@ -198,7 +236,7 @@ class Geolocalisation extends Component {
     this.sendEmployeeDataToServer();
   };
 
-  scriptIsFinished = () => {
+  getAddressesFromDb = () => {
     const token = localStorage.getItem("token");
     const userId = localStorage.getItem("id");
     const body = {
@@ -206,39 +244,87 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/geolocation/results",
+      url: "http://localhost:8080/user/geolocation/list",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then(result => {
-        let isReady = result.data[0].is_ready;
-        let addressIsReady = result.data[0].address;
+        let allData = result.data;
         let allAddresses = this.state.addressReady;
-        if (isReady === 1) {
-          let results = { address: addressIsReady, ready: true };
-          allAddresses.push(results);
-          this.setState({
-            allAddresses
-          });
-          console.log(allAddresses);
-        }
+        allData.map(data => {
+          return allAddresses.push(data);
+        });
+        this.setState({
+          allAddresses
+        });
       })
       .catch(error => {
-        this.alertFunctionError();
+        this.alertFunctionErrorAddress();
       });
   };
 
-  displayMap = address => {
-    console.log(address);
-    this.setState({
-      displayMap: true
-    });
+  displayResults = address => {
+    const token = localStorage.getItem("token");
+    const userId = localStorage.getItem("id");
+    const body = {
+      user_id: userId,
+      address: address
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/geolocation/results",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(result => {
+        if (result.data === "In progress") {
+          this.setState({
+            notReady:
+              "Les résultats ne sont pas encore prêts, merci d'attendre l'e-mail de confirmation",
+            displayMap: false
+          });
+        } else {
+          let employeeMapData = result.data.employeeData;
+          let societyMapData = result.data.societyData;
+          let lengthEmployee = result.data.employeeLength;
+          let employeesMarkers = this.state.employeePosition;
+          employeeMapData.position.map(position => {
+            let positionInArray = position.split(",");
+            let lat = parseFloat(positionInArray[0]);
+            let lng = parseFloat(positionInArray[1]);
+            return employeesMarkers.push([lat, lng]);
+          });
+          let employeeStats = {
+            distance: employeeMapData.distance,
+            duration: employeeMapData.duration
+          };
+          this.setState({
+            employeePosition: employeesMarkers,
+            employeeStats: employeeStats,
+            societyPosition: [societyMapData.lat, societyMapData.lng],
+            isochrone5_auto: societyMapData.isochrone5_auto,
+            isochrone10_auto: societyMapData.isochrone10_auto,
+            isochrone20_auto: societyMapData.isochrone20_auto,
+            isochrone5_cycle: societyMapData.isochrone5_cycle,
+            isochrone10_cycle: societyMapData.isochrone10_cycle,
+            isochrone15_cycle: societyMapData.isochrone15_cycle,
+            displayMap: true,
+            isReady: true,
+            lengthEmployee: lengthEmployee
+          });
+        }
+      })
+      .catch(error => {
+        this.alertFunctionErrorResult();
+      });
   };
 
   componentDidMount = () => {
-    this.scriptIsFinished();
+    this.getAddressesFromDb();
   };
 
   handleImg = () => {
@@ -258,10 +344,10 @@ class Geolocalisation extends Component {
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
-        if (capture.clientHeight > 800) {
+        if (capture.clientHeight > 900) {
           imgData = new Image(180, 180);
         } else {
-          imgData = new Image(180, 110);
+          imgData = new Image(180, 100);
         }
         imgData.src = dataUrl;
         allImagesData.push(imgData);
@@ -279,8 +365,6 @@ class Geolocalisation extends Component {
 
   handlePdf = () => {
     let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(30);
     const allImages = this.state.imgData.reverse();
     allImages.map(image => {
       if (image.height >= 180) {
@@ -317,6 +401,8 @@ class Geolocalisation extends Component {
                 </h1>
                 <NotificationAlert ref="notificationAlertError" />
                 <NotificationAlert ref="notificationAlertErrorLimit" />
+                <NotificationAlert ref="notificationAlertErrorAddress" />
+                <NotificationAlert ref="notificationAlertErrorResult" />
                 <NotificationAlert ref="notificationAlertProblem" />
               </Col>
             </Row>
@@ -500,38 +586,71 @@ class Geolocalisation extends Component {
                     className="btn text-white mb-4 mt-4"
                     onClick={this.sendDataToServer}
                   >
-                    Lancer la géolocalisation
+                    Lancer la géolocalisation <i className="fa fa-map" />
                   </button>
                 )}
               </Col>
             </Row>
-          </Container>
-          <hr />
-          <Container>
             <Row>
               <Col lg={{ size: 12 }}>
-                <select>
-                  <option>Sélectionner une adresse</option>
-                  {this.state.addressReady.map(address => {
-                    return (
-                      <option
-                        key={address.address}
-                        onClick={() => {
-                          this.displayMap(address.address);
-                        }}
-                      >
-                        {address.address}{" "}
-                      </option>
-                    );
-                  })}
-                </select>
+                <hr />
               </Col>
             </Row>
+            <ScrollAnimation animateIn="fadeIn">
+              <Row className="mt-4 mb-4">
+                <Col lg={{ size: 12 }}>
+                  <h5>
+                    <img
+                      alt="step 1"
+                      src="./img/4-circle.png"
+                      className="mr-2"
+                      width="50"
+                      height="50"
+                    />
+                    Sélectionner une adresse et consulter les résultats
+                  </h5>
+                  <select className="mt-3">
+                    <option>Sélectionner une adresse</option>
+                    {this.state.addressReady.map(address => {
+                      let isReady = "";
+                      if (address.is_ready === 1) {
+                        isReady = "Terminée";
+                      } else {
+                        isReady = "En cours";
+                      }
+                      return (
+                        <option
+                          key={address.address}
+                          onClick={() => {
+                            this.displayResults(address.address);
+                          }}
+                        >
+                          {address.address} : {isReady}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {this.state.displayMap === false ? (
+                    <p className="mt-3">
+                      <b>{this.state.notReady}</b>
+                    </p>
+                  ) : (
+                    <div className="mt-4">
+                      <img
+                        src="./img/arrow-down.png"
+                        alt="down"
+                        height="90"
+                        width="90"
+                      />
+                    </div>
+                  )}
+                </Col>
+              </Row>
+            </ScrollAnimation>
           </Container>
-          {this.state.displayMap === false ? (
-            ""
-          ) : (
+          {this.state.displayMap === true ? (
             <div>
+              <hr />
               <ScrollAnimation animateIn="fadeIn">
                 <Container className="card shadow mt-5">
                   <div id="capture1" className="m-3">
@@ -540,6 +659,14 @@ class Geolocalisation extends Component {
                       legendTitle="Distance en voiture"
                       measure="km"
                       mapTitle="Analyse de la distance en voiture"
+                      employeesPositions={this.state.employeePosition}
+                      employeeStats={this.state.employeeStats}
+                      societyPosition={this.state.societyPosition}
+                      firstPolygon={this.state.isochrone5_auto}
+                      secondPolygon={this.state.isochrone10_auto}
+                      thirdPolygon={this.state.isochrone20_auto}
+                      isReady={this.state.isReady}
+                      lengthEmployee={this.state.lengthEmployee}
                     />
                   </div>
                 </Container>
@@ -552,20 +679,28 @@ class Geolocalisation extends Component {
                       legendTitle="Durée du trajet à vélo"
                       measure=" minutes "
                       mapTitle="Analyse du temps de trajet à vélo"
+                      employeesPositions={this.state.employeePosition}
+                      employeeStats={this.state.employeeStats}
+                      societyPosition={this.state.societyPosition}
+                      firstPolygon={this.state.isochrone5_cycle}
+                      secondPolygon={this.state.isochrone10_cycle}
+                      thirdPolygon={this.state.isochrone15_cycle}
+                      isReady={this.state.isReady}
+                      lengthEmployee={this.state.lengthEmployee}
                     />
                   </div>
                 </Container>
               </ScrollAnimation>
-              <hr />
+              <hr className="mt-5 mb-4" />
               <ScrollAnimation animateIn="fadeIn">
                 <div>
                   <h4>
                     <img
                       alt="step 1"
-                      src="./img/4-circle.png"
+                      src="./img/5-circle.png"
                       className="mr-2"
-                      width="50"
-                      height="50"
+                      width="40"
+                      height="40"
                     />
                     <b>Enregistrer votre compte-rendu :</b>
                   </h4>
@@ -587,6 +722,8 @@ class Geolocalisation extends Component {
                 </div>
               </ScrollAnimation>
             </div>
+          ) : (
+            ""
           )}
         </div>
       </div>
