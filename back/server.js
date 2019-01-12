@@ -99,13 +99,16 @@ app.get('/user/list/survey', (req, res) => {
 });
 
 app.get('/user/resultat', (req, res) => {
-  dbHandle.query('SELECT * FROM response', (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.status(200).json(results);
+  dbHandle.query(
+    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three FROM response',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
     }
-  });
+  );
 });
 
 app.get('/employee/list/:token', (req, res) => {
