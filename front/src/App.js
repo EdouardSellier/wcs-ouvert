@@ -7,7 +7,6 @@ import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
 import Geolocalisation from "./components/Geolocalisation";
-//import APIGeoloc from "./components/APIGeoloc";
 import SondageRH from "./components/SondageRH";
 import Sondage from "./components/Sondage";
 import Resultat from "./components/Resultat";
@@ -82,10 +81,11 @@ class App extends Component {
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <UserRoute path="/geolocalisation" component={Geolocalisation} />
-            <UserRoute path="/sondage" component={Sondage} />
             <UserRoute path="/sondageRH" component={SondageRH} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
+
+            <Route path="/sondage" component={Sondage} />
 
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
