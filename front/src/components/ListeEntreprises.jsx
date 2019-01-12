@@ -378,11 +378,6 @@ class ListeEntreprises extends Component {
                 <b>Liste des entreprises inscrites</b>
               </h2>
             </Col>
-            <Col lg={{ size: 2 }}>
-              <Button className="btn-danger" onClick={this.handleSubmit}>
-                <i className="fa fa-power-off" /> Déconnexion
-              </Button>
-            </Col>
           </Row>
           <Row>
             <Col>

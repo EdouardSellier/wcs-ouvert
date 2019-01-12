@@ -132,10 +132,14 @@ class SondageRH extends Component {
 
   sendMails = () => {
     let body = { mails: this.props.location.state.mailsData };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/user/send/survey",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         this.setState({
@@ -154,6 +158,7 @@ class SondageRH extends Component {
         &times;
       </button>
     );
+    console.log(localStorage.getItem("currentUser"));
     return (
       <div className="text-white">
         <NotificationAlert ref="notificationAlertError" />
@@ -193,7 +198,6 @@ class SondageRH extends Component {
               </div>
             </Col>
           </Row>
-
           {this.state.isSend === false ? (
             <Row>
               <Col lg={{ size: 8, offset: 2 }}>

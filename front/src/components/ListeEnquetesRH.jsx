@@ -32,12 +32,16 @@ class ListeEnquetesRH extends Component {
 
   getSurveyName = () => {
     const token = localStorage.getItem("token");
-    axios
-      .get("http://localhost:8080/user/list/survey", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+    const userId = localStorage.getItem("id");
+    const body = { user_id: userId };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/list/survey",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => {
         this.setState({
           allSurveyName: res.data
