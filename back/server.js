@@ -42,7 +42,7 @@ app.post('/contact', (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (error) {
+      if (err) {
         res.status(500).send('An error occured with confirmation e-mail after sign up.');
       }
     });
@@ -86,7 +86,7 @@ app.post('/assistance', (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (error) {
+      if (err) {
         res.status(500).send('An error occured with confirmation e-mail after sign up.');
       }
     });

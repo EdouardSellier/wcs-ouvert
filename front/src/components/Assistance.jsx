@@ -20,7 +20,7 @@ class Assistance extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handlePost(e) {
+  handleSubmit(e) {
     e.preventDefault();
     const token = localStorage.getItem("token");
     let body = {
@@ -29,7 +29,7 @@ class Assistance extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/contact",
+      url: "http://localhost:8080/assistance",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -37,7 +37,7 @@ class Assistance extends Component {
     });
   }
 
-  handleSubmit = event => {
+  handleBack = event => {
     event.preventDefault();
     this.props.history.push("/listeenquetesrh");
   };
@@ -50,7 +50,7 @@ class Assistance extends Component {
               <Col lg={{ size: 2 }}>
                 <button
                   className="mt-2 btn text-white"
-                  onClick={this.handleSubmit}
+                  onClick={this.handleBack}
                 >
                   <i className="fa fa-arrow-left" /> Précédent
                 </button>
@@ -69,7 +69,12 @@ class Assistance extends Component {
                 par mail via le formulaire ci-dessous ou à nous joindre par
                 téléphone au <i className="fa fa-phone" /> 03.20.61.90.89.
               </p>
-              <form method="post" action="" className="mt-2">
+              <form
+                onSubmit={this.handleSubmit}
+                method="post"
+                action=""
+                className="mt-2"
+              >
                 <div className="form-group">
                   <input
                     type="email"
@@ -77,6 +82,7 @@ class Assistance extends Component {
                     className="form-control"
                     id="inputEmailContact"
                     placeholder="Adresse e-mail"
+                    onChange={this.handleChange}
                   />
                 </div>
                 <div className="form-group">
@@ -86,6 +92,7 @@ class Assistance extends Component {
                     className="form-control"
                     id="inputMessageContact"
                     placeholder="Votre message..."
+                    onChange={this.handleChange}
                   />
                 </div>
                 <button type="submit" className="btn text-white">
