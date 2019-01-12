@@ -8,6 +8,8 @@ class EspaceRH extends Component {
   handleSubmit = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
+    localStorage.removeItem("currentUser");
+    localStorage.removeItem("id");
     this.props.history.push("/");
   };
   render() {
@@ -15,7 +17,7 @@ class EspaceRH extends Component {
       <div className="espaceRh ">
         <Container>
           <Row>
-            <Col lg={{ size: 8, offset: 2 }}>
+            <Col xs={{ size: 8, offset: 2 }}>
               <Zoom>
                 <h1 className="mt-2 text-white">
                   <b>Bienvenue sur votre espace</b>
@@ -34,7 +36,7 @@ class EspaceRH extends Component {
         </Container>
         <Container className="mt-5">
           <Row className="justify-content-between">
-            <Col lg={{ size: 4 }}>
+            <Col lg={{ size: 4, offset: 0 }} sm={{ size: 8, offset: 2 }}>
               <Link to="/nouvelleenquete" className="linkTo">
                 <div className="card shadow mt-5 rhCard">
                   <div className="card-body">
@@ -58,7 +60,11 @@ class EspaceRH extends Component {
                 </div>
               </Link>
             </Col>
-            <Col lg={{ size: 4 }}>
+            <Col
+              lg={{ size: 4, offset: 0 }}
+              sm={{ size: 8, offset: 2 }}
+              className="mt-5 mt-lg-1"
+            >
               <Link to="/listeenquetesrh" className="linkTo">
                 <div className="card shadow mt-5 mb-4 rhCard">
                   <div className="card-body">
@@ -69,7 +75,6 @@ class EspaceRH extends Component {
                       height="150"
                       className="cardIcon"
                     />
-
                     <h4>Suivre les enquêtes en cours</h4>
                     <p className="text-justify p-3">
                       Ici, sélectionnez parmi les enquêtes que vous avez créées
@@ -81,9 +86,13 @@ class EspaceRH extends Component {
                 </div>
               </Link>
             </Col>
-            <Col lg={{ size: 4 }}>
+            <Col
+              lg={{ size: 4, offset: 0 }}
+              sm={{ size: 8, offset: 2 }}
+              className="mt-md-5 mt-3 mt-lg-1"
+            >
               <Link to="/geolocalisation" className="linkTo">
-                <div className="card shadow mt-5 mb-4 rhCard">
+                <div className="card shadow mt-5 mb-5 rhCard">
                   <div className="card-body">
                     <img
                       src="./img/geoloc.jpg"

@@ -1,31 +1,15 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Map, TileLayer } from "react-leaflet";
-import NotificationAlert from "react-notification-alert";
-//import axios from "axios";
-//import L from "leaflet";
+import { Map, TileLayer, Marker, Polygon } from "react-leaflet";
+import L from "leaflet";
 import "./css/Geolocalisation.css";
-
-const errorMsg = {
-  place: "tr",
-  message:
-    "Nous avons rencontré un problème, merci de retenter dans quelques minutes ou de contacter l'assistance",
-  type: "danger",
-  autoDismiss: 4
-};
 
 class APIGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      employeesPositions: [],
       employeesMarkers: [],
-      firstPolygon: [],
-      secondPolygon: [],
-      thirdPolygon: [],
-      statsKm: [],
-      statsMin: [],
-      average: 0,
+      averageKm: 0,
       min: 0,
       max: 0,
       nbPersUnder5: 0,
@@ -45,181 +29,29 @@ class APIGeoloc extends Component {
     };
   }
 
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
-  };
-
-  /*getIsochrone = () => {
-    this.setState({
-      mapIsLoading: true
-    });
-    setTimeout(() => {
-      this.setState({
-        mapIsLoading: false
-      });
-    }, 5000);
-    axios
-      .get(
-        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${
-          this.props.addressSociety
-        }&profile=${this.props.profile}&range_type=${
-          this.props.rangeType
-        }&range=${this.props.range}`
-      )
-      .then(result => {
-        const firstResult = result.data.features[0].geometry.coordinates;
-        const secondResult = result.data.features[1].geometry.coordinates;
-        const thirdResult = result.data.features[2].geometry.coordinates;
-        let firstPolygon = [];
-        let secondPolygon = [];
-        let thirdPolygon = [];
-
-        firstResult.map(position => {
-          return position.map(latLng => {
-            let realLatLng = latLng.reverse();
-            firstPolygon = this.state.firstPolygon;
-            return firstPolygon.push(realLatLng);
-          });
-        });
-        secondResult.map(position => {
-          return position.map(latLng => {
-            let realLatLng = latLng.reverse();
-            secondPolygon = this.state.secondPolygon;
-            return secondPolygon.push(realLatLng);
-          });
-        });
-        thirdResult.map(position => {
-          return position.map(latLng => {
-            let realLatLng = latLng.reverse();
-            thirdPolygon = this.state.thirdPolygon;
-            return thirdPolygon.push(realLatLng);
-          });
-        });
-        this.setState(
-          {
-            firstPolygon: firstPolygon,
-            secondPolygon: secondPolygon,
-            thirdPolygon: thirdPolygon
-          },
-          this.getLatLng()
-        );
-      })
-      .catch(err => {
-        this.alertFunctionError();
-      });
-  };
-
-  getLatLng = () => {
-    let allMapData = this.state.employeesPositions;
-    this.props.addressEmployees.map(address => {
-      let addressQuery = address.join("+").replace(" ", "+");
-      return axios
-        .get(`https://api-adresse.data.gouv.fr/search/?q=${addressQuery}`)
-        .then(result => {
-          let employeesMarkers = result.data.features[0].geometry.coordinates.reverse();
-          let latLng = {
-            position: employeesMarkers,
-            address: addressQuery
-          };
-          allMapData.push(latLng);
-          if (allMapData.length === this.props.addressEmployees.length) {
-            this.setState(
-              {
-                employeesPositions: allMapData
-              },
-              this.getDistance()
-            );
-          }
-          if (
-            this.props.parameter === "à vélo" &&
-            allMapData.length === this.props.addressEmployees.length
-          ) {
-            let societyPosition = {
-              position: this.props.addressSociety,
-              address: this.props.addressSocietyToArray
-            };
-            let employeesPositions = allMapData;
-            let body = {
-              society_position: societyPosition,
-              employees_positions: employeesPositions
-            };
-            axios({
-              method: "post",
-              url: "http://localhost:8080/user/geolocation",
-              data: body
-            })
-              .then(result => {
-                if (result.status !== 200) {
-                  this.alertFunctionProblem();
-                }
-              })
-              .catch(error => {
-                this.alertFunctionError();
-              });
-          }
-        })
-        .catch(error => {
-          this.alertFunctionError();
-        });
-    });
-  };
-
   getDistance = () => {
-    const employeesPositions = this.state.employeesPositions;
-    const societyPosition = this.props.addressSociety;
-    employeesPositions.map(marker => {
-      let employeeLatLng = marker.position.reverse();
-      let query = `${societyPosition}|${employeeLatLng}`;
-      return axios({
-        method: "get",
-        url: `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&coordinates=${query}&profile=${
-          this.props.profile
-        }&units=km&language=fr`
-      })
-        .then(res => {
-          const distances = this.state.statsKm;
-          const durations = this.state.statsMin;
-          const distanceKm = res.data.routes[0].summary.distance;
-          const distanceSec = res.data.routes[0].summary.duration;
-          let distanceMin = distanceSec / 60;
-          distances.push(distanceKm);
-          durations.push(Math.round(distanceMin));
-          let sum = distances.reduce((a, b) => a + b, 0);
-          let averageKm = sum / distances.length;
-          let min = Math.min(...distances);
-          let max = Math.max(...distances);
-          let mapData = this.state.employeesMarkers;
-          let newMarkers = { position: marker.position.reverse() };
-          mapData.push(newMarkers);
-          this.setState(
-            {
-              statsMin: durations,
-              statsKm: distances,
-              average: averageKm.toFixed(1),
-              min: min.toFixed(1),
-              max: max.toFixed(1),
-              employeesMarkers: mapData,
-              isClicked: true
-            },
-            this.getStatistics()
-          );
-        })
-        .catch(err => {
-          this.alertFunctionError();
-        });
+    let allDistances = this.props.employeeStats.distance;
+    let sumKm = allDistances.reduce((a, b) => a + b, 0);
+    let averageKm = sumKm / allDistances.length;
+    let minimumKm = Math.min(...allDistances);
+    let maximumKm = Math.max(...allDistances);
+    this.setState({
+      averageKm: averageKm.toFixed(1),
+      min: minimumKm,
+      max: maximumKm
     });
   };
 
   getStatistics = () => {
-    const allDistances = this.state.statsKm;
-    const allDurations = this.state.statsMin;
+    let allDistances = this.props.employeeStats.distance;
+    let allDurations = this.props.employeeStats.duration;
     let countPersUnder5 = 0;
     let countPers5To10 = 0;
     let countPers10To15 = 0;
     let countPers10To20 = 0;
     let countPersOver15 = 0;
     let countPersOver20 = 0;
-    if (this.props.parameter === "en voiture") {
+    if (this.props.measure === "km") {
       allDistances.map(distance => {
         if (distance <= 5) {
           countPersUnder5 = countPersUnder5 + 1;
@@ -251,16 +83,16 @@ class APIGeoloc extends Component {
       });
     } else {
       allDurations.map(duration => {
-        if (duration <= 5) {
+        if (duration <= 10) {
           countPersUnder5 = countPersUnder5 + 1;
         }
-        if (duration > 5 && duration <= 10) {
+        if (duration > 10 && duration <= 20) {
           countPers5To10 = countPers5To10 + 1;
         }
-        if (duration > 10 && duration <= 15) {
+        if (duration > 20 && duration <= 30) {
           countPers10To15 = countPers10To15 + 1;
         }
-        if (duration > 15) {
+        if (duration > 30) {
           countPersOver15 = countPersOver15 + 1;
         }
         return duration;
@@ -280,166 +112,236 @@ class APIGeoloc extends Component {
         percentOver15: Math.round(percentOver15)
       });
     }
-  };*/
+  };
+
+  componentDidMount = () => {
+    this.getDistance();
+    this.getStatistics();
+  };
 
   render() {
     const defaultPosition = [50.62925, 3.057256];
-    /*const societyIcon = L.icon({
+    const societyIcon = L.icon({
       iconUrl: "./img/societyMarker.png",
       iconSize: [30, 30]
     });
     const employeeIcon = L.icon({
       iconUrl: "./img/employeeMarker.png",
       iconSize: [30, 30]
-    });*/
+    });
     return (
       <div>
-        <NotificationAlert ref="notificationAlertError" />
-        <Col lg={{ size: 10, offset: 1 }}>
-          <div className="mt-3 mb-5">
-            <h4>
-              {this.props.mapTitle} <i className={this.props.icon} />
-            </h4>
-            <Col lg={{ size: 12 }}>
+        <div className="mt-3 mb-5">
+          <h4>
+            {this.props.mapTitle} <i className={this.props.icon} />
+          </h4>
+          <Col lg={{ size: 12 }}>
+            {this.props.isReady === true &&
+            this.props.societyPosition !== undefined ? (
+              <Map
+                center={this.props.societyPosition}
+                zoom={10}
+                className="rounded shadow mt-5 mb-4"
+              >
+                <TileLayer
+                  attribution="&copy; <a href='http://osm.org/copyright'>MOUV'R</a> contributors"
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+                <Marker
+                  position={this.props.societyPosition}
+                  icon={societyIcon}
+                />
+                {this.props.employeesPositions.map(marker => {
+                  return (
+                    <Marker
+                      key={marker}
+                      position={marker}
+                      icon={employeeIcon}
+                    />
+                  );
+                })}
+                <Polygon
+                  positions={JSON.parse(this.props.firstPolygon)}
+                  color="rgb(55, 55, 226)"
+                />
+                <Polygon
+                  positions={JSON.parse(this.props.secondPolygon)}
+                  color="rgb(224, 55, 26)"
+                />
+                <Polygon
+                  positions={JSON.parse(this.props.thirdPolygon)}
+                  color="rgb(235, 235, 8)"
+                />
+              </Map>
+            ) : (
               <Map
                 center={defaultPosition}
                 zoom={10}
                 className="rounded shadow mt-5 mb-4"
               >
                 <TileLayer
-                  attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  attribution="&copy; <a href='http://osm.org/copyright'>MOUV'R</a> contributors"
                   url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
                 />
               </Map>
+            )}
+          </Col>
+          <Row>
+            <Col lg={{ size: 4 }}>
+              <div className="legend mr-lg-4">
+                <legend>Légende</legend>
+                <ul className="list-unstyled">
+                  <li>
+                    <img
+                      src="./img/societyMarker.png"
+                      alt="societyMarker"
+                      width="30"
+                      height="30"
+                      className="mb-2"
+                    />
+                    Entreprise
+                  </li>
+                  <li>
+                    <img
+                      src="./img/employeeMarker.png"
+                      alt="employeeMarker"
+                      width="30"
+                      height="30"
+                    />
+                    Salariés
+                  </li>
+                </ul>
+                <h6>
+                  {this.props.legendTitle} <i className={this.props.icon} /> :
+                </h6>
+                <ul className="list-unstyled pt-2">
+                  <li>
+                    <span className="bluePolygon mr-3">=====</span>
+                    Inférieur à{" "}
+                    {this.props.measure === "km" ? " 5 km" : "10 minutes"}
+                  </li>
+                  <li>
+                    <span className="redPolygon mr-3">=====</span>Entre{" "}
+                    {this.props.measure === "km"
+                      ? " 5 et 10 km "
+                      : " 10 et 20 minutes"}
+                  </li>
+                  <li>
+                    <span className="yellowPolygon mr-3">=====</span>Entre
+                    {this.props.measure === "km"
+                      ? " 10 et 20 km "
+                      : " 20 et 30 minutes"}
+                  </li>
+                </ul>
+              </div>
             </Col>
-            <Row>
-              <Col lg={{ size: 4 }}>
-                <div className="legend mr-lg-4">
-                  <legend>Légende</legend>
-                  <ul className="list-unstyled">
-                    <li>
-                      <img
-                        src="./img/societyMarker.png"
-                        alt="societyMarker"
-                        width="30"
-                        height="30"
-                        className="mb-2"
-                      />
-                      Entreprise
-                    </li>
-                    <li>
-                      <img
-                        src="./img/employeeMarker.png"
-                        alt="employeeMarker"
-                        width="30"
-                        height="30"
-                      />
-                      Salariés
-                    </li>
-                  </ul>
-                  <h6>
-                    {this.props.legendTitle} <i className={this.props.icon} /> :
-                  </h6>
-                  <ul className="list-unstyled pt-2">
-                    <li>
-                      <span className="bluePolygon mr-3">=====</span>
-                      Inférieur à{" "}
-                      {this.props.measure === "km" ? " 5 km" : "10 minutes"}
-                    </li>
-                    <li>
-                      <span className="redPolygon mr-3">=====</span>Entre{" "}
-                      {this.props.measure === "km"
-                        ? " 5 et 10 km "
-                        : " 10 et 20 minutes"}
-                    </li>
-                    <li>
-                      <span className="yellowPolygon mr-3">=====</span>Entre
-                      {this.props.measure === "km"
-                        ? " 10 et 20 km "
-                        : " 20 et 30 minutes"}
-                    </li>
-                  </ul>
-                </div>
-              </Col>
-              <Col lg={{ size: 8 }}>
-                <div className="mb-3">
-                  <Container className="statistics ml-lg-5">
-                    {this.props.measure === "km" ? (
-                      <div>
-                        <p>
-                          Distance domicile-lieu de travail en moyenne :
-                          <br />
-                        </p>
-                        <p>
-                          Distance domicile-lieu de travail minimale :
-                          <br />
-                        </p>
-                        <p>
-                          Distance domicile-lieu de travail maximale :
-                          <br />
-                        </p>
+            <Col lg={{ size: 8 }}>
+              <div className="mb-3">
+                <Container className="statistics ml-lg-5">
+                  {this.props.measure === "km" &&
+                  this.state.averageKm !== undefined ? (
+                    <div>
+                      <p>
+                        Distance domicile-lieu de travail en moyenne :
                         <br />
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                    <p>
-                      <img
-                        src="./img/right-arrow.png"
-                        alt="arrow"
-                        width="25"
-                        height="20"
-                        className="float-left mt-1 mr-1"
-                      />
-                      <b>
-                        Sur les 0 salariés enregistrés, 0 ont été géolocalisés :
-                      </b>
-                    </p>
-                    {this.props.measure === "km" ? (
-                      <div>
-                        <p>
-                          0 salarié habite à moins de 5 km en voiture de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite entre 5 et 10 km en voiture de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite entre 10 et 20 km en voiture de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite à plus de 20 km en voiture de son
-                          lieu de travail.
-                        </p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p>
-                          0 salarié habite à moins de 10 minutes à vélo de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite entre 10 et 20 minutes à vélo de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite entre 20 et 30 minutes à vélo de son
-                          lieu de travail.
-                        </p>
-                        <p>
-                          0 salarié habite à plus de 30 minutes à vélo de son
-                          lieu de travail.
-                        </p>
-                      </div>
-                    )}
-                  </Container>
-                </div>
-              </Col>
-            </Row>
-          </div>
-        </Col>
+                        <span className="stats">{this.state.averageKm} km</span>
+                      </p>
+                      <p>
+                        Distance domicile-lieu de travail minimale :
+                        <br />
+                        <span className="stats">{this.state.min} km</span>
+                      </p>
+                      <p>
+                        Distance domicile-lieu de travail maximale :
+                        <br />
+                        <span className="stats">{this.state.max} km</span>
+                      </p>
+                      <br />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <p>
+                    <img
+                      src="./img/right-arrow.png"
+                      alt="arrow"
+                      width="25"
+                      height="20"
+                      className="float-left mt-1 mr-1"
+                    />
+                    <b>
+                      {this.props.lengthEmployee} salariés ont été géolocalisés
+                      :
+                    </b>
+                  </p>
+                  {this.props.measure === "km" ? (
+                    <div>
+                      <p>
+                        {this.state.nbPersUnder5} salarié
+                        {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                        {this.state.percentUnder5}%) habite
+                        {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
+                        km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers5To10} salarié
+                        {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                        {this.state.percent5To10}%) habite
+                        {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
+                        km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers10To20} salarié
+                        {this.state.nbPers10To20 > 1 ? "s" : ""} (
+                        {this.state.percent10To20}%) habite
+                        {this.state.nbPers10To200 > 1 ? "nt" : ""} entre 10 et
+                        20 km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPersOver20} salarié
+                        {this.state.nbPersOver20 > 1 ? "s" : ""} (
+                        {this.state.percentOver20}%) habite
+                        {this.state.nbPersOver20 > 1 ? "nt" : ""} à plus de 20
+                        km en voiture de son lieu de travail.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>
+                        {this.state.nbPersUnder5} salarié
+                        {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                        {this.state.percentUnder5}%) habite
+                        {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 10
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers5To10} salarié
+                        {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                        {this.state.percent5To10}%) habite
+                        {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 10 et 20
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers10To15} salarié
+                        {this.state.nbPers10To15 > 1 ? "s" : ""} (
+                        {this.state.percent10To15}%) habite
+                        {this.state.nbPers10To15 > 1 ? "nt" : ""} entre 20 et 30
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPersOver15} salarié
+                        {this.state.nbPersOver15 > 1 ? "s" : ""} (
+                        {this.state.percentOver15}%) habite
+                        {this.state.nbPersOver15 > 1 ? "nt" : ""} à plus de 30
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                    </div>
+                  )}
+                </Container>
+              </div>
+            </Col>
+          </Row>
+        </div>
       </div>
     );
   }
