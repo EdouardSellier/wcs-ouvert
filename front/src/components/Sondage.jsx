@@ -116,7 +116,6 @@ class Sondage extends Component {
     super(props);
     this.state = {
       statesForm: {
-        token_employee: this.props.match.params.token,
         genre: "Un homme",
         age: "25 ans ou moins",
         principal_transport_one: "Voiture personnelle",
@@ -198,21 +197,23 @@ class Sondage extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "get",
-      url: "http://localhost:8080/employee/list/" + this.state.token_employee,
+      url:
+        "http://localhost:8080/employee/list/" + this.props.match.params.token,
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then(res => {
-        if (res.data.date_response != null) {
+        if (res.data.length === 0) {
           this.props.history.push("/");
+        } else {
+          if (res.data[0].date_response !== null) {
+            this.props.history.push("/");
+          }
         }
-        this.setState({
-          token_employee: this.props.match.params.token
-        });
       })
       .catch(error => {
-        alert(error);
+        this.props.history.push("/");
       });
   }
 
