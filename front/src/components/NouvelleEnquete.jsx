@@ -192,7 +192,7 @@ class Home extends Component {
               <Row>
                 <Col md={{ size: 4, offset: 6 }}>
                   <button className="btn text-white mt-4 mb-3">
-                    Consulter le sondage avant envoi{" "}
+                    Consulter l'enquête avant envoi{" "}
                     <i className="fa fa-arrow-right" />
                   </button>
                 </Col>
