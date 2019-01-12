@@ -269,7 +269,12 @@ const questions = [
       "Plus de 2 fois par semaine"
     ],
     index: "frequency_pro",
-    number: 14
+    number: 14,
+    contentPDF: `A quelle fréquence effectuez-vous des déplacements professionnels ?`,
+    coordinateTitle: [50, 15],
+    coordinateImg: [0, 22, -100, 40],
+    indexImgPdf: 8,
+    pageAdded: false
   },
   {
     id: "distancePro",
@@ -285,7 +290,13 @@ const questions = [
       "Plus de 50 km"
     ],
     index: "distance_pro",
-    number: 15
+    number: 15,
+    contentPDF: `A quelle distance (aller ou retour, en km) vous déplacez-vous en moyenne 
+    pour les déplacements professionnels ?`,
+    coordinateTitle: [46, 80],
+    coordinateImg: [0, 90, -100, 40],
+    indexImgPdf: 9,
+    pageAdded: false
   },
   {
     id: "deplacementPro",
@@ -305,7 +316,12 @@ const questions = [
       "Marche à pied"
     ],
     index: "deplacement_pro",
-    number: 16
+    number: 16,
+    contentPDF: `Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?`,
+    coordinateTitle: [25, 148],
+    coordinateImg: [0, 155, -100, 49],
+    indexImgPdf: 14,
+    pageAdded: false
   },
   {
     id: "reasonPersoCar",
@@ -321,7 +337,12 @@ const questions = [
       "Je n’utilise pas ma voiture personnelle pour les déplacements professionnels"
     ],
     index: "reason_perso_car",
-    number: 17
+    number: 17,
+    contentPDF: `Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?`,
+    coordinateTitle: [27, 224],
+    coordinateImg: [0, 229, -100, 47],
+    indexImgPdf: 10,
+    pageAdded: true
   },
   {
     id: "deplacementMethodPro",

@@ -311,59 +311,6 @@ class Resultat extends Component {
     const allImages = imga;
     newPdf.setFontSize(10);
 
-    newPdf.text(65, 83, "Où déjeunez-vous le plus souvent le midi ?");
-
-    newPdf.addImage(allImages[5], "JPEG", 0, 90, -100, 40);
-
-    newPdf.text(
-      45,
-      152,
-      "En moyenne, à quelle fréquence effectuez-vous des déplacements le midi ?"
-    );
-
-    newPdf.addImage(allImages[7], "JPEG", 0, 159, -100, 40);
-
-    newPdf.text(
-      45,
-      220,
-      "Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?"
-    );
-
-    newPdf.addImage(allImages[13], "JPEG", 0, 227, -100, 49);
-
-    newPdf.addPage();
-
-    newPdf.text(
-      50,
-      15,
-      "A quelle fréquence effectuez-vous des déplacements professionnels ?"
-    );
-    newPdf.addImage(allImages[8], "JPEG", 0, 22, -100, 40);
-
-    newPdf.text(
-      46,
-      80,
-      `A quelle distance (aller ou retour, en km) vous déplacez-vous en moyenne 
-                         pour les déplacements professionnels ?`
-    );
-    newPdf.addImage(allImages[9], "JPEG", 0, 90, -100, 40);
-
-    newPdf.text(
-      25,
-      148,
-      `Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?`
-    );
-    newPdf.addImage(allImages[14], "JPEG", 0, 155, -100, 49);
-
-    newPdf.text(
-      27,
-      224,
-      `Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?`
-    );
-    newPdf.addImage(allImages[10], "JPEG", 0, 229, -100, 47);
-
-    newPdf.addPage();
-
     newPdf.text(
       42,
       30,
