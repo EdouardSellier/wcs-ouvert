@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import "./css/EnqueteRH.css";
@@ -18,7 +18,8 @@ class ListeEnquetesRH extends Component {
     super(props);
     this.state = {
       allSurveyName: [],
-      surveyNameSelected: ""
+      surveyNameSelected: "",
+      currentId: null
     };
   }
 
@@ -53,7 +54,8 @@ class ListeEnquetesRH extends Component {
 
         this.setState({
           allSurveyName: allSurveyName,
-          surveyNameSelected: allSurveyName[0].survey_name
+          surveyNameSelected: allSurveyName[0].survey_name,
+          currentId: currentId
         });
       })
       .catch(error => {
@@ -105,7 +107,15 @@ class ListeEnquetesRH extends Component {
             <Col lg={{ size: 4, offset: 1 }}>
               <div className="card shadow mt-5 mb-4">
                 <div className="card-body">
-                  <Link to="/resultat">
+                  <NavLink
+                    to={{
+                      pathname: "/resultat",
+                      state: {
+                        surveyNameSelected: this.state.surveyNameSelected,
+                        currentId: this.state.currentId
+                      }
+                    }}
+                  >
                     <img
                       src="./img/surveyResults.jpg"
                       alt="icon"
@@ -113,7 +123,7 @@ class ListeEnquetesRH extends Component {
                       height="150"
                       className="cardIcon mb-4"
                     />
-                  </Link>
+                  </NavLink>
                   <h4>Consulter les résultats</h4>
                 </div>
               </div>
