@@ -1,35 +1,10 @@
 import React, { Component } from "react";
-import posed from "react-pose";
-import styled from "styled-components";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
 import { Pie } from "react-chartjs-2";
 import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
 import "./css/Resultat.css";
-
-const Square = posed.div({
-  start: {
-    height: "0%"
-  },
-  end: {
-    height: "100%",
-    transition: { delay: 100 }
-  }
-});
-
-const StyledSquare = styled(Square)`
-  width: 100%;
-  background: linear-gradient(to left, blue 60%, white 70%, blue 100%);
-  border-radius: 8px 8px 0px 0px;
-  box-shadow: 6px 0px 8px 0px;
-  overflow: hidden;
-  word-wrap: break-word;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
 
 const ResultBar = props => {
   return (
@@ -46,22 +21,15 @@ const ResultBar = props => {
             <Row id={props.number}>
               {props.possibilities.map(data => (
                 <React.Fragment>
-                  <Col xs={{ size: 4 }} className="pt-2 pr-0 bidule">
-                    {/**/}
-                    <Col xs={{ size: 12 }} className="alignItems pr-1">
+                  <Col xs={{ size: 4 }} className="pt-2 pr-0 alignCenter">
+                    <Col xs={{ size: 12 }} className="textAlignRight pr-1">
                       {data}
                     </Col>
                   </Col>
                   <Col xs={{ size: 7 }} className="borderLeft pt-2 px-0">
-                    {/**/}
                     <Col
                       xs={{ size: 12 }}
-                      className="px-0"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        height: "100%"
-                      }}
+                      className="px-0 alignCenterFullHeight"
                     >
                       <div
                         className="bg-dark text-white"
@@ -234,52 +202,6 @@ const ResultPie = props => {
 
   let idTab = 0;
   return (
-    /*<React.Fragment>
-      <Col xs={{ size: 12 }} className="d-flex justify-content-center my-5">
-        <Col xs={{ size: 12 }} className="bg-light pb-5 px-4">
-          <Col xs={{ size: 12 }} className="mt-4 componentTitle">
-            {props.label}
-          </Col>
-          <Col xs={{ size: 12 }} className="mt-5 mb-4  px-5">
-            <Row className="d-flex justify-content-left">
-              {tabName.map(data => {
-                idTab += 1;
-
-                return (
-                  <Col lg={{ size: 6 }}>
-                    <Col xs={{ size: 12 }} className="d-flex vbn my-1">
-                      <Col xs={{ size: 4 }} className="align">
-                        <Col
-                          xs={{ size: 8 }}
-                          className="border ccc"
-                          style={{ backgroundColor: color[idTab - 1] }}
-                        >
-                          {" "}
-                        </Col>
-                      </Col>
-                      <Col xs={{ size: 8 }} className="alignItemss">
-                        {data}
-                      </Col>
-                    </Col>
-                  </Col>
-                );
-              })}
-            </Row>
-          </Col>
-          <Row>
-            <Col lg={{ size: 4 }} className="">
-              <Pie data={data[0]} options={options[0]} />
-            </Col>
-            <Col lg={{ size: 4 }} className="">
-              <Pie data={data[1]} options={options[1]} />
-            </Col>
-            <Col lg={{ size: 4 }} className="">
-              <Pie data={data[2]} options={options[2]} />
-            </Col>
-          </Row>
-        </Col>
-      </Col>
-    </React.Fragment>*/
     <Col lg={{ size: 6 }} className="d-flex justify-content-center mt-5">
       <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
         <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
@@ -292,17 +214,20 @@ const ResultPie = props => {
 
               return (
                 <Col lg={{ size: 12 }}>
-                  <Col xs={{ size: 12 }} className="d-flex vbn my-1">
-                    <Col xs={{ size: 4 }} className="align">
+                  <Col xs={{ size: 12 }} className="d-flex my-1">
+                    <Col xs={{ size: 4 }} className="centerRight">
                       <Col
                         xs={{ size: 8 }}
-                        className="border ccc"
-                        style={{ backgroundColor: color[idTab - 1] }}
+                        className="border colorLegend"
+                        style={{
+                          height: "3vh",
+                          backgroundColor: color[idTab - 1]
+                        }}
                       >
                         {" "}
                       </Col>
                     </Col>
-                    <Col xs={{ size: 8 }} className="alignItemss">
+                    <Col xs={{ size: 8 }} className="textAlignLeft">
                       {data}
                     </Col>
                   </Col>
@@ -327,7 +252,7 @@ const ResultPie = props => {
                 height={100}
               />
             </Col>
-            <Col lg={{ size: 12 }} className="">
+            <Col lg={{ size: 12 }}>
               <Pie
                 data={data[2]}
                 options={options[2]}
@@ -612,6 +537,17 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
+    try {
+      if (
+        !this.props.location.state.currentId &&
+        !this.props.location.state.surveyNameSelected
+      ) {
+        this.props.history.push("/");
+      }
+    } catch {
+      this.props.history.push("/");
+    }
+
     const token = localStorage.getItem("token");
 
     fetch("http://localhost:8080/user/resultat", {

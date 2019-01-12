@@ -101,7 +101,6 @@ app.get('/user/list/survey', (req, res) => {
 app.get('/user/resultat', (req, res) => {
   dbHandle.query('SELECT * FROM response', (err, results) => {
     if (err) {
-      console.log(err);
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
       res.status(200).json(results);

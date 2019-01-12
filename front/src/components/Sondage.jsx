@@ -158,7 +158,6 @@ class Sondage extends Component {
   }
 
   changeFormState = (event, index, col) => {
-    alert(index);
     let statesForm = this.state.statesForm;
 
     if (col === undefined) {
@@ -189,7 +188,6 @@ class Sondage extends Component {
         this.props.history.push("/");
       })
       .catch(error => {
-        alert("pas");
         this.alertFunctionError();
       });
   };

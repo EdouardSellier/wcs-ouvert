@@ -51,7 +51,7 @@ class ListeEnquetesRH extends Component {
       })
       .then(res => {
         const allSurveyName = res.data.filter(
-          survey => survey.user_id == currentId
+          survey => survey.user_id === currentId
         );
 
         this.setState({

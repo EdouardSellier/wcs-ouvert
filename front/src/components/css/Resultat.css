@@ -1,34 +1,5 @@
-.merde {
-  text-align: center;
-}
-
-.containerBar {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  height: 33vh;
-}
-
-.bingo {
-  height: 100%;
-}
-
-.flexxx {
-  display: flex;
-  justify-content: space-between;
-}
-
-.testons {
-  display: flex;
-  align-items: flex-end;
-}
-
 .borderRight {
   border-right: 2px black solid;
-}
-
-.hhh {
-  height: 100%;
 }
 
 .borderLeft {
@@ -44,55 +15,9 @@
   border-bottom: 2px black solid;
 }
 
-.piesContainer {
-  display: flex;
-  justify-content: space-evenly;
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.bgWhiteOpac {
-  background-color: rgba(255, 255, 255, 0.8);
-}
-
-.colHundred {
-  height: 33%;
-  display: flex;
-  align-items: flex-start;
-  text-align: left;
-  font-weight: bold;
-}
-
-.barTitle {
-  word-wrap: break-word;
-  font-size: 0.8em;
-  font-weight: bold;
-}
-
 .componentTitle {
   font-weight: bold;
   font-size: 1.5em;
-}
-
-.justifyContentRight {
-  display: flex;
-  justify-content: right;
-  color: white;
-}
-
-.colFifty {
-  height: 33%;
-  display: flex;
-  align-items: center;
-  text-align: left;
-  font-weight: bold;
-}
-
-.colZero {
-  height: 33%;
-  display: flex;
-  align-items: flex-end;
-  text-align: left;
-  font-weight: bold;
 }
 
 .dataResultText {
@@ -111,26 +36,24 @@
   font-size: 2.4em;
 }
 
-.alignItems {
-  text-align: right;
-}
-
-.align {
+.centerRight {
   display: flex;
   justify-content: right;
   align-items: center;
 }
 
-.alignItemss {
+.textAlignLeft {
   display: flex;
   text-align: left;
 }
 
-.ccc {
-  height: 3vh;
-}
-
-.bidule {
+.alignCenter {
   display: flex;
   align-items: center;
+}
+
+.alignCenterFullHeight {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
