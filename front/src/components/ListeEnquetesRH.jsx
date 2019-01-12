@@ -17,7 +17,8 @@ class ListeEnquetesRH extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allSurveyName: []
+      allSurveyName: [],
+      surveyNameSelected: ""
     };
   }
 
@@ -30,6 +31,12 @@ class ListeEnquetesRH extends Component {
     this.props.history.push("/monespace");
   };
 
+  changeSurveyName = event => {
+    this.setState({
+      surveyNameSelected: event.target.value
+    });
+  };
+
   getSurveyName = () => {
     const token = localStorage.getItem("token");
     const currentId = Number(localStorage.getItem("currentId"));
@@ -40,13 +47,13 @@ class ListeEnquetesRH extends Component {
         }
       })
       .then(res => {
-        console.log(res.data);
         const allSurveyName = res.data.filter(
-          survey => survey.user_id === currentId
+          survey => survey.user_id == currentId
         );
-        console.log(allSurveyName);
+
         this.setState({
-          allSurveyName: allSurveyName
+          allSurveyName: allSurveyName,
+          surveyNameSelected: allSurveyName[0].survey_name
         });
       })
       .catch(error => {
@@ -82,7 +89,9 @@ class ListeEnquetesRH extends Component {
           <NotificationAlert ref="notificationAlertError" />
           <Col lg={{ size: 6, offset: 3 }}>
             <select className="form-control surveySelect">
-              <option>Sélectionner une enquête</option>
+              <option onChange={event => this.changeSurveyName(event)}>
+                Sélectionner une enquête
+              </option>
               {this.state.allSurveyName.map(survey => {
                 return (
                   <option key={survey.survey_name}>{survey.survey_name}</option>

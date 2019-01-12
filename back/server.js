@@ -90,7 +90,7 @@ app.post('/employee/send/sondage', (req, res) => {
 });
 
 app.get('/user/list/survey', (req, res) => {
-  dbHandle.query('SELECT survey_name FROM survey', (err, results) => {
+  dbHandle.query('SELECT survey_name, user_id FROM survey', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {

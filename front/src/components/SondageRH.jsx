@@ -154,6 +154,8 @@ class SondageRH extends Component {
       .catch(error => {
         this.alertFunctionError();
       });
+
+    this.props.history.push("/");
   };
 
   render() {
