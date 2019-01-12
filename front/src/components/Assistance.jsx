@@ -1,7 +1,42 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
+import axios from "axios";
 
 class Assistance extends Component {
+  constructor() {
+    super();
+    this.state = {
+      fields: {
+        email: "",
+        message: ""
+      }
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  handlePost(e) {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+    let body = {
+      email: this.state.fields.email,
+      message: this.state.fields.message
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/contact",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  }
+
   handleSubmit = event => {
     event.preventDefault();
     this.props.history.push("/listeenquetesrh");
@@ -38,6 +73,7 @@ class Assistance extends Component {
                 <div className="form-group">
                   <input
                     type="email"
+                    name="email"
                     className="form-control"
                     id="inputEmailContact"
                     placeholder="Adresse e-mail"
@@ -46,6 +82,7 @@ class Assistance extends Component {
                 <div className="form-group">
                   <textarea
                     type="text"
+                    name="message"
                     className="form-control"
                     id="inputMessageContact"
                     placeholder="Votre message..."
