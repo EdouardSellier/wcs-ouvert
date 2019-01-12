@@ -99,7 +99,7 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <div className="card shadow m-5 pt-3">
+        <div className="card shadow m-lg-5 m-md-4 pt-3">
           <NotificationAlert ref="notificationAlertError" />
           <Container className="mt-2">
             <Row>
@@ -189,12 +189,14 @@ class Home extends Component {
                   )}
                 </Col>
               </Row>
-              <Col md={{ size: 3, offset: 9 }}>
-                <button className="btn text-white mt-4 mb-3">
-                  Consulter le sondage avant envoi{" "}
-                  <i className="fa fa-arrow-right" />
-                </button>
-              </Col>
+              <Row>
+                <Col md={{ size: 4, offset: 6 }}>
+                  <button className="btn text-white mt-4 mb-3">
+                    Consulter le sondage avant envoi{" "}
+                    <i className="fa fa-arrow-right" />
+                  </button>
+                </Col>
+              </Row>
             </form>
           </Container>
         </div>

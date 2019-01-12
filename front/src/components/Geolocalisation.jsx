@@ -408,7 +408,7 @@ class Geolocalisation extends Component {
               </Col>
             </Row>
           </Container>
-          <Container className="card shadow p-3 mt-5 mb-5">
+          <Container className="card shadow p-3 mt-5 mb-lg-5">
             <Row>
               <Col md={{ size: 5, offset: 1 }}>
                 <h5 className="text-left">
@@ -479,7 +479,7 @@ class Geolocalisation extends Component {
                   </div>
                 )}
               </Col>
-              <div className="separator mr-5" />
+              <div className="separator mr-lg-5" />
               <Col md={{ size: 5 }}>
                 <h5>
                   <img

@@ -75,6 +75,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
+            <Route path="/sondage" component={Sondage} />
 
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/monespace" component={EspaceRH} />
@@ -84,8 +85,6 @@ class App extends Component {
             <UserRoute path="/sondageRH" component={SondageRH} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
-
-            <Route path="/sondage" component={Sondage} />
 
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
