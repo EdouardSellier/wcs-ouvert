@@ -305,21 +305,37 @@ class Resultat extends Component {
     };
   }
 
-  handlePdf(imga) {
+  handlePdf(img) {
     let newPdf = new jsPDF();
+    const allImages = img;
     newPdf.text(15, 15, "Résultat de votre enquête :");
-    const allImages = imga;
+
     newPdf.setFontSize(10);
 
-    newPdf.text(
-      38,
-      164,
-      `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`
-    );
+    questions.map(data => {
+      if (data.number < 22) {
+        newPdf.text(
+          data.coordinateTitle[0],
+          data.coordinateTitle[1],
+          data.contentPDF
+        );
 
-    newPdf.addImage(allImages[17], "JPEG", 25, 173, 150, 100);
+        newPdf.addImage(
+          allImages[data.indexImgPdf],
+          "JPEG",
+          data.coordinateImg[0],
+          data.coordinateImg[1],
+          data.coordinateImg[2],
+          data.coordinateImg[3]
+        );
 
-    newPdf.save("compte-rendu.pdf");
+        if (data.pageAdded === true) {
+          newPdf.addPage();
+        }
+      }
+    });
+
+    newPdf.save("resultat-enquete.pdf");
   }
 
   handleImg() {

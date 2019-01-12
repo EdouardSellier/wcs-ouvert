@@ -439,7 +439,12 @@ const questions = [
       "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
     possibilities: [],
     index: "other_than_car",
-    number: 22
+    number: 22,
+    contentPDF: ``,
+    coordinateTitle: [],
+    coordinateImg: [],
+    indexImgPdf: null,
+    pageAdded: false
   },
   {
     id: "commentary",
@@ -448,7 +453,12 @@ const questions = [
       "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
     possibilities: [],
     index: "commentary",
-    number: 23
+    number: 23,
+    contentPDF: ``,
+    coordinateTitle: [],
+    coordinateImg: [],
+    indexImgPdf: null,
+    pageAdded: false
   }
 ];
 
