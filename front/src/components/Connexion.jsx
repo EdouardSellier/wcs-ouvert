@@ -33,8 +33,13 @@ class Connexion extends Component {
 
   isLoggedIn = event => {
     event.preventDefault();
+    const token = localStorage.getItem("token");
     axios
-      .post("http://localhost:8080/auth/connexion", this.state)
+      .post("http://localhost:8080/auth/connexion", this.state, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(response => {
         const { token, user } = response.data;
         localStorage.setItem("currentUser", this.state.mail);
