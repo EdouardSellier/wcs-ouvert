@@ -216,7 +216,7 @@ class SondageRH extends Component {
             <Row>
               <Col lg={{ size: 8, offset: 2 }}>
                 <p className="mt-2 mb-2 confirmationMsg">
-                  Le sondage a bien été envoyé à votre liste. Vous devez
+                  L'enquête a bien été envoyée à votre liste. Vous devez
                   attendre la date de fin indiquée lors de la création de
                   l'enquête pour obtenir les résultats.
                 </p>
