@@ -333,57 +333,22 @@ class Resultat extends Component {
           newPdf.addPage();
         }
       }
+      return false;
     });
 
     newPdf.save("resultat-enquete.pdf");
   }
 
   handleImg() {
-    const capture1 = document.getElementById("1");
-    const capture2 = document.getElementById("2");
-    const capture3 = document.getElementById("3");
-    const capture4 = document.getElementById("4");
-    const capture5 = document.getElementById("5");
-    const capture6 = document.getElementById("6");
-    const capture7 = document.getElementById("7");
-    const capture8 = document.getElementById("8");
-    const capture9 = document.getElementById("9");
-    const capture10 = document.getElementById("10");
-    const capture11 = document.getElementById("11");
-    const capture12 = document.getElementById("12");
-    const capture13 = document.getElementById("13");
-    const capture14 = document.getElementById("14");
-    const capture15 = document.getElementById("15");
-    const capture16 = document.getElementById("16");
-    const capture17 = document.getElementById("17");
-    const capture18 = document.getElementById("18");
-    const capture19 = document.getElementById("19");
-    const capture20 = document.getElementById("20");
-    const capture21 = document.getElementById("21");
-
     let allCaptures = [];
 
-    allCaptures.push(capture1);
-    allCaptures.push(capture2);
-    allCaptures.push(capture3);
-    allCaptures.push(capture4);
-    allCaptures.push(capture5);
-    allCaptures.push(capture6);
-    allCaptures.push(capture7);
-    allCaptures.push(capture8);
-    allCaptures.push(capture9);
-    allCaptures.push(capture10);
-    allCaptures.push(capture11);
-    allCaptures.push(capture12);
-    allCaptures.push(capture13);
-    allCaptures.push(capture14);
-    allCaptures.push(capture15);
-    allCaptures.push(capture16);
-    allCaptures.push(capture17);
-    allCaptures.push(capture18);
-    allCaptures.push(capture19);
-    allCaptures.push(capture20);
-    allCaptures.push(capture21);
+    questions.map(data => {
+      if (data.number < 22) {
+        allCaptures.push(document.getElementById(data.number));
+      }
+      return false;
+    });
+
     let allImagesData = [];
 
     allCaptures.map(capture => {
@@ -394,9 +359,7 @@ class Resultat extends Component {
 
         imgData.src = dataUrl;
         allImagesData.push(imgData);
-        this.setState({
-          imgData: allImagesData
-        });
+
         this.handlePdf(allImagesData);
       });
     });

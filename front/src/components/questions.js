@@ -6,6 +6,10 @@ const questions = [
     possibilities: ["Un homme", "Une femme", "Je ne souhaite pas répondre"],
     index: "genre",
     number: 1,
+    /*It's not a dupplicate code, it's because the text could be changed to be display correctly in the pdf..
+      It's why we need two versions of the text, one for the site, the other with more spaces by example for the pdf...
+              ANTOINE WAS HERE !!!!
+    */
     contentPDF: `Vous êtes :`,
     coordinateTitle: [90, 30],
     coordinateImg: [0, 35, -100, 40],
