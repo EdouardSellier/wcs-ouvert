@@ -32,6 +32,7 @@ class ListeEnquetesRH extends Component {
 
   getSurveyName = () => {
     const token = localStorage.getItem("token");
+    const currentId = Number(localStorage.getItem("currentId"));
     axios
       .get("http://localhost:8080/user/list/survey", {
         headers: {
@@ -39,8 +40,13 @@ class ListeEnquetesRH extends Component {
         }
       })
       .then(res => {
+        console.log(res.data);
+        const allSurveyName = res.data.filter(
+          survey => survey.user_id === currentId
+        );
+        console.log(allSurveyName);
         this.setState({
-          allSurveyName: res.data
+          allSurveyName: allSurveyName
         });
       })
       .catch(error => {

@@ -14,6 +14,7 @@ import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 import ListeGeoloc from "./components/ListeGeoloc";
+import SondageRH from "./components/SondageRH";
 
 const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -79,9 +80,10 @@ class App extends Component {
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <UserRoute path="/geolocalisation" component={Geolocalisation} />
-            <UserRoute path="/sondage" component={Sondage} />
+            <UserRoute path="/sondage/:token" component={Sondage} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
+            <UserRoute path="/sondageRH" component={SondageRH} />
 
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />

@@ -131,11 +131,19 @@ class SondageRH extends Component {
   };
 
   sendMails = () => {
-    let body = { mails: this.props.location.state.mailsData };
+    let body = {
+      mails: this.props.location.state.mailsData,
+      user_id: this.props.location.state.user_id,
+      survey_name: this.props.location.state.survey_name
+    };
+    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: "http://localhost:8080/user/send/survey",
-      data: body
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(res => {
         this.setState({
@@ -144,6 +152,7 @@ class SondageRH extends Component {
         });
       })
       .catch(error => {
+        console.log(error);
         this.alertFunctionError();
       });
   };

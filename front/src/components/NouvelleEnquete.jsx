@@ -64,6 +64,7 @@ class Home extends Component {
     let body = {
       survey_name: this.state.survey_name,
       ending_date: this.state.ending_date,
+      user_id: localStorage.getItem("currentId"),
       all_mails: JSON.stringify(this.state.mailsArray)
     };
     const token = localStorage.getItem("token");
@@ -84,7 +85,9 @@ class Home extends Component {
             pathname: "/sondageRH",
             state: {
               nbMails: this.state.nbMails,
-              mailsData: this.state.mailsArray
+              mailsData: this.state.mailsArray,
+              user_id: localStorage.getItem("currentId"),
+              survey_name: this.state.survey_name
             }
           });
         }

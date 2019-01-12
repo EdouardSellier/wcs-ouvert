@@ -5,6 +5,7 @@ const cors = require('cors');
 const { portServer, dbHandle, userTransporter } = require('./conf');
 require('./passport-strategy');
 const nodemailer = require('nodemailer');
+const uuidv4 = require('uuid');
 
 const app = express();
 
@@ -70,8 +71,21 @@ app.post('/user/survey', (req, res) => {
   });
 });
 
+app.post('/employee/send/sondage', (req, res) => {
+  const formData = req.body;
+
+  dbHandle.query('UPDATE response SET ?', formData, (err, results) => {
+    if (err) {
+      console.log(err);
+      res.status(500).send('The database crashed ! The reason is ' + err);
+    } else {
+      res.status(200).send('SUCCESS');
+    }
+  });
+});
+
 app.get('/user/list/survey', (req, res) => {
-  dbHandle.query('SELECT survey_name FROM survey', (err, results) => {
+  dbHandle.query('SELECT survey_name, user_id FROM survey', (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
@@ -80,33 +94,59 @@ app.get('/user/list/survey', (req, res) => {
   });
 });
 
+app.get('/employee/list/:token', (req, res) => {
+  dbHandle.query(
+    `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
+    }
+  );
+});
+
 app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
-    userTransporter.createTestAccount((err, account) => {
-      let nodemailer = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
-        secure: false,
-        auth: {
-          user: userTransporter.user,
-          pass: userTransporter.pass
-        }
-      });
-      let mailOptions = {
-        from: '"OUVERT" <no-reply@ouvert.com>',
-        to: mail,
-        subject: 'Sondage de mobilité ✔',
-        html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
-      };
-      nodemailer.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          res.status(500).send('An error occured during mail sending.');
-        }
-        res.status(200).send('SUCCESS');
-      });
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: userTransporter.user,
+        pass: userTransporter.pass
+      }
     });
+
+    let mailOptions = {
+      from: '"OUVERT" <no-reply@ouvert.com>',
+      to: mail,
+      subject: 'Sondage de mobilité ✔',
+      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+        res.status(500).send('An error occured during mail sending.');
+      }
+    });
+
+    dbHandle.query(
+      `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
+        req.body.survey_name
+      }','${req.body.user_id}')`,
+      function(err, result) {
+        if (err) {
+          console.log(err);
+        }
+      }
+    );
+
+    res.status(200).send('SUCCESS');
   });
 });
 
