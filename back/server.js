@@ -181,8 +181,8 @@ app.post('/user/send/survey', (req, res) => {
     let mailOptions = {
       from: '"OUVERT" <no-reply@ouvert.com>',
       to: mail,
-      subject: 'Sondage de mobilité ✔',
-      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      subject: 'Enquête de mobilité ✔',
+      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
