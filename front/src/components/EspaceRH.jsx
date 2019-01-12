@@ -1,25 +1,30 @@
 import React, { Component } from "react";
-import "./css/EspaceRH.css";
 import { Link } from "react-router-dom";
 import { Container, Row, Col } from "reactstrap";
+import Zoom from "react-reveal/Zoom";
+import "./css/EspaceRH.css";
 
 class EspaceRH extends Component {
-  handleSubmit = event => {
-    event.preventDefault();
+  handleSubmit = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("has_paid");
     this.props.history.push("/");
   };
   render() {
     return (
-      <div>
-        <hr />
+      <div className="espaceRh ">
         <Container>
           <Row>
             <Col lg={{ size: 8, offset: 2 }}>
-              <h3>Mon Espace</h3>
+              <Zoom>
+                <h1 className="mt-2 text-white">
+                  <b>Bienvenue sur votre espace</b>
+                </h1>
+              </Zoom>
             </Col>
             <Col lg={{ size: 2 }}>
               <button
-                className="mt-2 btn btn-danger"
+                className="mt-3 mb-5 btn btn-danger"
                 onClick={this.handleSubmit}
               >
                 <i className="fa fa-power-off" /> Déconnexion
@@ -27,78 +32,78 @@ class EspaceRH extends Component {
             </Col>
           </Row>
         </Container>
-        <Container className="espaceRH mt-5">
-          <Row>
-            <p className="text-justify ml-5 mr-5">
-              Lorem ipsum sit amet dolor lorem ipsum sit amet dolor, lorem ipsum
-              sit amet dolor Lorem ipsum sit amet dolor lorem ipsum sit amet
-              dolor, lorem ipsum sit amet dolor Lorem ipsum sit amet dolor lorem
-              ipsum sit amet dolor, lorem ipsum sit amet dolor Lorem ipsum sit
-              amet dolor lorem ipsum sit amet dolor, lorem ipsum sit amet dolor.
-            </p>
-          </Row>
-        </Container>
-        <Container className="mt-5 mb-5">
+        <Container className="mt-5">
           <Row className="justify-content-between">
-            <Col lg={{ size: 3 }}>
-              <div className="card">
-                <div className="card-header">Nouvelle enquête</div>
-                <div className="card-body">
-                  <Link to="/nouvelleenquete">
+            <Col lg={{ size: 4 }}>
+              <Link to="/nouvelleenquete" className="linkTo">
+                <div className="card shadow mt-5 rhCard">
+                  <div className="card-body">
                     <img
-                      src="https://image.freepik.com/iconen-gratis/het-invoeren-van-tekst-op-browser-cirkelsymbool_318-57678.jpg"
+                      src="./img/createSurvey.jpg"
                       alt="icon"
-                      width="180"
-                      height="180"
+                      width="150"
+                      height="150"
+                      className="cardIcon"
                     />
-                  </Link>
+                    <h4>Créer et diffuser une enquête</h4>
+                    <p className="text-justify">
+                      Depuis cette page, vous pouvez diffuser auprès de vos
+                      salariés une enquête permettant de mieux comprendre leurs
+                      habitudes de déplacement. Cela vous aidera par la suite à
+                      proposer des solutions d’alternatives à l’utilisation de
+                      la voiture individuelle pertinentes pour les déplacements
+                      quotidiens de vos salariés.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Col>
-            <Col lg={{ size: 3 }}>
-              <div className="card">
-                <div className="card-header">Mes enquêtes en cours</div>
-                <div className="card-body">
-                  <Link to="/listeenquetesrh">
+            <Col lg={{ size: 4 }}>
+              <Link to="/listeenquetesrh" className="linkTo">
+                <div className="card shadow mt-5 mb-4 rhCard">
+                  <div className="card-body">
                     <img
-                      src="https://static.thenounproject.com/png/580745-200.png"
+                      src="./img/surveyInProgress.jpg"
                       alt="icon"
-                      width="170"
-                      height="170"
+                      width="150"
+                      height="150"
+                      className="cardIcon"
                     />
-                  </Link>
+
+                    <h4>Suivre les enquêtes en cours</h4>
+                    <p className="text-justify p-3">
+                      Ici, sélectionnez parmi les enquêtes que vous avez créées
+                      celle dont vous voulez consulter les résultats. Si
+                      l’enquête n’a pas pris fin, vous serez alors informé du
+                      taux de participation.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </Col>
-            <Col lg={{ size: 3 }}>
-              <div className="card">
-                <div className="card-header">Géolocaliser mes salariés</div>
-                <div className="card-body">
-                  <Link to="/geolocalisation">
+            <Col lg={{ size: 4 }}>
+              <Link to="/geolocalisation" className="linkTo">
+                <div className="card shadow mt-5 mb-4 rhCard">
+                  <div className="card-body">
                     <img
-                      src="https://upload.wikimedia.org/wikipedia/commons/3/39/Simpleicons_Places_map-with-placeholder.svg"
+                      src="./img/geoloc.jpg"
                       alt="icon"
-                      width="180"
-                      height="180"
+                      width="150"
+                      height="150"
+                      className="cardIcon"
                     />
-                  </Link>
+                    <h4>Géolocaliser les salariés</h4>
+                    <p className="text-justify">
+                      Cette page vous permet de géolocaliser vos salariés. Grâce
+                      à cela, vous connaîtrez entre autres la distance domicile
+                      – travail moyenne que parcourent vos salariés, et la part
+                      d’entre eux pouvant se rendre sur leur lieu de travail en
+                      vélo. Pour géolocaliser vos salariés, il vous suffit de
+                      suivre les étapes numérotées ci-dessous.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Col>
-            <Col lg={{ size: 3 }}>
-              <div className="card">
-                <div className="card-header">Assistance</div>
-                <div className="card-body">
-                  <Link to="/assistance">
-                    <img
-                      src="http://cdn.onlinewebfonts.com/svg/img_571111.png"
-                      alt="icon"
-                      width="170"
-                      height="170"
-                    />
-                  </Link>
-                </div>
-              </div>
+              </Link>
             </Col>
           </Row>
         </Container>

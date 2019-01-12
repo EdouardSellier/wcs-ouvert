@@ -1,0 +1,23 @@
+.nouvelleEnquete {
+  min-height: 70vh;
+  padding: 15px;
+}
+
+.importMails {
+  max-height: 200px;
+  overflow: scroll;
+}
+
+.newSurveyButton {
+  background-color: #dbddf0;
+  color: rgb(41, 39, 39);
+}
+
+.listeEnquetesRH {
+  min-height: 70vh;
+  padding: 15px;
+}
+
+.surveySelect {
+  margin-bottom: 80px;
+}

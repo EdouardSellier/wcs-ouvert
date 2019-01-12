@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
-import "./css/EspaceAdmin.css";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
+import Zoom from "react-reveal/Zoom";
+import "./css/EspaceAdmin.css";
 
 const errorMsg = {
   place: "tr",
-  message: "Nous ne pouvons pas afficher les statistiques.",
+  message: "Nous ne pouvons pas afficher les statistiques pour le moment.",
   type: "danger",
   autoDismiss: 4
 };
@@ -22,17 +23,29 @@ class AccueilAdmin extends Component {
       surveyList: 0,
       surveyFinished: 0,
       surveyNotFinished: 0,
-      surveyArray: []
+      surveyArray: [],
+      geolocationLength: 0
     };
   }
+
+  handleSubmit = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("has_paid");
+    this.props.history.push("/");
+  };
 
   alertFunctionError = () => {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
   };
 
   getSocietyStat = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/society")
+      .get("http://localhost:8080/admin/list/society/", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(result => {
         let nbSociety = result.data.length;
         let societyList = result.data;
@@ -55,8 +68,13 @@ class AccueilAdmin extends Component {
   };
 
   getSurveyStat = () => {
+    const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/survey")
+      .get("http://localhost:8080/admin/list/survey", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(result => {
         let nbSurvey = result.data.length;
         let surveyList = result.data;
@@ -79,20 +97,44 @@ class AccueilAdmin extends Component {
         this.alertFunctionError();
       });
   };
+
+  getGeolocationStat = () => {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:8080/admin/list/geolocation", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(result => {
+        let geolocationList = result.data.length;
+        this.setState({
+          geolocationLength: geolocationList
+        });
+      })
+      .catch(err => {
+        this.alertFunctionError();
+      });
+  };
+
   componentDidMount = () => {
     this.getSocietyStat();
     this.getSurveyStat();
+    this.getGeolocationStat();
   };
 
   render() {
     return (
-      <div>
-        <hr />
+      <div className="text-white">
         <NotificationAlert ref="notificationAlertError" />
-        <Container className="mb-5">
+        <Container className="mb-5 mt-3">
           <Row>
             <Col lg={{ size: 8, offset: 2 }}>
-              <h2>Bienvenue sur votre espace administrateur</h2>
+              <Zoom>
+                <h1>
+                  <b>Bienvenue sur votre espace administrateur</b>
+                </h1>
+              </Zoom>
             </Col>
             <Col lg={{ size: 2 }}>
               <button
@@ -106,15 +148,15 @@ class AccueilAdmin extends Component {
         </Container>
         <Container className="espaceAdmin mb-4">
           <Row>
-            <Col lg={{ size: 5, offset: 1 }} className="mt-5">
-              <div className="card">
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
                 <div className="card-header">
                   <h4>
                     <i className="fa fa-users" /> Inscriptions :{" "}
-                    {this.state.societyList}
+                    <b>{this.state.societyList}</b>
                   </h4>
                 </div>
-                <div className="card-body p-5 adminStat">
+                <div className="card-body adminStat">
                   <p>
                     <span className="nbSociety">{this.state.societyPaid}</span>{" "}
                     entreprise
@@ -130,25 +172,23 @@ class AccueilAdmin extends Component {
                       ? "s sont en attente de confirmation."
                       : " est en attente de confirmation."}
                   </p>
-                  <Col lg={{ size: 10, offset: 1 }}>
-                    <Link to="/listeentreprises">
-                      <button className="btn text-white m-3">
-                        Consulter la liste des entreprises
-                      </button>
-                    </Link>
-                  </Col>
+                  <Link to="/listeentreprises">
+                    <button className="btn text-white mt-4 ml-5">
+                      Consulter la liste des entreprises
+                    </button>
+                  </Link>
                 </div>
               </div>
             </Col>
-            <Col lg={{ size: 5 }} className="mt-5">
-              <div className="card">
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
                 <div className="card-header">
                   <h4>
                     <i className="fa fa-bar-chart" /> Enquêtes de mobilité :{" "}
-                    {this.state.surveyList}{" "}
+                    <b>{this.state.surveyList}</b>
                   </h4>
                 </div>
-                <div className="card-body p-5 adminStat">
+                <div className="card-body adminStat">
                   <p>
                     <span className="nbSociety">
                       {this.state.surveyFinished}
@@ -166,13 +206,33 @@ class AccueilAdmin extends Component {
                       ? "s en cours."
                       : " en cours."}{" "}
                   </p>
-                  <Col lg={{ size: 10, offset: 1 }}>
-                    <Link to="/listeenquetes">
-                      <button className="btn text-white m-3">
-                        Consulter la liste des enquêtes
-                      </button>
-                    </Link>
-                  </Col>
+                  <Link to="/listeenquetes">
+                    <button className="btn text-white mt-5 ml-5">
+                      Consulter la liste des enquêtes
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </Col>
+            <Col lg={{ size: 4 }} className="mt-5">
+              <div className="card adminCard pt-2">
+                <div className="card-header">
+                  <h4>
+                    <i className="fa fa-map" /> Géolocalisations :{" "}
+                    <b>{this.state.geolocationLength}</b>
+                  </h4>
+                </div>
+                <div className="card-body adminStat">
+                  <p>
+                    Vous pouvez retrouver sur cette page les coordonnées GPS et
+                    les adresses du lieu de travail et des salariés renseignés
+                    lors de la géolocalisation et les exporter sous format CSV.
+                  </p>
+                  <Link to="/listegeoloc">
+                    <button className="btn text-white mt-4 ml-3">
+                      Consulter la liste des géolocalisations
+                    </button>
+                  </Link>
                 </div>
               </div>
             </Col>
