@@ -63,10 +63,23 @@ class ListeGeoloc extends Component {
       }
     })
       .then(res => {
-        let arrayShown = res.data.data;
+        let arrayShown = res.data.tableData;
+        let displayResult = [];
+        arrayShown.map(row => {
+          let positionSociety = {
+            companyName: row.companyName,
+            societyPosition: `${row.societyAddress} (${row.societyLat} - ${
+              row.societyLng
+            })`,
+            addressEmployee: row.employeeAddress,
+            positionEmployee: row.employeePosition,
+            id: row.id
+          };
+          return displayResult.push(positionSociety);
+        });
         let nbPages = Math.ceil(res.data.totalCount / this.state.isSelected);
         this.setState({
-          geolocationList: arrayShown,
+          geolocationList: displayResult,
           nbPages: nbPages
         });
       })
@@ -81,19 +94,14 @@ class ListeGeoloc extends Component {
 
   onClickCell = (e, column, item) => {
     if (column === "id") {
-      let societyData = item.society_position;
-      let employeeData = item.employees_positions;
-      let regex = /\(/gi;
-      let society = societyData.replace(regex, ";(");
-      let employees = employeeData.replace(regex, ";(");
-      let allData = `${society},${employees}`;
-      let csvData = this.state.csvData;
-      allData.split(",").map(data => {
-        let newData = data.split(";");
-        return csvData.push(newData);
-      });
+      let regex = /,/gi;
+      let societyName = item.companyName;
+      let societyColumn = item.societyPosition.replace(regex, " - ");
+      let employeeAddressColumn = item.addressEmployee.replace(regex, " - ");
+      let employeePositionColumn = item.positionEmployee.replace(regex, " - ");
+      let allData = `${societyName}; ${societyColumn}; ${employeeAddressColumn}; ${employeePositionColumn}`;
       this.setState({
-        csvData: csvData
+        csvData: allData
       });
     }
   };
@@ -149,15 +157,32 @@ class ListeGeoloc extends Component {
 
   render() {
     let columns = [
-      { key: "user_id", label: "Société" },
-      { key: "society_position", label: "Adresse et position de la société" },
+      { key: "companyName", label: "Société" },
+      { key: "societyPosition", label: "Adresse et position de la société" },
       {
-        key: "employees_positions",
-        label: "Adresses et positions des salariés",
+        key: "addressEmployee",
+        label: "Adresses des salariés",
         cell: columnKey => {
           return (
             <ul className="list-unstyled employeesList">
-              {columnKey.employees_positions.split(",").map((data, id) => {
+              {columnKey.addressEmployee.split(",").map((data, id) => {
+                return (
+                  <li key={id}>
+                    {id + 1}) {data}
+                  </li>
+                );
+              })}
+            </ul>
+          );
+        }
+      },
+      {
+        key: "positionEmployee",
+        label: "Position des salariés",
+        cell: columnKey => {
+          return (
+            <ul className="list-unstyled employeesList">
+              {columnKey.positionEmployee.split(",").map((data, id) => {
                 return (
                   <li key={id}>
                     {id + 1}) {data}
@@ -185,7 +210,6 @@ class ListeGeoloc extends Component {
         }
       }
     ];
-
     return (
       <div className="surveyList text-white mt-3">
         <NotificationAlert ref="notificationAlertError" />

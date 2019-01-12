@@ -105,7 +105,9 @@ class AccueilAdmin extends Component {
         }
       })
       .then(result => {
+        console.log(result.data);
         let geolocationList = result.data.length;
+        console.log(geolocationList);
         this.setState({
           geolocationLength: geolocationList
         });
