@@ -14,6 +14,42 @@ app.use(cors());
 
 app.use('/auth', require('./auth'));
 
+app.post('/contact', (req, res) => {
+  nodemailer.createTestAccount((err, account) => {
+    const htmlEmail = `
+    <ul>
+      <li>Email: ${req.body.email}</li>
+    </ul>
+    <h3>Message</h3>
+    <p>${req.body.message}</p>
+  `;
+
+    let transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 587,
+      secure: false,
+      auth: {
+        user: userTransporter.user,
+        pass: userTransporter.pass
+      }
+    });
+
+    let mailOptions = {
+      from: req.body.email,
+      to: '"OUVERT" <no-reply@ouvert.com>',
+      subject: "Nouveau message - Mouv'R",
+      html: htmlEmail
+    };
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (error) {
+        res.status(500).send('An error occured with confirmation e-mail after sign up.');
+      }
+    });
+  });
+  res.status(200).send('SUCCESS');
+});
+
 app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   next();
 });
