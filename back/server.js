@@ -62,13 +62,27 @@ app.post('/user/geolocation', (req, res) => {
 
 app.post('/user/survey', (req, res) => {
   const formData = req.body;
-  dbHandle.query('INSERT INTO survey SET ?', formData, (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.status(200).send('SUCCESS');
+  console.log(formData.survey_name);
+  dbHandle.query(
+    `SELECT survey_name FROM survey WHERE user_id = ${formData.user_id}`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        if (results.filter(data => data.survey_name === formData.survey_name).length > 0) {
+          res.status(500).send('The database crashed ! The reason is ' + err);
+        } else {
+          dbHandle.query('INSERT INTO survey SET ?', formData, (err, results) => {
+            if (err) {
+              res.status(500).send('The database crashed ! The reason is ' + err);
+            } else {
+              res.status(200).send('grehre');
+            }
+          });
+        }
+      }
     }
-  });
+  );
 });
 
 app.post('/employee/send/sondage', (req, res) => {
