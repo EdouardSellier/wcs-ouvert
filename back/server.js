@@ -42,11 +42,12 @@ app.post('/contact', (req, res) => {
     };
 
     transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        return console.log(err);
+      if (error) {
+        res.status(500).send('An error occured with confirmation e-mail after sign up.');
       }
     });
   });
+  res.status(200).send('SUCCESS');
 });
 
 app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
