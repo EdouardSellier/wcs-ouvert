@@ -109,15 +109,59 @@ app.post('/user/survey', (req, res) => {
   });
 });
 
-app.post('/user/list/survey', (req, res) => {
-  const userId = req.body.user_id;
-  dbHandle.query(`SELECT survey_name FROM survey WHERE user_id = ${userId}`, (err, results) => {
+app.post('/employee/send/sondage', (req, res) => {
+  const formData = req.body;
+
+  dbHandle.query(
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
+    formData,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).send('SUCCESS');
+      }
+    }
+  );
+});
+
+app.get('/user/list/survey', (req, res) => {
+  //const userId = req.body.user_id;
+
+  dbHandle.query(`SELECT survey_name, user_id FROM survey`, (err, results) => {
     if (err) {
+      console.log(err);
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
       res.json(results);
     }
   });
+});
+
+app.get('/user/resultat', (req, res) => {
+  dbHandle.query(
+    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.get('/employee/list/:token', (req, res) => {
+  dbHandle.query(
+    `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
 });
 
 app.post('/user/send/survey', (req, res) => {
@@ -133,19 +177,32 @@ app.post('/user/send/survey', (req, res) => {
         pass: userTransporter.pass
       }
     });
+
     let mailOptions = {
       from: '"OUVERT" <no-reply@ouvert.com>',
       to: mail,
-      subject: 'Sondage de mobilité ✔',
-      html: `<h1>Sondage de mobilité</h1><p>Votre employeur vous a envoyé un sondage permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+      subject: 'Enquête de mobilité ✔',
+      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
     };
+
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         res.status(500).send('An error occured during mail sending.');
       }
-      res.status(200).send('SUCCESS');
     });
+
+    dbHandle.query(
+      `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
+        req.body.survey_name
+      }','${req.body.user_id}')`,
+      function(err) {
+        if (err) {
+          res.status(500).send('The database crashed ! The reason is ' + err);
+        }
+      }
+    );
   });
+  res.status(200).send('SUCCESS');
 });
 
 app.post('/user/geolocation/employee', (req, res) => {

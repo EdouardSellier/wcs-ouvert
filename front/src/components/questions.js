@@ -5,7 +5,13 @@ const questions = [
     label: "Vous êtes :",
     possibilities: ["Un homme", "Une femme", "Je ne souhaite pas répondre"],
     index: "genre",
-    number: 1
+    number: 1,
+  
+    contentPDF: `Vous êtes :`,
+    coordinateTitle: [90, 30],
+    coordinateImg: [0, 35, -100, 40],
+    indexImgPdf: 3,
+    pageAdded: false
   },
   {
     id: "age",
@@ -19,7 +25,12 @@ const questions = [
       "Je ne souhaite pas répondre"
     ],
     index: "age",
-    number: 2
+    number: 2,
+    contentPDF: `Vous avez :`,
+    coordinateTitle: [90, 95],
+    coordinateImg: [0, 100, -100, 40],
+    indexImgPdf: 6,
+    pageAdded: false
   },
   {
     id: "principalTransport",
@@ -39,7 +50,15 @@ const questions = [
       "Marche à pied"
     ],
     index: "principal_transport_",
-    number: 3
+    number: 3,
+    contentPDF: `        Quels modes de déplacements utilisez-vous pour venir travailler ?
+    Si vous utilisez plusieurs modes de déplacements au cours de votre trajet 
+    domicile-travail, veuillez les renseigner dans l'ordre dimportance qu'ils ont 
+        dans votre parcours (en termes de temps et de distance)`,
+    coordinateTitle: [38, 165],
+    coordinateImg: [25, 185, 150, 100],
+    indexImgPdf: 18,
+    pageAdded: true
   },
   {
     id: "ocasionalyTransport",
@@ -59,7 +78,14 @@ const questions = [
       "Marche à pied"
     ],
     index: "ocasionaly_transport_",
-    number: 4
+    number: 4,
+    contentPDF: `                Peut-être utilisez-vous occasionnellement d'autres modes 
+    de déplacements en fonction du jour de la semaine,  de vos horaires,
+                                                de la météo...`,
+    coordinateTitle: [42, 15],
+    coordinateImg: [25, 30, 150, 100],
+    indexImgPdf: 19,
+    pageAdded: false
   },
   {
     id: "reasonTransport",
@@ -79,7 +105,12 @@ const questions = [
       "Autre raison"
     ],
     index: "reason_transport",
-    number: 5
+    number: 5,
+    contentPDF: `Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ? `,
+    coordinateTitle: [42, 170],
+    coordinateImg: [25, 180, 150, 100],
+    indexImgPdf: 12,
+    pageAdded: true
   },
 
   {
@@ -88,7 +119,12 @@ const questions = [
     label: "Quelle distance (en km) parcourez-vous pour :",
     possibilities: [],
     index: "distance_klm",
-    number: 6
+    number: 6,
+    contentPDF: `Quelle distance (en km) parcourez-vous pour :`,
+    coordinateTitle: [64, 15],
+    coordinateImg: [-58, 20, 320, 10],
+    indexImgPdf: 0,
+    pageAdded: false
   },
   {
     id: "distanceMin",
@@ -96,7 +132,12 @@ const questions = [
     label: "Combien de temps (en minutes) mettez-vous pour :",
     possibilities: [],
     index: "distance_min",
-    number: 7
+    number: 7,
+    contentPDF: `Combien de temps (en minutes) mettez-vous pour :`,
+    coordinateTitle: [60, 50],
+    coordinateImg: [-57, 55, 320, 10],
+    indexImgPdf: 2,
+    pageAdded: false
   },
 
   {
@@ -105,7 +146,12 @@ const questions = [
     label: "Quel budget (en euros) dépensez-vous pour :",
     possibilities: [],
     index: "distance_money",
-    number: 8
+    number: 8,
+    contentPDF: `Quel budget (en euros) dépensez-vous pour :`,
+    coordinateTitle: [65, 85],
+    coordinateImg: [-57, 90, 320, 10],
+    indexImgPdf: 1,
+    pageAdded: false
   },
   {
     id: "elements",
@@ -121,7 +167,12 @@ const questions = [
       "Autre"
     ],
     index: "elements_",
-    number: 9
+    number: 9,
+    contentPDF: `Quels éléments prenez-vous en compte pour organiser vos déplacements domicile-travail ?`,
+    coordinateTitle: [35, 135],
+    coordinateImg: [25, 150, 150, 100],
+    indexImgPdf: 16,
+    pageAdded: true
   },
   {
     id: "parkingPlace",
@@ -134,7 +185,12 @@ const questions = [
       "Je ne me rends pas sur mon lieu de travail en voiture"
     ],
     index: "parking_place",
-    number: 10
+    number: 10,
+    contentPDF: `Si vous vous rendez en voiture sur votre lieu de travail, y-trouvez-vous facilement une place de parking ?`,
+    coordinateTitle: [25, 15],
+    coordinateImg: [0, 22, -100, 40],
+    indexImgPdf: 4,
+    pageAdded: false
   },
   {
     id: "midday",
@@ -147,7 +203,12 @@ const questions = [
       "A l’extérieur"
     ],
     index: "midday",
-    number: 11
+    number: 11,
+    contentPDF: `Où déjeunez-vous le plus souvent le midi ?`,
+    coordinateTitle: [65, 83],
+    coordinateImg: [0, 90, -100, 40],
+    indexImgPdf: 5,
+    pageAdded: false
   },
   {
     id: "frequencyMidday",
@@ -162,7 +223,12 @@ const questions = [
       "Tous les jours"
     ],
     index: "frequency_midday",
-    number: 12
+    number: 12,
+    contentPDF: `En moyenne, à quelle fréquence effectuez-vous des déplacements le midi ?`,
+    coordinateTitle: [45, 152],
+    coordinateImg: [0, 159, -100, 40],
+    indexImgPdf: 7,
+    pageAdded: false
   },
   {
     id: "transportMidday",
@@ -183,7 +249,12 @@ const questions = [
       "Marche à pied"
     ],
     index: "transport_midday",
-    number: 13
+    number: 13,
+    contentPDF: `Lorsque vous vous déplacez le midi, quel mode de transport utilisez-vous principalement ?`,
+    coordinateTitle: [45, 220],
+    coordinateImg: [0, 227, -100, 49],
+    indexImgPdf: 13,
+    pageAdded: true
   },
   {
     id: "frequencyPro",
@@ -199,7 +270,12 @@ const questions = [
       "Plus de 2 fois par semaine"
     ],
     index: "frequency_pro",
-    number: 14
+    number: 14,
+    contentPDF: `A quelle fréquence effectuez-vous des déplacements professionnels ?`,
+    coordinateTitle: [50, 15],
+    coordinateImg: [0, 22, -100, 40],
+    indexImgPdf: 8,
+    pageAdded: false
   },
   {
     id: "distancePro",
@@ -215,7 +291,13 @@ const questions = [
       "Plus de 50 km"
     ],
     index: "distance_pro",
-    number: 15
+    number: 15,
+    contentPDF: `A quelle distance (aller ou retour, en km) vous déplacez-vous en moyenne 
+    pour les déplacements professionnels ?`,
+    coordinateTitle: [46, 80],
+    coordinateImg: [0, 90, -100, 40],
+    indexImgPdf: 9,
+    pageAdded: false
   },
   {
     id: "deplacementPro",
@@ -235,7 +317,12 @@ const questions = [
       "Marche à pied"
     ],
     index: "deplacement_pro",
-    number: 16
+    number: 16,
+    contentPDF: `Pour vos déplacements professionnels, quel mode de déplacements utilisez-vous principalement ?`,
+    coordinateTitle: [25, 148],
+    coordinateImg: [0, 155, -100, 49],
+    indexImgPdf: 14,
+    pageAdded: false
   },
   {
     id: "reasonPersoCar",
@@ -251,7 +338,12 @@ const questions = [
       "Je n’utilise pas ma voiture personnelle pour les déplacements professionnels"
     ],
     index: "reason_perso_car",
-    number: 17
+    number: 17,
+    contentPDF: `Si vous utilisez votre voiture personnelle pour des déplacements professionnels, pour quelle raison ?`,
+    coordinateTitle: [27, 224],
+    coordinateImg: [0, 229, -100, 47],
+    indexImgPdf: 10,
+    pageAdded: true
   },
   {
     id: "deplacementMethodPro",
@@ -267,7 +359,13 @@ const questions = [
       "Je n’ai pas envie de changer mes habitudes de déplacements"
     ],
     index: "deplacement_method_pro",
-    number: 18
+    number: 18,
+    contentPDF: `Parmi les affirmations ci-dessous, laquelle correspond le plus à la manière dont 
+    vous vous déplacez pour vous rendre sur votre lieu de travail ?`,
+    coordinateTitle: [42, 30],
+    coordinateImg: [0, 40, -100, 67],
+    indexImgPdf: 11,
+    pageAdded: false
   },
   {
     id: "communTransport",
@@ -282,7 +380,12 @@ const questions = [
       "Autre"
     ],
     index: "commun_transport_",
-    number: 19
+    number: 19,
+    contentPDF: `Parmi ces propositions, lesquelles vous inciteraient à utiliser davantage les transports en commun ?`,
+    coordinateTitle: [28, 138],
+    coordinateImg: [25, 153, 150, 116],
+    indexImgPdf: 15,
+    pageAdded: true
   },
   {
     id: "bike",
@@ -302,7 +405,12 @@ const questions = [
       "Rien, je ne souhaite pas pédaler"
     ],
     index: "bike_",
-    number: 20
+    number: 20,
+    contentPDF: `Parmi ces mesures, lesquelles vous inciteraient à utiliser davantage le vélo ?`,
+    coordinateTitle: [38, 21],
+    coordinateImg: [25, 31, 150, 100],
+    indexImgPdf: 20,
+    pageAdded: false
   },
   {
     id: "carpooling",
@@ -318,7 +426,12 @@ const questions = [
       "Rien, je ne souhaite pas covoiturer "
     ],
     index: "carpooling_",
-    number: 21
+    number: 21,
+    contentPDF: `Parmi ces mesures, lesquelles vous inciteraient davantage à covoiturer ?`,
+    coordinateTitle: [38, 164],
+    coordinateImg: [25, 173, 150, 100],
+    indexImgPdf: 17,
+    pageAdded: false
   },
   {
     id: "otherThanCar",
@@ -327,7 +440,12 @@ const questions = [
       "Avez–vous une ou des idée(s) de modes de déplacements alternatifs à la voiture individuelle qui conviendrai(en)t à votre situation ?",
     possibilities: [],
     index: "other_than_car",
-    number: 22
+    number: 22,
+    contentPDF: ``,
+    coordinateTitle: [],
+    coordinateImg: [],
+    indexImgPdf: null,
+    pageAdded: false
   },
   {
     id: "commentary",
@@ -336,7 +454,12 @@ const questions = [
       "Si vous avez des commentaires ou remarques éventuelles, n’hésitez pas à nous en faire part !",
     possibilities: [],
     index: "commentary",
-    number: 23
+    number: 23,
+    contentPDF: ``,
+    coordinateTitle: [],
+    coordinateImg: [],
+    indexImgPdf: null,
+    pageAdded: false
   }
 ];
 
