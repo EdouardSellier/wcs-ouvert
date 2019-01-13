@@ -11,21 +11,19 @@ getEmployeePosition = () => {
         results.map(data => {
           let queryAddress = data.address.replace(regex, '+');
           let idAddress = data.id;
-          return axios
-            .get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`)
-            .then(res => {
-              let results = res.data.features[0].geometry.coordinates;
-              dbHandle.query(
-                `UPDATE maps_employee SET lat = ${results[1]}, lng = ${
-                  results[0]
-                } WHERE id = ${idAddress}`,
-                (err, results) => {
-                  if (results) {
-                    console.log('Database has updated with employees lat lng :)');
-                  }
+          axios.get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`).then(res => {
+            let results = res.data.features[0].geometry.coordinates;
+            dbHandle.query(
+              `UPDATE maps_employee SET lat = ${results[1]}, lng = ${
+                results[0]
+              } WHERE id = ${idAddress}`,
+              (err, results) => {
+                if (results) {
+                  console.log('Database has updated with employees lat lng :)');
                 }
-              );
-            });
+              }
+            );
+          });
         });
       }
     }
@@ -60,7 +58,7 @@ getDistance = () => {
                 `UPDATE maps_employee SET distance = ${distanceKm} WHERE id = ${data.emp_id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated with distance and duration :)');
+                    console.log('Database has updated with distance :)');
                   }
                 }
               );
@@ -100,7 +98,7 @@ getDuration = () => {
                 `UPDATE maps_employee SET duration = ${durationMin} WHERE id = ${data.emp_id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated with distance and duration :)');
+                    console.log('Database has updated with duration :)');
                   }
                 }
               );
@@ -118,7 +116,7 @@ getIsochroneAuto = () => {
       if (results) {
         results.map(data => {
           let query = [data.lng, data.lat];
-          return axios
+          axios
             .get(
               `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${query}&profile=driving-car&range_type=distance&range=5000,10000,20000`
             )
@@ -189,12 +187,12 @@ getIsochroneAuto = () => {
 
 getIsochroneCycle = () => {
   dbHandle.query(
-    'SELECT id, lat, lng FROM map WHERE lat IS NOT NULL AND lng IS NOT NULL AND isochrone5_auto IS NOT NULL AND isochrone10_auto IS NOT NULL AND NOT isochrone20_auto IS NULL AND isochrone5_cycle IS NULL AND isochrone10_cycle IS NULL AND isochrone15_cycle IS NULL',
+    'SELECT id, lat, lng FROM map WHERE lat IS NOT NULL AND lng IS NOT NULL AND isochrone5_cycle IS NULL AND isochrone10_cycle IS NULL AND isochrone15_cycle IS NULL',
     (err, results) => {
       if (results) {
         results.map(data => {
           let query = [data.lng, data.lat];
-          return axios
+          axios
             .get(
               `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${query}&profile=cycling-regular&range_type=time&range=600,1200,1800`
             )
@@ -295,7 +293,8 @@ checkValidateMaps = () => {
                     WHERE user_id = ${data.id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated !!! :)');
+                    console.log('Mail is send, it s ready !!! :)');
+                    return;
                   }
                 }
               );
@@ -307,13 +306,20 @@ checkValidateMaps = () => {
   );
 };
 
-main = () => {
+const main = async () => {
   getEmployeePosition();
-  getDistance();
-  getDuration();
   getIsochroneAuto();
-  getIsochroneCycle();
+  getIsochroneCycle(); // ====> STOP
+  getDistance();
+  getDuration(); // ====> STOP
   checkValidateMaps();
+  await closeScript();
+  console.log('Closing...');
 };
 
+const closeScript = () => {
+  return new Promise(resolve => {
+    setTimeout(() => resolve(dbHandle.end()), 10000);
+  });
+};
 main();
