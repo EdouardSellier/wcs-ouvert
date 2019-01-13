@@ -1,16 +1,15 @@
 import React, { Component } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import "./css/Connexion.css";
-import { Row, Col } from "reactstrap";
+import { withRouter } from "react-router-dom";
+import { Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 
 const dangerMsg = {
-  place: "tr",
-  message: "Votre email et/ou votre mot de passe sont incorrects",
+  place: "br",
+  message:
+    "Votre email et/ou votre mot de passe sont incorrects ou il y a un problème avec votre compte. Merci de nous recontacter si le problème persiste.",
   type: "danger",
-  autoDismiss: 4
+  autoDismiss: 5
 };
 
 class Connexion extends Component {
@@ -22,29 +21,36 @@ class Connexion extends Component {
     };
   }
 
-  alertFunctionDanger = () => {
-    this.refs.notificationAlert.notificationAlert(dangerMsg);
-  };
-
   handleChange = event => {
     this.setState({
       [event.target.name]: event.target.value
     });
   };
 
+  alertFunctionDanger = () => {
+    this.refs.notificationAlert.notificationAlert(dangerMsg);
+  };
+
   isLoggedIn = event => {
     event.preventDefault();
-    let body = {
-      mail: this.state.mail,
-      password: this.state.password
-    };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/connexion",
-      data: body
-    })
-      .then(res => {
-        if (res.data === "SUCCESS") {
+    const token = localStorage.getItem("token");
+    axios
+      .post("http://localhost:8080/auth/connexion", this.state, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(response => {
+        const { token, user } = response.data;
+        localStorage.setItem("currentId", user.id);
+        localStorage.setItem("currentUser", this.state.mail);
+        localStorage.setItem("id", user.id);
+        localStorage.setItem("token", token);
+        localStorage.setItem("is_admin", user.admin);
+        localStorage.setItem("has_paid", user.has_paid);
+        if (user.admin === 1) {
+          this.props.history.push("/admin");
+        } else if (user.admin === 0 && user.has_paid === 1) {
           this.props.history.push("/monespace");
         }
       })
@@ -56,26 +62,26 @@ class Connexion extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
-        <Header />
-        <div className="connexion mt-3">
+        <div className="connexionContainer">
           <NotificationAlert ref="notificationAlert" />
-          <h2>Connexion à mon espace</h2>
-          <Row>
-            <Col
-              lg={{ size: 6, offset: 3 }}
-              md={{ size: 8, offset: 2 }}
-              sm={{ size: 10, offset: 1 }}
-              xs={{ size: 10, offset: 1 }}
+          <Col
+            lg={{ size: 6, offset: 3 }}
+            md={{ size: 8, offset: 2 }}
+            sm={{ size: 10, offset: 1 }}
+            xs={{ size: 10, offset: 1 }}
+          >
+            <form
+              className="formContainer card shadow"
+              onSubmit={this.isLoggedIn}
             >
-              <form
-                className="mt-5 formContainer shadow"
-                onSubmit={this.isLoggedIn}
-              >
-                <div className="form-group">
-                  <label>Adresse e-mail</label>
+              <h2 className="mt-2 mb-5 text-center">Connexion à mon espace</h2>
+              <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text form-control bg-transparent">
+                      <i className="fa fa-envelope" />
+                    </span>
+                  </div>
                   <input
                     type="email"
                     name="mail"
@@ -87,8 +93,14 @@ class Connexion extends Component {
                     value={this.state.mail}
                   />
                 </div>
-                <div className="form-group">
-                  <label>Mot de passe</label>
+              </div>
+              <div className="form-group">
+                <div className="input-group">
+                  <div className="input-group-prepend">
+                    <span className="input-group-text form-control bg-transparent">
+                      <i className="fa fa-lock passwordIcon" />
+                    </span>
+                  </div>
                   <input
                     type="password"
                     name="password"
@@ -100,17 +112,16 @@ class Connexion extends Component {
                     value={this.state.password}
                   />
                 </div>
-                <button type="submit" className="btn text-white mt-3">
-                  Me connecter
-                </button>
-              </form>
-            </Col>
-          </Row>
+              </div>
+              <button type="submit" className="btn text-white mt-3 loginButton">
+                Me connecter
+              </button>
+            </form>
+          </Col>
         </div>
-        <Footer />
       </div>
     );
   }
 }
 
-export default Connexion;
+export default withRouter(Connexion);

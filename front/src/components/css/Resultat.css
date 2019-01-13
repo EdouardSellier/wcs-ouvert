@@ -1,3 +1,59 @@
-.resultat {
-  min-height: 90vh;
+.borderRight {
+  border-right: 2px black solid;
+}
+
+.borderLeft {
+  border-left: 2px black solid;
+}
+
+.textAlignRight {
+  text-align: right;
+}
+
+.containerResultBar {
+  border-left: 2px black solid;
+  border-bottom: 2px black solid;
+}
+
+.componentTitle {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.dataResultText {
+  font-weight: bold;
+  font-size: 1.5em;
+  margin-left: 1%;
+}
+
+.contentResultText {
+  color: black;
+  font-size: 1.2em;
+}
+
+.contentTotalResult {
+  color: white;
+  font-size: 2.4em;
+}
+
+.centerRight {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+
+.textAlignLeft {
+  display: flex;
+  text-align: left;
+}
+
+.alignCenter {
+  display: flex;
+  align-items: center;
+}
+
+.alignCenterFullHeight {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }

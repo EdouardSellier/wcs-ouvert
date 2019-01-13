@@ -1,161 +1,191 @@
 import React, { Component } from "react";
-import GeoStatistics from "./GeoStatistics";
-import "./css/Geolocalisation.css";
 import { Container, Row, Col } from "reactstrap";
-import { Map, Marker, Polygon, Popup, TileLayer } from "react-leaflet";
-import axios from "axios";
+import { Map, TileLayer, Marker, Polygon } from "react-leaflet";
 import L from "leaflet";
-import NotificationAlert from "react-notification-alert";
-
-const errorMsg = {
-  place: "tr",
-  message:
-    "Nous avons rencontré un problème lors du chargement, merci de retenter dans quelques minutes ou de contacter l'assistance",
-  type: "danger",
-  autoDismiss: 4
-};
+import "./css/Geolocalisation.css";
 
 class APIGeoloc extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapData: [],
-      firstPolygon: [],
-      secondPolygon: [],
-      thirdPolygon: []
+      employeesMarkers: [],
+      averageKm: 0,
+      min: 0,
+      max: 0,
+      nbPersUnder5: 0,
+      percentUnder5: 0,
+      nbPers5To10: 0,
+      percent5To10: 0,
+      nbPers10To15: 0,
+      percent10To15: 0,
+      nbPers10To20: 0,
+      percent10To20: 0,
+      nbPersOver15: 0,
+      percentOver15: 0,
+      nbPersOver20: 0,
+      percentOver20: 0,
+      isClicked: false,
+      mapIsLoading: false
     };
   }
 
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
-  };
-
-  getLatLng = () => {
-    this.props.addressEmployee.map(data => {
-      let dataStr = data.join("+").replace(" ", "+");
-      return axios
-        .get(`https://api-adresse.data.gouv.fr/search/?q=${dataStr}`)
-        .then(result => {
-          let newData = result.data.features[0].geometry.coordinates;
-          newData.reverse();
-          let latLng = { marker: newData };
-          let allMapData = this.state.mapData;
-          allMapData.push(latLng);
-          this.setState({
-            mapData: allMapData
-          });
-        })
-        .catch(err => {
-          this.alertFunctionError();
-        });
+  getDistance = () => {
+    let allDistances = this.props.employeeStats.distance;
+    let sumKm = allDistances.reduce((a, b) => a + b, 0);
+    let averageKm = sumKm / allDistances.length;
+    let minimumKm = Math.min(...allDistances);
+    let maximumKm = Math.max(...allDistances);
+    this.setState({
+      averageKm: averageKm.toFixed(1),
+      min: minimumKm,
+      max: maximumKm
     });
   };
 
-  getIsochrone = () => {
-    let center = undefined;
-    if (this.props.profile === "cycling-regular") {
-      center = this.props.addressSociety;
-    } else {
-      center = this.props.addressSociety.reverse();
-    }
-    axios
-      .get(
-        `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624884e9b90603e34a1bba9744ae0c73fd0a&locations=${center}&profile=${
-          this.props.profile
-        }&range_type=${this.props.rangeType}&range=${this.props.range}`
-      )
-      .then(result => {
-        let firstRes = result.data.features[0].geometry.coordinates;
-        let secondRes = result.data.features[1].geometry.coordinates;
-        let thirdRes = result.data.features[2].geometry.coordinates;
-        let firstPolygon = [];
-        let secondPolygon = [];
-        let thirdPolygon = [];
-        firstRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            firstPolygon = this.state.firstPolygon;
-            return firstPolygon.push(realLatLng);
-          });
-        });
-        secondRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            secondPolygon = this.state.secondPolygon;
-            return secondPolygon.push(realLatLng);
-          });
-        });
-        thirdRes.map(data => {
-          return data.map(latLng => {
-            let realLatLng = latLng.reverse();
-            thirdPolygon = this.state.thirdPolygon;
-            return thirdPolygon.push(realLatLng);
-          });
-        });
-        this.setState({
-          firstPolygon: firstPolygon,
-          secondPolygon: secondPolygon,
-          thirdPolygon: thirdPolygon
-        });
-      })
-      .catch(err => {
-        this.alertFunctionError();
+  getStatistics = () => {
+    let allDistances = this.props.employeeStats.distance;
+    let allDurations = this.props.employeeStats.duration;
+    let countPersUnder5 = 0;
+    let countPers5To10 = 0;
+    let countPers10To15 = 0;
+    let countPers10To20 = 0;
+    let countPersOver15 = 0;
+    let countPersOver20 = 0;
+    if (this.props.measure === "km") {
+      allDistances.map(distance => {
+        if (distance <= 5) {
+          countPersUnder5 = countPersUnder5 + 1;
+        }
+        if (distance > 5 && distance <= 10) {
+          countPers5To10 = countPers5To10 + 1;
+        }
+        if (distance > 10 && distance <= 20) {
+          countPers10To20 = countPers10To20 + 1;
+        }
+        if (distance > 20) {
+          countPersOver20 = countPersOver20 + 1;
+        }
+        return distance;
       });
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To20 = (countPers10To20 * 100) / allDistances.length;
+      let percentOver20 = (countPersOver20 * 100) / allDistances.length;
+      this.setState({
+        nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
+        nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
+        nbPers10To20: countPers10To20,
+        percent10To20: Math.round(percent10To20),
+        nbPersOver20: countPersOver20,
+        percentOver20: Math.round(percentOver20)
+      });
+    } else {
+      allDurations.map(duration => {
+        if (duration <= 10) {
+          countPersUnder5 = countPersUnder5 + 1;
+        }
+        if (duration > 10 && duration <= 20) {
+          countPers5To10 = countPers5To10 + 1;
+        }
+        if (duration > 20 && duration <= 30) {
+          countPers10To15 = countPers10To15 + 1;
+        }
+        if (duration > 30) {
+          countPersOver15 = countPersOver15 + 1;
+        }
+        return duration;
+      });
+      let percentUnder5 = (countPersUnder5 * 100) / allDistances.length;
+      let percent5To10 = (countPers5To10 * 100) / allDistances.length;
+      let percent10To15 = (countPers10To15 * 100) / allDistances.length;
+      let percentOver15 = (countPersOver15 * 100) / allDistances.length;
+      this.setState({
+        nbPersUnder5: countPersUnder5,
+        percentUnder5: Math.round(percentUnder5),
+        nbPers5To10: countPers5To10,
+        percent5To10: Math.round(percent5To10),
+        nbPers10To15: countPers10To15,
+        percent10To15: Math.round(percent10To15),
+        nbPersOver15: countPersOver15,
+        percentOver15: Math.round(percentOver15)
+      });
+    }
+  };
+
+  componentDidMount = () => {
+    this.getDistance();
+    this.getStatistics();
   };
 
   render() {
-    const zoom = 11.4;
     const defaultPosition = [50.62925, 3.057256];
-    const societyPosition = this.props.addressSociety;
-    const myIcon = L.icon({
-      iconUrl: "https://img.icons8.com/metro/1600/marker.png",
-      iconSize: [38, 38]
+    const societyIcon = L.icon({
+      iconUrl: "./img/societyMarker.png",
+      iconSize: [30, 30]
     });
-    const firstPolygon = [this.state.firstPolygon];
-    const secondPolygon = [this.state.secondPolygon];
-    const thirdPolygon = [this.state.thirdPolygon];
+    const employeeIcon = L.icon({
+      iconUrl: "./img/employeeMarker.png",
+      iconSize: [30, 30]
+    });
     return (
       <div>
-        <Container className="mt-3">
-          <NotificationAlert ref="notificationAlertError" />
-          <h3>Analyse du temps de trajet en {this.props.parameter} :</h3>
-          <button className="btn text-white mt-4 mb-3" onClick={this.getLatLng}>
-            Géolocaliser mes salariés
-          </button>
-          <button
-            className="btn text-white mt-4 mb-3 ml-3"
-            onClick={this.getIsochrone}
-          >
-            Afficher la cartographie isochrone <em>(cf. légende)</em>
-          </button>
-          {societyPosition.length === 0 ? (
-            <Map center={defaultPosition} zoom={zoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-            </Map>
-          ) : (
-            <Map center={societyPosition} zoom={zoom}>
-              <TileLayer
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-              />
-              <Marker position={societyPosition} icon={myIcon}>
-                <Popup>
-                  <span>Société</span>
-                </Popup>
-              </Marker>
-              {this.state.mapData.map(data => {
-                return <Marker position={data.marker} key={data.marker} />;
-              })}
-              <Polygon positions={firstPolygon} color="blue" />
-              <Polygon positions={secondPolygon} color="red" />
-              <Polygon positions={thirdPolygon} color="yellow" />
-            </Map>
-          )}
-        </Container>
-        <Container className="mt-3">
+        <div className="mt-3 mb-5">
+          <h4>
+            {this.props.mapTitle} <i className={this.props.icon} />
+          </h4>
+          <Col lg={{ size: 12 }}>
+            {this.props.isReady === true &&
+            this.props.societyPosition !== undefined ? (
+              <Map
+                center={this.props.societyPosition}
+                zoom={10}
+                className="rounded shadow mt-5 mb-4"
+              >
+                <TileLayer
+                  attribution="&copy; <a href='http://osm.org/copyright'>MOUV'R</a> contributors"
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+                <Marker
+                  position={this.props.societyPosition}
+                  icon={societyIcon}
+                />
+                {this.props.employeesPositions.map(marker => {
+                  return (
+                    <Marker
+                      key={marker}
+                      position={marker}
+                      icon={employeeIcon}
+                    />
+                  );
+                })}
+                <Polygon
+                  positions={JSON.parse(this.props.firstPolygon)}
+                  color="rgb(55, 55, 226)"
+                />
+                <Polygon
+                  positions={JSON.parse(this.props.secondPolygon)}
+                  color="rgb(224, 55, 26)"
+                />
+                <Polygon
+                  positions={JSON.parse(this.props.thirdPolygon)}
+                  color="rgb(235, 235, 8)"
+                />
+              </Map>
+            ) : (
+              <Map
+                center={defaultPosition}
+                zoom={10}
+                className="rounded shadow mt-5 mb-4"
+              >
+                <TileLayer
+                  attribution="&copy; <a href='http://osm.org/copyright'>MOUV'R</a> contributors"
+                  url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
+                />
+              </Map>
+            )}
+          </Col>
           <Row>
             <Col lg={{ size: 4 }}>
               <div className="legend mr-lg-4">
@@ -163,9 +193,9 @@ class APIGeoloc extends Component {
                 <ul className="list-unstyled">
                   <li>
                     <img
-                      src="https://img.icons8.com/metro/1600/marker.png"
+                      src="./img/societyMarker.png"
                       alt="societyMarker"
-                      width="38"
+                      width="30"
                       height="30"
                       className="mb-2"
                     />
@@ -173,59 +203,145 @@ class APIGeoloc extends Component {
                   </li>
                   <li>
                     <img
-                      src="http://www.association-sauvy.fr/leaflet/marker-icon-bluec.png"
+                      src="./img/employeeMarker.png"
                       alt="employeeMarker"
-                      width="22"
-                      height="28"
-                      className="ml-2 mr-2"
+                      width="30"
+                      height="30"
                     />
                     Salariés
                   </li>
                 </ul>
-                <b>
-                  {this.props.distance} {this.props.parameter} :
-                </b>
-                <ul className="list-unstyled">
+                <h6>
+                  {this.props.legendTitle} <i className={this.props.icon} /> :
+                </h6>
+                <ul className="list-unstyled pt-2">
                   <li>
-                    <span className="bluePolygon mr-3">=====</span>Inférieur à 5{" "}
-                    {this.props.measure}
+                    <span className="bluePolygon mr-3">=====</span>
+                    Inférieur à{" "}
+                    {this.props.measure === "km" ? " 5 km" : "10 minutes"}
                   </li>
                   <li>
-                    <span className="redPolygon mr-3">=====</span>Entre 5 et 10
-                    {this.props.measure === "km" ? " km " : " minutes"}
+                    <span className="redPolygon mr-3">=====</span>Entre{" "}
+                    {this.props.measure === "km"
+                      ? " 5 et 10 km "
+                      : " 10 et 20 minutes"}
                   </li>
                   <li>
-                    <span className="yellowPolygon mr-3">=====</span>Entre 10 et
-                    {this.props.measure === "km" ? " 20 km " : " 15 minutes"}
+                    <span className="yellowPolygon mr-3">=====</span>Entre
+                    {this.props.measure === "km"
+                      ? " 10 et 20 km "
+                      : " 20 et 30 minutes"}
                   </li>
                 </ul>
               </div>
             </Col>
             <Col lg={{ size: 8 }}>
-              <div className="card">
-                {this.props.measure === "km" ? (
-                  <GeoStatistics
-                    employeePositions={this.state.mapData}
-                    societyPosition={societyPosition}
-                    measure="km"
-                    profile="driving-car"
-                    parameter="voiture"
-                    title="Distance"
-                  />
-                ) : (
-                  <GeoStatistics
-                    employeePositions={this.state.mapData}
-                    societyPosition={societyPosition}
-                    measure="minutes"
-                    profile="cycling-regular"
-                    parameter="vélo"
-                    title="Temps de trajet"
-                  />
-                )}
+              <div className="mb-3">
+                <Container className="statistics ml-lg-5">
+                  {this.props.measure === "km" &&
+                  this.state.averageKm !== undefined ? (
+                    <div>
+                      <p>
+                        Distance domicile-lieu de travail en moyenne :
+                        <br />
+                        <span className="stats">{this.state.averageKm} km</span>
+                      </p>
+                      <p>
+                        Distance domicile-lieu de travail minimale :
+                        <br />
+                        <span className="stats">{this.state.min} km</span>
+                      </p>
+                      <p>
+                        Distance domicile-lieu de travail maximale :
+                        <br />
+                        <span className="stats">{this.state.max} km</span>
+                      </p>
+                      <br />
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  <p>
+                    <img
+                      src="./img/right-arrow.png"
+                      alt="arrow"
+                      width="25"
+                      height="20"
+                      className="float-left mt-1 mr-1"
+                    />
+                    <b>
+                      {this.props.lengthEmployee} salariés ont été géolocalisés
+                      :
+                    </b>
+                  </p>
+                  {this.props.measure === "km" ? (
+                    <div>
+                      <p>
+                        {this.state.nbPersUnder5} salarié
+                        {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                        {this.state.percentUnder5}%) habite
+                        {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
+                        km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers5To10} salarié
+                        {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                        {this.state.percent5To10}%) habite
+                        {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
+                        km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers10To20} salarié
+                        {this.state.nbPers10To20 > 1 ? "s" : ""} (
+                        {this.state.percent10To20}%) habite
+                        {this.state.nbPers10To200 > 1 ? "nt" : ""} entre 10 et
+                        20 km en voiture de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPersOver20} salarié
+                        {this.state.nbPersOver20 > 1 ? "s" : ""} (
+                        {this.state.percentOver20}%) habite
+                        {this.state.nbPersOver20 > 1 ? "nt" : ""} à plus de 20
+                        km en voiture de son lieu de travail.
+                      </p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>
+                        {this.state.nbPersUnder5} salarié
+                        {this.state.nbPersUnder5 > 1 ? "s" : ""} (
+                        {this.state.percentUnder5}%) habite
+                        {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 10
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers5To10} salarié
+                        {this.state.nbPers5To10 > 1 ? "s" : ""} (
+                        {this.state.percent5To10}%) habite
+                        {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 10 et 20
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPers10To15} salarié
+                        {this.state.nbPers10To15 > 1 ? "s" : ""} (
+                        {this.state.percent10To15}%) habite
+                        {this.state.nbPers10To15 > 1 ? "nt" : ""} entre 20 et 30
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                      <p>
+                        {this.state.nbPersOver15} salarié
+                        {this.state.nbPersOver15 > 1 ? "s" : ""} (
+                        {this.state.percentOver15}%) habite
+                        {this.state.nbPersOver15 > 1 ? "nt" : ""} à plus de 30
+                        minutes à vélo de son lieu de travail.
+                      </p>
+                    </div>
+                  )}
+                </Container>
               </div>
             </Col>
           </Row>
-        </Container>
+        </div>
       </div>
     );
   }
