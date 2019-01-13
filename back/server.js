@@ -126,11 +126,8 @@ app.post('/employee/send/sondage', (req, res) => {
 });
 
 app.get('/user/list/survey', (req, res) => {
-  //const userId = req.body.user_id;
-
   dbHandle.query(`SELECT survey_name, user_id FROM survey`, (err, results) => {
     if (err) {
-      console.log(err);
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
       res.json(results);
@@ -454,9 +451,7 @@ app.post('/admin/list/geolocation', (req, res) => {
   dbHandle.query('SELECT COUNT(*) AS TotalCount FROM map', function(err, rows) {
     let startNum = 0;
     let limitNum = 5;
-    if (err) {
-      return err;
-    } else {
+    if (rows) {
       totalCount = rows[0].TotalCount;
       startNum = req.body.start;
       limitNum = req.body.limit;
