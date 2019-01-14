@@ -43,20 +43,24 @@ class ListeEnquetesRH extends Component {
   getSurveyName = () => {
     const token = localStorage.getItem("token");
     const currentId = Number(localStorage.getItem("currentId"));
-    axios
-      .get("http://localhost:8080/user/list/survey", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+    const body = {
+      user_id: currentId
+    };
+    axios({
+      method: "post",
+      url: "http://localhost:8080/user/list/survey",
+      data: body,
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
       .then(res => {
-        const allSurveyName = res.data.filter(
-          survey => survey.user_id === currentId
-        );
-
+        let allSurvey = this.state.allSurveyName;
+        res.data.map(data => {
+          return allSurvey.push(data.survey_name);
+        });
         this.setState({
-          allSurveyName: allSurveyName,
-          surveyNameSelected: allSurveyName[0].survey_name,
+          allSurveyName: allSurvey,
           currentId: currentId
         });
       })
@@ -98,9 +102,7 @@ class ListeEnquetesRH extends Component {
             >
               <option>Sélectionner une enquête</option>
               {this.state.allSurveyName.map(survey => {
-                return (
-                  <option key={survey.survey_name}>{survey.survey_name}</option>
-                );
+                return <option key={survey}>{survey}</option>;
               })}
             </select>
           </Col>
