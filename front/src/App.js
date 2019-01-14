@@ -8,13 +8,13 @@ import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
 import Geolocalisation from "./components/Geolocalisation";
 import EnqueteRH from "./components/EnqueteRH";
-import Enquete from "./components/Enquete";
 import Resultat from "./components/Resultat";
 import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
 import ListeEntreprises from "./components/ListeEntreprises";
 import ListeEnquetes from "./components/ListeEnquetes";
 import ListeGeoloc from "./components/ListeGeoloc";
+import EnqueteEmployee from "./components/EnqueteEmployee";
 
 const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -72,12 +72,11 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/enquete" component={Enquete} />
+            <Route path="/enquete/:token" component={EnqueteEmployee} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <UserRoute path="/geolocalisation" component={Geolocalisation} />
-            <UserRoute path="/enquete/:token" component={Enquete} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
             <UserRoute path="/enqueteRH" component={EnqueteRH} />
