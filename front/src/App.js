@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Route, BrowserRouter, Switch, Redirect } from "react-router-dom";
 import "./App.css";
-import Accueil from "./components/Accueil";
+import Home from "./components/Home";
 import Footer from "./components/Footer";
 import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
@@ -74,7 +74,7 @@ class App extends Component {
       <div className="App">
         <BrowserRouter>
           <Switch>
-            <Route exact path="/" component={Accueil} />
+            <Route exact path="/" component={Home} />
             <Route path="/enquete" component={Enquete} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/monespace" component={EspaceRH} />
