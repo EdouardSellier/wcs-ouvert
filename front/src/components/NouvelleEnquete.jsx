@@ -15,7 +15,7 @@ const errorMsg = {
   autoDismiss: 4
 };
 
-class Home extends Component {
+class NouvelleEnquete extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -206,4 +206,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default NouvelleEnquete;
