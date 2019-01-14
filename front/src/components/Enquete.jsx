@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Footer from "./Footer";
 import questions from "./questions";
 import axios from "axios";
-import "./css/Sondage.css";
+import "./css/Enquete.css";
 
 const MultipleOption = props => {
   return (
@@ -225,14 +225,16 @@ class Enquete extends Component {
   render() {
     return (
       <div>
-        <p className="homeSlogan">
-          MOUV'R : Enquête de mobilité pour vos salariés
-        </p>
-        <div className="sondage">
-          <h3>Sondage</h3>
-          <div className="d-flex justify-content-center">
-            <div className="textAlignLeft col-6 pl-5">
-              <form className="" onSubmit={event => this.submit(event)}>
+        <div className="text-white p-3">
+          <h1>
+            <b>Enquête de mobilité</b>
+          </h1>
+          <div className="d-flex justify-content-center mt-5">
+            <div className="textAlignLeft col-8">
+              <form
+                className="card shadow p-5 mb-3"
+                onSubmit={event => this.submit(event)}
+              >
                 {questions.map(data => {
                   switch (data.type) {
                     case "option":
@@ -271,14 +273,11 @@ class Enquete extends Component {
                       return <p>Il y a une erreur.</p>;
                   }
                 })}
-                <button className="btn btn-primary btn-lg buttonSubmit">
-                  Envoyer
-                </button>
+                <button className="btn btn-lg text-white">Envoyer</button>
               </form>
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }

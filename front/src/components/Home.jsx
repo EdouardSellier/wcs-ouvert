@@ -108,13 +108,13 @@ class Home extends Component {
                   </div>
                   <div className="card-body pt-4">
                     OUVERT vous accompagne dans la mise en œuvre de votre plan
-                    de mobilité.{" "}
+                    de mobilité.
                     <button
                       className="toggleButton"
                       onClick={this.toggleDescription}
                     >
                       Cliquez ici
-                    </button>{" "}
+                    </button>
                     pour en savoir plus sur notre accompagnement.
                   </div>
                   <Modal
@@ -155,7 +155,7 @@ class Home extends Component {
                           Intégré à POCHECO, une industrie certifiée QSE, nous
                           proposons des solutions sur mesure dont la
                           méthodologie a été préalablement testée avec une
-                          efficacité validée. Visitez notre site internet :{" "}
+                          efficacité validée. Visitez notre site internet :
                           <a href="www.ouvert.eu">www.ouvert.eu</a>.
                         </p>
                         <p className="text-center">
@@ -235,7 +235,7 @@ class Home extends Component {
                     Le Plan de Mobilité est une étude visant à réduire la part
                     d’utilisation de la voiture individuelle dans le cadre des
                     déplacements professionnels et des déplacements domicile –
-                    travail.{" "}
+                    travail.
                     <button className="toggleButton" onClick={this.togglePDM}>
                       Cliquez ici
                     </button>
@@ -273,7 +273,6 @@ class Home extends Component {
                           raison d’entamer un PDM ? Non.
                         </p>
                         <p>
-                          {" "}
                           Le contexte économique et écologique nous oblige à
                           repenser notre vision de la mobilité et à diminuer
                           l’emprise de la voiture sur nos déplacements. Les PDM
@@ -317,7 +316,7 @@ class Home extends Component {
                           diagnostic d’accessibilité à vélo de l’entreprise, la
                           diffusion d’une enquête sur les habitudes de
                           déplacement et une analyse statistique des réponses à
-                          l’enquête.{" "}
+                          l’enquête.
                         </p>
                         <p>
                           Suite à l’accès à ces premiers éléments de diagnostic,
@@ -354,7 +353,7 @@ class Home extends Component {
                   <div className="card-body pt-4">
                     En 3 clics, les premières étapes de votre PDM sont réalisées
                     ! Pour en savoir plus sur nos services et les modalités
-                    d’inscription,{" "}
+                    d’inscription,
                     <button
                       className="toggleButton"
                       onClick={this.toggleInscription}

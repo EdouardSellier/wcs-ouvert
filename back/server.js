@@ -36,7 +36,7 @@ app.post('/contact', (req, res) => {
 
     let mailOptions = {
       from: req.body.email,
-      to: '"OUVERT" <no-reply@ouvert.com>',
+      to: 'etude.ouvert@gmail.com',
       subject: "Nouveau message - Mouv'R",
       html: htmlEmail
     };
@@ -76,8 +76,8 @@ app.post('/assistance', (req, res) => {
 
     let mailOptions = {
       from: req.body.email,
-      to: '"OUVERT" <no-reply@ouvert.com>',
-      subject: "Nouveau message - Mouv'R",
+      to: 'etude.ouvert@gmail.com',
+      subject: "Nouveau message - MOUV'R",
       html: htmlEmail
     };
 
@@ -107,7 +107,6 @@ app.post('/user/survey', (req, res) => {
 
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
-
   dbHandle.query(
     `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
     formData,
@@ -121,14 +120,18 @@ app.post('/employee/send/sondage', (req, res) => {
   );
 });
 
-app.get('/user/list/survey', (req, res) => {
-  dbHandle.query(`SELECT survey_name, user_id FROM survey`, (err, results) => {
-    if (err) {
-      res.status(500).send('The database crashed ! The reason is ' + err);
-    } else {
-      res.json(results);
+app.post('/user/list/survey', (req, res) => {
+  const userId = req.body.user_id;
+  dbHandle.query(
+    `SELECT survey_name, user_id FROM survey WHERE user_id = ${userId}`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.json(results);
+      }
     }
-  });
+  );
 });
 
 app.get('/user/resultat', (req, res) => {
@@ -170,20 +173,17 @@ app.post('/user/send/survey', (req, res) => {
         pass: userTransporter.pass
       }
     });
-
     let mailOptions = {
       from: '"OUVERT" <no-reply@ouvert.com>',
       to: mail,
       subject: 'Enquête de mobilité ✔',
-      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/enquete/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
     };
-
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         res.status(500).send('An error occured during mail sending.');
       }
     });
-
     dbHandle.query(
       `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
         req.body.survey_name
@@ -365,7 +365,6 @@ app.post('/admin/payment', (req, res) => {
           subject: "Votre compte n'est plus actif",
           html: `<h1>Désactivation de votre compte</h1><p>Sauf erreur de notre part, nous n'avons pas reçu votre règlement pour bénéficier de nos services. Nous avons ainsi désactivé votre compte. En cas de problème, vous pouvez nous contacter par e-mail ou par téléphone : <a href='http://localhost:3000/contact'>Cliquez sur ce lien</a>.</p><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
         };
-
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
             res.status(500).send('An error occured with confirmation e-mail after sign up.');
