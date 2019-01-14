@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import ScrollAnimation from "react-animate-on-scroll";
 import Zoom from "react-reveal/Zoom";
-import "./css/Accueil.css";
+import "./css/Home.css";
 
 class Home extends Component {
   constructor(props) {
