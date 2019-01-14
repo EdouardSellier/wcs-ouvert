@@ -21,7 +21,7 @@ class Contact extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit(e) {
+  handleSubmit = e => {
     e.preventDefault();
     let body = {
       email: this.state.fields.email,
@@ -32,7 +32,7 @@ class Contact extends Component {
       url: "http://localhost:8080/contact",
       data: body
     });
-  }
+  };
 
   render() {
     return (
