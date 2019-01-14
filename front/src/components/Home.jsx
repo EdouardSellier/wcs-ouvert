@@ -435,21 +435,6 @@ class Accueil extends Component {
                             d’actions.
                           </li>
                         </ul>
-
-                        <h4 className="text-center">
-                          <b>TARIFS </b>
-                        </h4>
-                        <p className="text-center">
-                          <b>
-                            (utilisation pendant un an, renouvelable à échéance)
-                          </b>
-                        </p>
-                        <ul>
-                          <li>0 - 500 salariés : 500 € HT / an</li>
-                          <li>500 – 1 000 salariés : 800 € HT / an</li>
-                          <li>1000 – 2000 salariés : 1 000 € HT / an</li>
-                          <li>> 2000 salariés : sur devis</li>
-                        </ul>
                       </div>
                     </ModalBody>
                     <ModalFooter>
