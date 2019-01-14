@@ -15,7 +15,7 @@ import ScrollAnimation from "react-animate-on-scroll";
 import Zoom from "react-reveal/Zoom";
 import "./css/Accueil.css";
 
-class Accueil extends Component {
+class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -493,4 +493,4 @@ class Accueil extends Component {
   }
 }
 
-export default Accueil;
+export default Home;
