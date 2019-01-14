@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Footer from "./Footer";
 import questions from "./questions";
 import axios from "axios";
-import "./css/Sondage.css";
+import "./css/Enquete.css";
 
 const MultipleOption = props => {
   return (
