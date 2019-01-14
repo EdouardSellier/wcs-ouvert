@@ -5,7 +5,7 @@ import Zoom from "react-reveal/Zoom";
 import "./css/EspaceRH.css";
 
 class EspaceRH extends Component {
-  handleSubmit = () => {
+  handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
     localStorage.removeItem("currentUser");
@@ -14,7 +14,7 @@ class EspaceRH extends Component {
   };
   render() {
     return (
-      <div className="espaceRh ">
+      <div className="espaceRh">
         <Container>
           <Row>
             <Col xs={{ size: 8, offset: 2 }}>
@@ -27,7 +27,7 @@ class EspaceRH extends Component {
             <Col lg={{ size: 2 }}>
               <button
                 className="mt-3 mb-5 btn btn-danger"
-                onClick={this.handleSubmit}
+                onClick={this.handleLogOut}
               >
                 <i className="fa fa-power-off" /> Déconnexion
               </button>
