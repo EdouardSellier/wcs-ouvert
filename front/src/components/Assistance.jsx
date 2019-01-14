@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Form } from "reactstrap";
 import axios from "axios";
 
 class Assistance extends Component {
@@ -7,8 +7,8 @@ class Assistance extends Component {
     super(props);
     this.state = {
       fields: {
-        email: undefined,
-        message: undefined,
+        email: "",
+        message: "",
         confirmation: ""
       }
     };
@@ -88,12 +88,7 @@ class Assistance extends Component {
                 par mail via le formulaire ci-dessous ou à nous joindre par
                 téléphone au <i className="fa fa-phone" /> 03.20.61.90.89.
               </p>
-              <form
-                onSubmit={this.contactForm}
-                method="post"
-                action=""
-                className="mt-2"
-              >
+              <Form onSubmit={this.contactForm} className="mt-2">
                 <div className="form-group">
                   <input
                     type="email"
@@ -107,7 +102,7 @@ class Assistance extends Component {
                 </div>
                 <div className="form-group">
                   <textarea
-                    type="text"
+                    type="message"
                     name="message"
                     className="form-control"
                     id="inputMessageContact"
@@ -119,7 +114,7 @@ class Assistance extends Component {
                 <button type="submit" className="btn text-white">
                   Envoyer ma demande <i className="fa fa-envelope" />
                 </button>
-              </form>
+              </Form>
               {this.state.confirmation}
             </div>
           </Col>
