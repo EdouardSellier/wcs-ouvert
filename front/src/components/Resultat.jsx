@@ -410,7 +410,7 @@ class Resultat extends Component {
         <Row>
           <Col lg={{ size: 2 }} className="pb-4">
             <button className="mt-2 btn text-white" onClick={this.handleSubmit}>
-              Revenir à l'accueil
+              <i className="fa fa-home" /> Revenir à l'accueil
             </button>
           </Col>
           <Col lg={{ size: 8 }}>
