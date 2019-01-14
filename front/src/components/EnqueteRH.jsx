@@ -106,7 +106,7 @@ const Number = props => {
   );
 };
 
-class SondageRH extends Component {
+class EnqueteRH extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -279,4 +279,4 @@ class SondageRH extends Component {
   }
 }
 
-export default SondageRH;
+export default EnqueteRH;

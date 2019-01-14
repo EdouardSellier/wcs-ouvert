@@ -7,8 +7,8 @@ import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
 import Geolocalisation from "./components/Geolocalisation";
-import SondageRH from "./components/SondageRH";
-import Sondage from "./components/Sondage";
+import EnqueteRH from "./components/EnqueteRH";
+import Enquete from "./components/Enquete";
 import Resultat from "./components/Resultat";
 import Assistance from "./components/Assistance";
 import EspaceAdmin from "./components/EspaceAdmin";
@@ -75,7 +75,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
-            <Route path="/sondage" component={Sondage} />
+            <Route path="/enquete" component={Enquete} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
@@ -84,7 +84,7 @@ class App extends Component {
             <UserRoute path="/sondage/:token" component={Sondage} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
-            <UserRoute path="/sondageRH" component={SondageRH} />
+            <UserRoute path="/enqueteRH" component={EnqueteRH} />
 
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />
