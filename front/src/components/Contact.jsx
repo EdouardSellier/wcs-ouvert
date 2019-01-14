@@ -4,25 +4,23 @@ import "./css/Contact.css";
 import axios from "axios";
 
 class Contact extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       fields: {
-        email: "",
-        message: ""
+        email: undefined,
+        message: undefined,
+        confirmation: ""
       }
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
+  contactForm = event => {
+    event.preventDefault();
     let body = {
       email: this.state.fields.email,
       message: this.state.fields.message
@@ -31,7 +29,23 @@ class Contact extends Component {
       method: "post",
       url: "http://localhost:8080/contact",
       data: body
-    });
+    })
+      .then(res => {
+        if (res.status === 200) {
+          let fields = {};
+          fields["email"] = "";
+          fields["message"] = "";
+          this.setState({
+            confirmation: (
+              <p className="confirm">Le message a bien été envoyé</p>
+            ),
+            fields: fields
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   render() {
@@ -46,7 +60,7 @@ class Contact extends Component {
               au <i className="fa fa-phone" /> 03.20.61.90.89.
             </p>
             <Form
-              onSubmit={this.handleSubmit}
+              onSubmit={this.contactForm}
               method="post"
               action=""
               className="mt-2"
@@ -59,6 +73,7 @@ class Contact extends Component {
                   id="inputEmailContact"
                   placeholder="Adresse e-mail"
                   onChange={this.handleChange}
+                  value={this.state.fields.email || ""}
                 />
               </div>
               <div className="form-group">
@@ -69,12 +84,14 @@ class Contact extends Component {
                   id="inputMessageContact"
                   placeholder="Votre message..."
                   onChange={this.handleChange}
+                  value={this.state.fields.message || ""}
                 />
               </div>
               <button type="submit" className="btn text-white">
                 Envoyer ma demande <i className="fa fa-envelope" />
               </button>
             </Form>
+            {this.state.confirmation}
           </div>
         </Col>
       </div>
