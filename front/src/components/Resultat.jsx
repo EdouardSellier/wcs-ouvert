@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import posed from "react-pose";
-import styled from "styled-components";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
 import { Pie } from "react-chartjs-2";
@@ -8,116 +6,86 @@ import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
 import "./css/Resultat.css";
 
-const Square = posed.div({
-  start: {
-    height: "0%"
-  },
-  end: {
-    height: "100%",
-    transition: { delay: 100 }
-  }
-});
-
-const StyledSquare = styled(Square)`
-  width: 100%;
-  background: linear-gradient(to left, blue 60%, white 70%, blue 100%);
-  border-radius: 8px 8px 0px 0px;
-  box-shadow: 6px 0px 8px 0px;
-  word-wrap: break-word;
-  overflow: hidden;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const ResultBar = props => {
   return (
     <React.Fragment>
-      <Row className="d-flex justify-content-center">
-        <Col md={{ size: 10 }} className="mb-5 pb-5 d-none d-lg-block">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
+      <Col
+        lg={{ size: 6 }}
+        className="d-flex bidule justify-content-center mt-5"
+      >
+        <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+          <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
             {props.label}
           </Col>
-          <Col xs={{ size: 12 }} className="d-flex containerResultBar px-0">
-            <Col xs={{ size: 1 }} className="px-0">
-              <Col xs={{ size: 12 }} className="colHundred pl-1">
-                100%
-              </Col>
-              <Col xs={{ size: 12 }} className="colFifty pl-1">
-                50%
-              </Col>
-              <Col xs={{ size: 12 }} className="colZero  pl-1">
-                0%
-              </Col>
-            </Col>
-            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
+          <Col xs={{ size: 12 }} className="px-0">
+            <Row id={props.number}>
               {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="containerBar">
-                  <Col
-                    xs={{ size: 12 }}
-                    style={{
-                      height:
-                        100 /
+                <React.Fragment>
+                  <Col xs={{ size: 4 }} className="pt-2 pr-0 alignCenter">
+                    <Col xs={{ size: 12 }} className="textAlignRight pr-1">
+                      {data}
+                    </Col>
+                  </Col>
+                  <Col xs={{ size: 7 }} className="borderLeft pt-2 px-0">
+                    <Col
+                      xs={{ size: 12 }}
+                      className="px-0 alignCenterFullHeight"
+                    >
+                      <div
+                        className="bg-dark text-white"
+                        style={{
+                          width:
+                            100 /
+                              (props.dataFetch.length /
+                                props.dataFetch.filter(
+                                  dataFetch => dataFetch[props.index] === data
+                                ).length) +
+                            "%",
+                          display: "flex",
+                          height: "3vh",
+
+                          justifyContent: "center",
+                          alignItems: "center",
+                          overflow: "hidden"
+                        }}
+                      >
+                        {100 /
                           (props.dataFetch.length /
                             props.dataFetch.filter(
                               dataFetch => dataFetch[props.index] === data
                             ).length) +
-                        "%",
-                      display: "flex",
-                      alignItems: "flex-end"
-                    }}
-                    className="px-0"
-                  >
-                    <StyledSquare pose={props.hovering ? "end" : "start"}>
-                      {(
-                        100 /
-                        (props.dataFetch.length /
-                          props.dataFetch.filter(
-                            dataFetch => dataFetch[props.index] === data
-                          ).length)
-                      ).toFixed(2) + "%"}
-                    </StyledSquare>
+                          "%"}
+                      </div>
+                    </Col>
                   </Col>
-                </Col>
+                </React.Fragment>
               ))}
-            </Col>
-          </Col>
-          <Col xs={{ size: 12 }} className="px-0 justifyContentRight">
-            <Col xs={{ size: 11 }} className="d-flex justify-content-center">
-              {props.possibilities.map(data => (
-                <Col xs={{ size: 1 }} className="barTitle">
-                  {data}
-                </Col>
-              ))}
-            </Col>
-          </Col>
-        </Col>
-
-        <Col xs={{ size: 10 }} className="mb-5 pb-5 d-block d-lg-none">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col xs={{ size: 12 }} className="px-0">
-            {props.possibilities.map(data => (
-              <Col xs={{ size: 12 }} className="d-flex my-2 border-bottom">
-                <Col xs={{ size: 8 }} className="text-white">
-                  {data}
-                </Col>
-                <Col xs={{ size: 4 }} className="text-white">
-                  {(
-                    100 /
-                    (props.dataFetch.length /
-                      props.dataFetch.filter(
-                        dataFetch => dataFetch[props.index] === data
-                      ).length)
-                  ).toFixed(2) + "%"}
+              <Col
+                xs={{ size: 7, offset: 4 }}
+                className="px-0 containerResultBar"
+              >
+                <Col xs={{ size: 12 }} className="d-flex px-0 pt-2">
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
+                  <Col xs={{ size: 3 }} className="borderRight px-0 pt-2" />
                 </Col>
               </Col>
-            ))}
+              <Col xs={{ size: 7, offset: 4 }} className="d-flex px-0">
+                <Col xs={{ size: 1 }} className="px-1 d-flex">
+                  0%
+                </Col>
+                <Col xs={{ size: 4 }}>25%</Col>
+                <Col xs={{ size: 2 }}>50%</Col>
+                <Col xs={{ size: 4 }}>75%</Col>
+                <Col xs={{ size: 1 }} className="px-1 textAlignRight">
+                  100%
+                </Col>
+              </Col>
+            </Row>
           </Col>
         </Col>
-      </Row>
+      </Col>
     </React.Fragment>
   );
 };
@@ -128,7 +96,7 @@ const ResultPie = props => {
   possibilities.push("------");
 
   let pies = { pie1: [], pie2: [], pie3: [] };
-  props.possibilities.map(data =>
+  possibilities.map(data =>
     pies.pie1.push(
       props.dataFetch.filter(state => state[props.index + "one"] === data)
         .length
@@ -155,7 +123,7 @@ const ResultPie = props => {
 
   let color = [
     "#aad7a9",
-    "#348b5",
+    "#348b54",
     "#3cd74b",
     "#fd62d9",
     "#cda889",
@@ -205,51 +173,6 @@ const ResultPie = props => {
         fontSize: 13
       },
       legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    },
-    {
-      title: {
-        display: true,
-        text: "Priorité 2.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    },
-    {
-      title: {
-        display: true,
-        text: "Priorité 3.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
-        position: "left",
-        labels: {
-          fontSize: 11
-        }
-      }
-    }
-  ];
-
-  const options2 = [
-    {
-      title: {
-        display: true,
-        text: "Priorité 1.",
-        fontFamily: "Roboto",
-        fontSize: 13
-      },
-      legend: {
         display: false
       }
     },
@@ -277,48 +200,70 @@ const ResultPie = props => {
     }
   ];
 
+  let idTab = 0;
   return (
-    <React.Fragment>
-      <Row className="d-none d-lg-block">
-        <Col xs={{ size: 12 }} className="mb-5 pb-5 px-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col xs={{ size: 12 }} className="piesContainer pt-4">
-            <Col xs={{ size: 5 }}>
-              <Pie data={data[0]} options={options[0]} />
-            </Col>
-            <Col xl={{ size: 5 }}>
-              <Pie data={data[1]} options={options[1]} />
-            </Col>
-          </Col>
-          <Col
-            xs={{ size: 12 }}
-            className="bgWhiteOpac d-flex justify-content-center pb-5"
-          >
-            <Col xl={{ size: 5 }} className="">
-              <Pie data={data[2]} options={options[2]} />
-            </Col>
-          </Col>
+    <Col lg={{ size: 6 }} className="d-flex justify-content-center mt-5">
+      <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+        <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
+          {props.label}
         </Col>
-      </Row>
-      <Row className="d-block d-lg-none">
-        <Col xs={{ size: 12 }} className="mb-5 pb-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
+        <Row id={props.number}>
+          <Col xs={{ size: 8 }}>
+            {tabName.map(data => {
+              idTab += 1;
+
+              return (
+                <Col lg={{ size: 12 }}>
+                  <Col xs={{ size: 12 }} className="d-flex my-1">
+                    <Col xs={{ size: 4 }} className="centerRight">
+                      <Col
+                        xs={{ size: 8 }}
+                        className="border colorLegend"
+                        style={{
+                          height: "3vh",
+                          backgroundColor: color[idTab - 1]
+                        }}
+                      >
+                        {" "}
+                      </Col>
+                    </Col>
+                    <Col xs={{ size: 8 }} className="textAlignLeft">
+                      {data}
+                    </Col>
+                  </Col>
+                </Col>
+              );
+            })}
           </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[0]} options={options2[0]} width={100} />
+          <Col xs={{ size: 4 }}>
+            <Col lg={{ size: 12 }}>
+              <Pie
+                data={data[0]}
+                options={options[0]}
+                width={100}
+                height={100}
+              />
+            </Col>
+            <Col lg={{ size: 12 }}>
+              <Pie
+                data={data[1]}
+                options={options[1]}
+                width={100}
+                height={100}
+              />
+            </Col>
+            <Col lg={{ size: 12 }}>
+              <Pie
+                data={data[2]}
+                options={options[2]}
+                width={100}
+                height={100}
+              />
+            </Col>
           </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[1]} options={options2[1]} width={100} />
-          </Col>
-          <Col xs={{ size: 12 }} className="bgWhiteOpac">
-            <Pie data={data[2]} options={options2[2]} width={100} />
-          </Col>
-        </Col>
-      </Row>
-    </React.Fragment>
+        </Row>
+      </Col>
+    </Col>
   );
 };
 
@@ -333,20 +278,19 @@ const ResultText = props => {
 
   return (
     <React.Fragment>
-      <Row>
-        <Col xs={{ size: 12 }} className="mb-5 pb-5">
-          <Col xs={{ size: 12 }} className="my-5 componentTitle">
-            {props.label}
-          </Col>
-          <Col
-            xs={{ size: 12 }}
-            className="d-flex justify-content-center contentResultText"
-          >
-            La moyenne des salariés ayant répondu est de{" "}
-            <span className="dataResultText">{result}€</span>
-          </Col>
+      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light">
+        <Col xs={{ size: 12 }} className="my-5 componentTitle">
+          {props.label}
         </Col>
-      </Row>
+        <Col
+          xs={{ size: 12 }}
+          className="d-flex justify-content-center contentResultText"
+          id={props.number}
+        >
+          La moyenne des salariés ayant répondu est de{" "}
+          <span className="dataResultText">{result}€</span>
+        </Col>
+      </Col>
     </React.Fragment>
   );
 };
@@ -357,76 +301,53 @@ class Resultat extends Component {
 
     this.state = {
       hovering: true,
-      dataFetch: [
-        {
-          genre: "Un homme",
-          age: "25 ans ou moins",
-          principal_transport_one: "Voiture personnelle",
-          principal_transport_two: "------",
-          principal_transport_three: "------",
-          ocasionaly_transport_one: "Voiture personnelle",
-          ocasionaly_transport_two: "------",
-          ocasionaly_transport_three: "------",
-          reason_transport: "Rapidité",
-          distance_klm: 0,
-          distance_min: 0,
-          distance_money: 0,
-          elements_one: "Pas d’obligation particulière",
-          elements_two: "------",
-          elements_three: "------",
-          parking_place: "Oui",
-          midday: "Sur mon lieu de travail dans le restaurant d’entreprise",
-          frequency_midday: "Jamais",
-          transport_midday: "Voiture personnelle",
-          frequency_pro: "Je ne fais jamais de déplacements professionnels",
-          distance_pro: "Je ne fais jamais de déplacements professionnels",
-          deplacement_pro: "Voiture personnelle",
-          reason_perso_car: "Pas d’autres solutions identifiées",
-          deplacement_method_pro:
-            "J’utilise quotidiennement un mode de déplacements alternatif à la voiture individuelle",
-          commun_transport_one:
-            "J’utilise déjà souvent les transports en commun",
-          commun_transport_two: "------",
-          commun_transport_three: "------",
-          bike_one: "Je me déplace déjà souvent à vélo",
-          bike_two: "------",
-          bike_three: "------",
-          carpooling_one: "Je covoiture déjà souvent",
-          carpooling_two: "------",
-          carpooling_three: "------",
-          otherThanCar: "",
-          commentary: ""
-        }
-      ]
+      dataFetch: []
     };
   }
 
-  handlePdf(imga) {
+  handlePdf(img) {
     let newPdf = new jsPDF();
-    newPdf.text(15, 15, "Compte-rendu de la géolocalisation de vos salariés :");
-    newPdf.setFontSize(30);
-    const allImages = imga.reverse();
+    const allImages = img;
+    newPdf.text(15, 15, "Résultat de votre enquête :");
 
-    allImages.map(image => {
-      newPdf.addImage(image, "JPEG", 20, 10, 20, 20);
+    newPdf.setFontSize(10);
 
-      return newPdf.addPage();
+    questions.map(data => {
+      if (data.number < 22) {
+        newPdf.text(
+          data.coordinateTitle[0],
+          data.coordinateTitle[1],
+          data.contentPDF
+        );
+
+        newPdf.addImage(
+          allImages[data.indexImgPdf],
+          "JPEG",
+          data.coordinateImg[0],
+          data.coordinateImg[1],
+          data.coordinateImg[2],
+          data.coordinateImg[3]
+        );
+
+        if (data.pageAdded === true) {
+          newPdf.addPage();
+        }
+      }
+      return false;
     });
 
-    let lastPage = newPdf.internal.getNumberOfPages();
-    newPdf.deletePage(lastPage);
-
-    newPdf.save("compte-rendu.pdf");
+    newPdf.save("resultat-enquete.pdf");
   }
 
   handleImg() {
-    const capture1 = document.querySelector(".test");
-    const capture2 = document.querySelector(".test");
-
     let allCaptures = [];
 
-    allCaptures.push(capture1);
-    allCaptures.push(capture2);
+    questions.map(data => {
+      if (data.number < 22) {
+        allCaptures.push(document.getElementById(data.number));
+      }
+      return false;
+    });
 
     let allImagesData = [];
 
@@ -434,13 +355,11 @@ class Resultat extends Component {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
 
-        imgData = new Image(100, 100);
+        imgData = new Image(1000, 1000);
 
         imgData.src = dataUrl;
         allImagesData.push(imgData);
-        this.setState({
-          imgData: allImagesData
-        });
+
         this.handlePdf(allImagesData);
       });
     });
@@ -452,13 +371,34 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
-    fetch("http://localhost:8080/states", {
-      method: "POST"
+    try {
+      if (
+        !this.props.location.state.currentId &&
+        !this.props.location.state.surveyNameSelected
+      ) {
+        this.props.history.push("/");
+      }
+    } catch {
+      this.props.history.push("/");
+    }
+
+    const token = localStorage.getItem("token");
+
+    fetch("http://localhost:8080/user/resultat", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     })
       .then(results => results.json())
       .then(data => {
+        let dataFetch = data.filter(
+          survey =>
+            survey.id_rh === this.props.location.state.currentId &&
+            survey.survey_name === this.props.location.state.surveyNameSelected
+        );
+
         this.setState({
-          dataFetch: data,
+          dataFetch: dataFetch,
           hovering: true
         });
       });
@@ -485,43 +425,47 @@ class Resultat extends Component {
             sondage pour l'instant.
           </Col>
         </Row>
-        {questions.map(data => {
-          switch (data.type) {
-            case "option":
-              return (
-                <ResultBar
-                  hovering={this.state.hovering}
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
-            case "multipleOption":
-              return (
-                <ResultPie
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
-            case "number":
-              return (
-                <ResultText
-                  possibilities={data.possibilities}
-                  index={data.index}
-                  dataFetch={this.state.dataFetch}
-                  label={data.label}
-                />
-              );
-            default:
-              return false;
-          }
-        })}
-
+        <Row className="px-5 mt-5 d-flex justify-content-center">
+          {questions.map(data => {
+            switch (data.type) {
+              case "option":
+                return (
+                  <ResultBar
+                    hovering={this.state.hovering}
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              case "multipleOption":
+                return (
+                  <ResultPie
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              case "number":
+                return (
+                  <ResultText
+                    possibilities={data.possibilities}
+                    index={data.index}
+                    dataFetch={this.state.dataFetch}
+                    label={data.label}
+                    number={data.number}
+                  />
+                );
+              default:
+                return false;
+            }
+          })}
+        </Row>
         <Row>
-          <Col xs={{ size: 12 }} className="pb-5">
+          <Col xs={{ size: 12 }} className="pb-5 mt-5">
             <button
               onClick={() => this.handleImg()}
               className="mb-4 mt-3 btn btn-lg text-white pdfButton"

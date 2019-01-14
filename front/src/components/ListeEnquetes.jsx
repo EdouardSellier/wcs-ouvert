@@ -131,7 +131,7 @@ class ListeEnquetes extends Component {
 
   render() {
     let columns = [
-      { key: "user_id", label: "Société" },
+      { key: "company_name", label: "Société" },
       { key: "survey_name", label: "Nom de l'enquête" },
       {
         key: "starting_date",

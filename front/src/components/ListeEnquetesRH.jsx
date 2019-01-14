@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import "./css/EnqueteRH.css";
@@ -17,7 +17,9 @@ class ListeEnquetesRH extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      allSurveyName: []
+      allSurveyName: [],
+      surveyNameSelected: "",
+      currentId: null
     };
   }
 
@@ -30,21 +32,33 @@ class ListeEnquetesRH extends Component {
     this.props.history.push("/monespace");
   };
 
+  changeSurveyName = event => {
+    alert(event.target.value);
+    if (event.target.value !== "Sélectionner une enquête") {
+      this.setState({
+        surveyNameSelected: event.target.value
+      });
+    }
+  };
+
   getSurveyName = () => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
-    const body = { user_id: userId };
-    axios({
-      method: "post",
-      url: "http://localhost:8080/user/list/survey",
-      data: body,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
+    const currentId = Number(localStorage.getItem("currentId"));
+    axios
+      .get("http://localhost:8080/user/list/survey", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       .then(res => {
+        const allSurveyName = res.data.filter(
+          survey => survey.user_id === currentId
+        );
+
         this.setState({
-          allSurveyName: res.data
+          allSurveyName: allSurveyName,
+          surveyNameSelected: allSurveyName[0].survey_name,
+          currentId: currentId
         });
       })
       .catch(error => {
@@ -79,7 +93,10 @@ class ListeEnquetesRH extends Component {
         <Container className="mt-5">
           <NotificationAlert ref="notificationAlertError" />
           <Col lg={{ size: 6, offset: 3 }}>
-            <select className="form-control surveySelect">
+            <select
+              onChange={event => this.changeSurveyName(event)}
+              className="form-control surveySelect"
+            >
               <option>Sélectionner une enquête</option>
               {this.state.allSurveyName.map(survey => {
                 return (
@@ -94,7 +111,15 @@ class ListeEnquetesRH extends Component {
             <Col lg={{ size: 4, offset: 1 }}>
               <div className="card shadow mt-5 mb-4">
                 <div className="card-body">
-                  <Link to="/resultat">
+                  <NavLink
+                    to={{
+                      pathname: "/resultat",
+                      state: {
+                        surveyNameSelected: this.state.surveyNameSelected,
+                        currentId: this.state.currentId
+                      }
+                    }}
+                  >
                     <img
                       src="./img/surveyResults.jpg"
                       alt="icon"
@@ -102,7 +127,7 @@ class ListeEnquetesRH extends Component {
                       height="150"
                       className="cardIcon mb-4"
                     />
-                  </Link>
+                  </NavLink>
                   <h4>Consulter les résultats</h4>
                 </div>
               </div>

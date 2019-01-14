@@ -27,7 +27,6 @@ router.post('/connexion', (req, res) => {
 
 router.post('/inscription', (req, res) => {
   const formData = req.body;
-  console.log(formData);
   bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
     formData.password = hash;
     dbHandle.query(`INSERT INTO user SET ?`, formData, (errorRequest, results) => {

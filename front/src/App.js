@@ -7,7 +7,6 @@ import EspaceRH from "./components/EspaceRH";
 import NouvelleEnquete from "./components/NouvelleEnquete";
 import ListeEnquetesRH from "./components/ListeEnquetesRH";
 import Geolocalisation from "./components/Geolocalisation";
-//import APIGeoloc from "./components/APIGeoloc";
 import SondageRH from "./components/SondageRH";
 import Sondage from "./components/Sondage";
 import Resultat from "./components/Resultat";
@@ -21,9 +20,10 @@ const AdminRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      authChecker.getUser() &&
-      authChecker.isAdmin() === "1" &&
-      authChecker.hasPaid() === "0" ? (
+      (authChecker.getUser() &&
+        authChecker.isAdmin() === "1" &&
+        authChecker.hasPaid() === "0") ||
+      authChecker.hasPaid() === "1" ? (
         <Component {...props} />
       ) : (
         <Redirect
@@ -75,16 +75,16 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Accueil} />
-
+            <Route path="/sondage" component={Sondage} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/monespace" component={EspaceRH} />
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <UserRoute path="/geolocalisation" component={Geolocalisation} />
-            <UserRoute path="/sondage" component={Sondage} />
-            <UserRoute path="/sondageRH" component={SondageRH} />
+            <UserRoute path="/sondage/:token" component={Sondage} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
+            <UserRoute path="/sondageRH" component={SondageRH} />
 
             <AdminRoute path="/admin" component={EspaceAdmin} />
             <AdminRoute path="/listeentreprises" component={ListeEntreprises} />

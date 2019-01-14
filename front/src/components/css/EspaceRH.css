@@ -10,7 +10,7 @@
 }
 
 .rhCard {
-  height: 320px;
+  min-height: 325px;
 }
 
 .rhCard:hover {

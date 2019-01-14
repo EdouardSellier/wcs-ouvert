@@ -61,12 +61,12 @@ class Home extends Component {
 
   handleForm = event => {
     event.preventDefault();
-    const id = localStorage.getItem("id");
+    //const id = localStorage.getItem("id");
     let body = {
       survey_name: this.state.survey_name,
       ending_date: this.state.ending_date,
-      all_mails: JSON.stringify(this.state.mailsArray),
-      user_id: id
+      user_id: localStorage.getItem("currentId"),
+      all_mails: JSON.stringify(this.state.mailsArray)
     };
     const token = localStorage.getItem("token");
     axios({
@@ -86,7 +86,9 @@ class Home extends Component {
             pathname: "/sondageRH",
             state: {
               nbMails: this.state.nbMails,
-              mailsData: this.state.mailsArray
+              mailsData: this.state.mailsArray,
+              user_id: localStorage.getItem("currentId"),
+              survey_name: this.state.survey_name
             }
           });
         }
@@ -99,7 +101,7 @@ class Home extends Component {
   render() {
     return (
       <div>
-        <div className="card shadow m-5 pt-3">
+        <div className="card shadow m-lg-5 m-md-4 pt-3">
           <NotificationAlert ref="notificationAlertError" />
           <Container className="mt-2">
             <Row>
@@ -189,12 +191,14 @@ class Home extends Component {
                   )}
                 </Col>
               </Row>
-              <Col md={{ size: 3, offset: 9 }}>
-                <button className="btn text-white mt-4 mb-3">
-                  Consulter le sondage avant envoi{" "}
-                  <i className="fa fa-arrow-right" />
-                </button>
-              </Col>
+              <Row>
+                <Col md={{ size: 4, offset: 6 }}>
+                  <button className="btn text-white mt-4 mb-3">
+                    Consulter l'enquête avant envoi{" "}
+                    <i className="fa fa-arrow-right" />
+                  </button>
+                </Col>
+              </Row>
             </form>
           </Container>
         </div>
