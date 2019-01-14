@@ -31,10 +31,15 @@ class APIGeoloc extends Component {
 
   getDistance = () => {
     let allDistances = this.props.employeeStats.distance;
-    let sumKm = allDistances.reduce((a, b) => a + b, 0);
-    let averageKm = sumKm / allDistances.length;
-    let minimumKm = Math.min(...allDistances);
-    let maximumKm = Math.max(...allDistances);
+    let averageKm = 0;
+    let minimumKm = 0;
+    let maximumKm = 0;
+    if (allDistances.length !== 0) {
+      let sumKm = allDistances.reduce((a, b) => a + b, 0);
+      averageKm = sumKm / allDistances.length;
+      minimumKm = Math.min(...allDistances);
+      maximumKm = Math.max(...allDistances);
+    }
     this.setState({
       averageKm: averageKm.toFixed(1),
       min: minimumKm,
