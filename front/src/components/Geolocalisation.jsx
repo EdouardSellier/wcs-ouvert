@@ -11,7 +11,7 @@ import jsPDF from "jspdf";
 import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
 
-const errorMsg = {
+const errorSocietyAddress = {
   place: "tr",
   message:
     "Nous avons rencontré un problème avec votre adresse postale, merci de vérifier les champs",
@@ -27,7 +27,7 @@ const errorLimitMsg = {
   autoDismiss: 4
 };
 
-const problemMsg = {
+const errorOnSubmit = {
   place: "tr",
   message:
     "Nous avons rencontré un problème lors de l'enregistrement de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
@@ -35,7 +35,7 @@ const problemMsg = {
   autoDismiss: 4
 };
 
-const errorAddress = {
+const errorListAddress = {
   place: "tr",
   message:
     "Nous avons rencontré un problème lors de la récupération de vos données, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
@@ -43,7 +43,7 @@ const errorAddress = {
   autoDismiss: 4
 };
 
-const errorResult = {
+const errorDisplayResult = {
   place: "tr",
   message:
     "Nous avons rencontré un problème lors de l'affichage de vos résultats, nous vous remercions de bien vouloir recommencer dans quelques instants ou de contacter l'assistance.",
@@ -83,24 +83,8 @@ class Geolocalisation extends Component {
     };
   }
 
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
-  };
-
-  alertFunctionErrorLimit = () => {
-    this.refs.notificationAlertError.notificationAlert(errorLimitMsg);
-  };
-
-  alertFunctionProblem = () => {
-    this.refs.notificationAlertError.notificationAlert(problemMsg);
-  };
-
-  alertFunctionErrorAddress = () => {
-    this.refs.notificationAlertError.notificationAlert(errorAddress);
-  };
-
-  alertFunctionErrorResult = () => {
-    this.refs.notificationAlertError.notificationAlert(errorResult);
+  alertFunctionError = error => {
+    this.refs.notificationAlertError.notificationAlert(error);
   };
 
   handleChange = e => {
@@ -144,7 +128,7 @@ class Geolocalisation extends Component {
         });
       })
       .catch(error => {
-        this.alertFunctionError();
+        this.alertFunctionError(errorSocietyAddress);
       });
   };
 
@@ -164,7 +148,7 @@ class Geolocalisation extends Component {
           });
           this.setState({ employeeMapData, societyMapData: societyMapData });
         } else {
-          this.alertFunctionErrorLimit();
+          this.alertFunctionError(errorLimitMsg);
         }
       });
     };
@@ -196,13 +180,13 @@ class Geolocalisation extends Component {
     })
       .then(result => {
         if (result.status !== 200) {
-          this.alertFunctionProblem();
+          this.alertFunctionError(errorOnSubmit);
         } else {
           this.setState({ employeeIsSend: true });
         }
       })
       .catch(error => {
-        this.alertFunctionProblem();
+        this.alertFunctionError(errorOnSubmit);
       });
   };
 
@@ -219,7 +203,7 @@ class Geolocalisation extends Component {
     })
       .then(result => {
         if (result.status !== 200) {
-          this.alertFunctionProblem();
+          this.alertFunctionError(errorOnSubmit);
         } else {
           this.setState({
             societyIsSend: true
@@ -227,7 +211,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        this.alertFunctionProblem();
+        this.alertFunctionError(errorOnSubmit);
       });
   };
 
@@ -261,7 +245,7 @@ class Geolocalisation extends Component {
         });
       })
       .catch(error => {
-        this.alertFunctionErrorAddress();
+        this.alertFunctionError(errorListAddress);
       });
   };
 
@@ -320,7 +304,7 @@ class Geolocalisation extends Component {
         }
       })
       .catch(error => {
-        this.alertFunctionErrorResult();
+        this.alertFunctionError(errorDisplayResult);
       });
   };
 
@@ -337,11 +321,6 @@ class Geolocalisation extends Component {
     this.setState({
       pdfIsLoading: true
     });
-    setTimeout(() => {
-      this.setState({
-        pdfIsLoading: false
-      });
-    }, 3000);
     allCaptures.map(capture => {
       return domtoimage.toPng(capture).then(dataUrl => {
         let imgData = new Image();
@@ -379,6 +358,9 @@ class Geolocalisation extends Component {
     newPdf.deletePage(lastPage);
     if (allImages.length === 2) {
       newPdf.save("compte-rendu.pdf");
+      this.setState({
+        pdfIsLoading: false
+      });
     }
   };
 
@@ -519,7 +501,7 @@ class Geolocalisation extends Component {
                         handleFiles={this.handleFiles}
                       >
                         <button className="btn importButton mt-3">
-                          <i className="fa fa-upload" /> Importer mon fichier{" "}
+                          <i className="fa fa-upload" /> Importer mon fichier
                         </button>
                       </ReactFileReader>
                       <span className="titleExample">
