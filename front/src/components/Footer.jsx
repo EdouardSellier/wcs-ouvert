@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
+import {
+  Row,
+  Col,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from "reactstrap";
 import "./css/Footer.css";
 
 class Footer extends Component {
@@ -23,19 +30,25 @@ class Footer extends Component {
     return (
       <footer className="footer navbar-dark">
         <div className="container-fluid">
-          <div className="row">
-            <div className="ecolonomie col-lg-12 mt-1 mb-2">
-              BUREAU D'ECOLONOMIE
-            </div>
-            <div className="adresseOuvert col-lg-12 mb-2">
-              POCHECO - 13 rue des Roloirs, F 59510 Forest sur Marque - Tél. :
-              +33 (0)3 20 61 90 89 - bureau@ouvert.eu
-            </div>
-          </div>
-          <div className="row">
-            <div className="legalMentions col-lg-12 mb-2" onClick={this.toggle}>
-              Mentions Légales
-            </div>
+          <Row>
+            <Col>
+              <div className="ecolonomie mt-1 mb-2">BUREAU D'ECOLONOMIE</div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div className="adresseOuvert mb-2">
+                POCHECO - 13 rue des Roloirs, F 59510 Forest sur Marque - Tél. :
+                +33 (0)3 20 61 90 89 - bureau@ouvert.eu
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div className="legalMentions mb-2" onClick={this.toggle}>
+                Mentions Légales
+              </div>
+            </Col>
             <Modal
               isOpen={this.state.modal}
               toggle={this.toggle}
@@ -109,15 +122,14 @@ class Footer extends Component {
                 </button>
               </ModalFooter>
             </Modal>
-          </div>
-          <div className="row">
-            <a
-              href="https://wildcodeschool.fr"
-              className="madeWithLove col-lg-12 mb-2"
-            >
-              Made with <span className="heart">♥</span> by Wild Code School
-            </a>
-          </div>
+          </Row>
+          <Row>
+            <Col>
+              <a href="https://wildcodeschool.fr" className="madeWithLove mb-2">
+                Made with <span className="heart">♥</span> by Wild Code School
+              </a>
+            </Col>
+          </Row>
         </div>
       </footer>
     );
