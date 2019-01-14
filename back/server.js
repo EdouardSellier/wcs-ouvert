@@ -111,7 +111,6 @@ app.post('/user/survey', (req, res) => {
 
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
-
   dbHandle.query(
     `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
     formData,
@@ -125,7 +124,7 @@ app.post('/employee/send/sondage', (req, res) => {
   );
 });
 
-app.get('/user/list/survey', (req, res) => {
+app.post('/user/list/survey', (req, res) => {
   dbHandle.query(`SELECT survey_name, user_id FROM survey`, (err, results) => {
     if (err) {
       res.status(500).send('The database crashed ! The reason is ' + err);
