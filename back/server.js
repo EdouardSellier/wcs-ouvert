@@ -36,7 +36,7 @@ app.post('/contact', (req, res) => {
 
     let mailOptions = {
       from: req.body.email,
-      to: '"OUVERT" <no-reply@ouvert.com>',
+      to: 'etude.ouvert@gmail.com',
       subject: "Nouveau message - Mouv'R",
       html: htmlEmail
     };
@@ -76,8 +76,8 @@ app.post('/assistance', (req, res) => {
 
     let mailOptions = {
       from: req.body.email,
-      to: '"OUVERT" <no-reply@ouvert.com>',
-      subject: "Nouveau message - Mouv'R",
+      to: 'etude.ouvert@gmail.com',
+      subject: "Nouveau message - MOUV'R",
       html: htmlEmail
     };
 
@@ -177,7 +177,7 @@ app.post('/user/send/survey', (req, res) => {
       from: '"OUVERT" <no-reply@ouvert.com>',
       to: mail,
       subject: 'Enquête de mobilité ✔',
-      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/sondage/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/enquete/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
