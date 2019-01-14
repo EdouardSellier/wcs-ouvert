@@ -82,7 +82,7 @@ class NouvelleEnquete extends Component {
             nbMails: this.state.mailsArray.length
           });
           this.props.history.push({
-            pathname: "/sondageRH",
+            pathname: "/enqueteRH",
             state: {
               nbMails: this.state.nbMails,
               mailsData: this.state.mailsArray,
