@@ -3,7 +3,7 @@ import { Row, Col } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import "./css/Accueil.css";
+import "./css/Home.css";
 
 const successMsg = {
   place: "br",
