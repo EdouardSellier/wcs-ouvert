@@ -29,6 +29,7 @@ class Assistance extends Component {
 
   contactForm = event => {
     event.preventDefault();
+    const token = localStorage.getItem("token");
     let body = {
       email: this.state.fields.email,
       message: this.state.fields.message
