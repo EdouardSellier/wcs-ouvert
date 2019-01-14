@@ -77,7 +77,7 @@ class App extends Component {
             <UserRoute path="/nouvelleenquete" component={NouvelleEnquete} />
             <UserRoute path="/listeenquetesrh" component={ListeEnquetesRH} />
             <UserRoute path="/geolocalisation" component={Geolocalisation} />
-            <UserRoute path="/sondage/:token" component={Enquete} />
+            <UserRoute path="/enquete/:token" component={Enquete} />
             <UserRoute path="/assistance" component={Assistance} />
             <UserRoute path="/resultat" component={Resultat} />
             <UserRoute path="/enqueteRH" component={EnqueteRH} />
