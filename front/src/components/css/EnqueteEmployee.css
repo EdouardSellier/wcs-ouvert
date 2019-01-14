@@ -1,0 +1,22 @@
+.commentary {
+  width: 50%;
+  height: 30vh;
+}
+
+.threeInput {
+  width: 200px;
+  margin-right: 20px;
+}
+
+.textAlignLeft {
+  text-align: left;
+}
+
+.marginMultipleOption {
+  margin-bottom: 4vh;
+}
+
+.marginNumber,
+.marginOption {
+  margin-bottom: 2vh;
+}
