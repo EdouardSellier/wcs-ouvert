@@ -54,10 +54,6 @@ app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next)
   next();
 });
 
-app.get('/authrequired', (req, res) => {
-  res.send(`You're in, congrats !\n`);
-});
-
 app.post('/assistance', (req, res) => {
   nodemailer.createTestAccount((err, account) => {
     const htmlEmail = `
