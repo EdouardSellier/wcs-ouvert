@@ -1,0 +1,58 @@
+.espaceAdmin {
+  min-height: 65vh;
+}
+
+.nbSociety {
+  font-size: 1.6em;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+.adminStat {
+  text-align: left;
+}
+
+.adminCard {
+  min-height: 300px;
+}
+
+.listeEntreprises {
+  min-height: 100vh;
+}
+
+.arrowRight {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.arrowLeft {
+  background-color: white;
+  color: black;
+  border: none;
+}
+
+.getPage {
+  background: none;
+  border: none;
+}
+
+.paymentButton {
+  width: 90px;
+}
+
+.surveyList {
+  min-height: 80vh;
+}
+
+.employeesList {
+  height: 130px;
+  overflow: scroll;
+}
+
+.descInscription {
+  background-color: rgba(255, 255, 255, 0.671);
+  padding: 10px;
+  color: rgb(63, 61, 61);
+  border-radius: 7px;
+}

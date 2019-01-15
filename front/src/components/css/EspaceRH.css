@@ -1,0 +1,37 @@
+.espaceRh {
+  min-height: 80vh;
+}
+
+.cardIcon {
+  border-radius: 50%;
+  font-size: 1.88rem;
+  line-height: 90px;
+  margin-top: -90px;
+}
+
+.rhCard {
+  min-height: 325px;
+}
+
+.rhCard:hover {
+  transform: scale(1.05);
+}
+
+.linkTo:hover {
+  text-decoration: none;
+}
+
+.surveyCard {
+  text-align: left;
+}
+
+.confirmationMsg {
+  color: #38909d;
+  padding: 20px;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.surveyTextArea {
+  width: 60%;
+}
