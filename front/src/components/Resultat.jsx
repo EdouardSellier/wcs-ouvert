@@ -384,7 +384,7 @@ class Resultat extends Component {
 
     const token = localStorage.getItem("token");
 
-    fetch("http://localhost:8080/user/resultat", {
+    fetch("https://backend.mouv-r.fr/user/resultat", {
       headers: {
         Authorization: `Bearer ${token}`
       }

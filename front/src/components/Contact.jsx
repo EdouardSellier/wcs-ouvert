@@ -31,7 +31,7 @@ class Contact extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/contact",
+      url: "https://backend.mouv-r.fr/contact",
       data: body
     })
       .then(res => {

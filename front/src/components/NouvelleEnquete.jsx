@@ -70,7 +70,7 @@ class NouvelleEnquete extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/user/survey",
+      url: "https://backend.mouv-r.fr/user/survey",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

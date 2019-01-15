@@ -77,7 +77,7 @@ class ListeEntreprises extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/admin/list/society",
+      url: "https://backend.mouv-r.fr/admin/list/society",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -162,7 +162,7 @@ class ListeEntreprises extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/admin/payment",
+      url: "https://backend.mouv-r.fr/admin/payment",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
