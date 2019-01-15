@@ -13,7 +13,7 @@ const errorMsg = {
   autoDismiss: 4
 };
 
-class AccueilAdmin extends Component {
+class EspaceAdmin extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,7 +28,7 @@ class AccueilAdmin extends Component {
     };
   }
 
-  handleSubmit = () => {
+  handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
     localStorage.removeItem("currentUser");
@@ -141,7 +141,7 @@ class AccueilAdmin extends Component {
             <Col lg={{ size: 2 }}>
               <button
                 className="mt-2 btn btn-danger"
-                onClick={this.handleSubmit}
+                onClick={this.handleLogOut}
               >
                 <i className="fa fa-power-off" /> Déconnexion
               </button>
@@ -245,4 +245,4 @@ class AccueilAdmin extends Component {
   }
 }
 
-export default AccueilAdmin;
+export default EspaceAdmin;

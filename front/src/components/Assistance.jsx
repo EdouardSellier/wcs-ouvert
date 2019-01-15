@@ -1,27 +1,34 @@
 import React, { Component } from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col, Form } from "reactstrap";
 import axios from "axios";
 
 class Assistance extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       fields: {
         email: "",
-        message: ""
+        message: "",
+        confirmation: ""
       }
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+  handleBack = event => {
+    event.preventDefault();
+    this.props.history.push("/listeenquetesrh");
   };
 
-  handleSubmit(e) {
-    e.preventDefault();
+  handleChange = e => {
+    let fields = this.state.fields;
+    fields[e.target.name] = e.target.value;
+    this.setState({
+      fields
+    });
+  };
+
+  contactForm = event => {
+    event.preventDefault();
     const token = localStorage.getItem("token");
     let body = {
       email: this.state.fields.email,
@@ -34,13 +41,25 @@ class Assistance extends Component {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    });
-  }
-
-  handleBack = event => {
-    event.preventDefault();
-    this.props.history.push("/listeenquetesrh");
+    })
+      .then(res => {
+        if (res.status === 200) {
+          let fields = {};
+          fields["email"] = "";
+          fields["message"] = "";
+          this.setState({
+            confirmation: (
+              <p className="confirm">Le message a bien été envoyé</p>
+            ),
+            fields: fields
+          });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
+
   render() {
     return (
       <div>
@@ -69,12 +88,7 @@ class Assistance extends Component {
                 par mail via le formulaire ci-dessous ou à nous joindre par
                 téléphone au <i className="fa fa-phone" /> 03.20.61.90.89.
               </p>
-              <form
-                onSubmit={this.handleSubmit}
-                method="post"
-                action=""
-                className="mt-2"
-              >
+              <Form onSubmit={this.contactForm} className="mt-2">
                 <div className="form-group">
                   <input
                     type="email"
@@ -83,22 +97,25 @@ class Assistance extends Component {
                     id="inputEmailContact"
                     placeholder="Adresse e-mail"
                     onChange={this.handleChange}
+                    value={this.state.fields.email || ""}
                   />
                 </div>
                 <div className="form-group">
                   <textarea
-                    type="text"
+                    type="message"
                     name="message"
                     className="form-control"
                     id="inputMessageContact"
                     placeholder="Votre message..."
                     onChange={this.handleChange}
+                    value={this.state.fields.message || ""}
                   />
                 </div>
                 <button type="submit" className="btn text-white">
                   Envoyer ma demande <i className="fa fa-envelope" />
                 </button>
-              </form>
+              </Form>
+              {this.state.confirmation}
             </div>
           </Col>
         </div>

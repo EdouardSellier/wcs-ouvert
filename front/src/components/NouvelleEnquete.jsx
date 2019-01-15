@@ -15,7 +15,7 @@ const errorMsg = {
   autoDismiss: 4
 };
 
-class Home extends Component {
+class NouvelleEnquete extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -61,7 +61,6 @@ class Home extends Component {
 
   handleForm = event => {
     event.preventDefault();
-    //const id = localStorage.getItem("id");
     let body = {
       survey_name: this.state.survey_name,
       ending_date: this.state.ending_date,
@@ -83,7 +82,7 @@ class Home extends Component {
             nbMails: this.state.mailsArray.length
           });
           this.props.history.push({
-            pathname: "/sondageRH",
+            pathname: "/enqueteRH",
             state: {
               nbMails: this.state.nbMails,
               mailsData: this.state.mailsArray,
@@ -207,4 +206,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default NouvelleEnquete;
