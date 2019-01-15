@@ -56,7 +56,7 @@ class ListeGeoloc extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/admin/list/geolocation",
+      url: "https://backend.mouv-r.fr/admin/list/geolocation",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
