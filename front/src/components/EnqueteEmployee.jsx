@@ -177,7 +177,7 @@ class EnqueteEmployee extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/employee/send/sondage",
+      url: "https://backend.mouv-r.fr/employee/send/sondage",
       data: statesForm,
       headers: {
         Authorization: `Bearer ${token}`
@@ -196,7 +196,8 @@ class EnqueteEmployee extends Component {
     axios({
       method: "get",
       url:
-        "http://localhost:8080/employee/list/" + this.props.match.params.token,
+        "https://backend.mouv-r.fr/employee/list/" +
+        this.props.match.params.token,
       headers: {
         Authorization: `Bearer ${token}`
       }

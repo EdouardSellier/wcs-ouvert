@@ -172,7 +172,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/user/geolocation/employee",
+      url: "https://backend.mouv-r.fr/user/geolocation/employee",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -195,7 +195,7 @@ class Geolocalisation extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "http://localhost:8080/user/geolocation/society",
+      url: "https://backend.mouv-r.fr/user/geolocation/society",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -228,7 +228,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/user/geolocation/list",
+      url: "https://backend.mouv-r.fr/user/geolocation/list",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -259,7 +259,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/user/geolocation/results",
+      url: "https://backend.mouv-r.fr/user/geolocation/results",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

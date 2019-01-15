@@ -36,7 +36,7 @@ class Assistance extends Component {
     };
     axios({
       method: "post",
-      url: "http://localhost:8080/assistance",
+      url: "https://backend.mouv-r.fr/assistance",
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
