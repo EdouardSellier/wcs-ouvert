@@ -3,7 +3,7 @@ import { Row, Col } from "reactstrap";
 import { withRouter } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
-import "./css/Accueil.css";
+import "./css/Home.css";
 
 const successMsg = {
   place: "br",
@@ -88,7 +88,7 @@ class Inscription extends React.Component {
       this.setState({ fields: fields });
       let app = axios;
       app
-        .post("http://localhost:8080/auth/inscription", body)
+        .post("https://backend.mouv-r.fr/auth/inscription", body)
         .then(res => {
           if (res.data === "Signup successful") {
             this.alertFunctionSuccess();

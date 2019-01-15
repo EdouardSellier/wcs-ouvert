@@ -1,4 +1,4 @@
-const { dbHandle, userTransporter } = require('./conf');
+const { dbHandle, userTransporter, apiKey } = require('./conf');
 const axios = require('axios');
 const nodemailer = require('nodemailer');
 
@@ -19,7 +19,7 @@ getEmployeePosition = () => {
               } WHERE id = ${idAddress}`,
               (err, results) => {
                 if (results) {
-                  console.log('Database has updated with employees lat lng :)');
+                  return;
                 }
               }
             );
@@ -50,7 +50,9 @@ getDistance = () => {
           let query = `${data.map_lng},${data.map_lat}|${data.emp_lng},${data.emp_lat}`;
           axios
             .get(
-              `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&coordinates=${query}&profile=driving-car&units=km&language=fr`
+              `https://api.openrouteservice.org/directions?api_key=${
+                apiKey.key
+              }&coordinates=${query}&profile=driving-car&units=km&language=fr`
             )
             .then(result => {
               let distanceKm = [result.data.routes[0].summary.distance.toFixed(1)];
@@ -58,7 +60,7 @@ getDistance = () => {
                 `UPDATE maps_employee SET distance = ${distanceKm} WHERE id = ${data.emp_id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated with distance :)');
+                    return;
                   }
                 }
               );
@@ -89,7 +91,9 @@ getDuration = () => {
           let query = `${data.map_lng},${data.map_lat}|${data.emp_lng},${data.emp_lat}`;
           axios
             .get(
-              `https://api.openrouteservice.org/directions?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&coordinates=${query}&profile=cycling-regular&units=km&language=fr`
+              `https://api.openrouteservice.org/directions?api_key=${
+                apiKey.key
+              }&coordinates=${query}&profile=cycling-regular&units=km&language=fr`
             )
             .then(result => {
               let durationSec = result.data.routes[0].summary.duration;
@@ -98,7 +102,7 @@ getDuration = () => {
                 `UPDATE maps_employee SET duration = ${durationMin} WHERE id = ${data.emp_id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated with duration :)');
+                    return;
                   }
                 }
               );
@@ -118,7 +122,9 @@ getIsochroneAuto = () => {
           let query = [data.lng, data.lat];
           axios
             .get(
-              `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${query}&profile=driving-car&range_type=distance&range=5000,10000,20000`
+              `https://api.openrouteservice.org/isochrones?api_key=${
+                apiKey.key
+              }&locations=${query}&profile=driving-car&range_type=distance&range=5000,10000,20000`
             )
             .then(result => {
               let isochroneAuto5 = result.data.features[0].geometry.coordinates[0];
@@ -154,21 +160,19 @@ getIsochroneAuto = () => {
                 [firstPolygon],
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated for first polygon auto');
                     dbHandle.query(
                       `UPDATE map SET ?
                       WHERE id = ${data.id}`,
                       [secondPolygon],
                       (err, results) => {
                         if (results) {
-                          console.log('Database has updated for second polygon auto :)');
                           dbHandle.query(
                             `UPDATE map SET ?
                             WHERE id = ${data.id}`,
                             [thirdPolygon],
                             (err, results) => {
                               if (results) {
-                                console.log('Database has updated for third polygon auto :)');
+                                return;
                               }
                             }
                           );
@@ -194,7 +198,9 @@ getIsochroneCycle = () => {
           let query = [data.lng, data.lat];
           axios
             .get(
-              `https://api.openrouteservice.org/isochrones?api_key=5b3ce3597851110001cf624889b1dbef0e6b423b9343cf6910a26059&locations=${query}&profile=cycling-regular&range_type=time&range=600,1200,1800`
+              `https://api.openrouteservice.org/isochrones?api_key=${
+                apiKey.key
+              }&locations=${query}&profile=cycling-regular&range_type=time&range=600,1200,1800`
             )
             .then(result => {
               let isochroneCycle5 = result.data.features[0].geometry.coordinates[0];
@@ -230,21 +236,19 @@ getIsochroneCycle = () => {
                 [firstPolygon],
                 (err, results) => {
                   if (results) {
-                    console.log('Database has updated for first polygon cycle :)');
                     dbHandle.query(
                       `UPDATE map SET ?
                       WHERE id = ${data.id}`,
                       [secondPolygon],
                       (err, results) => {
                         if (results) {
-                          console.log('Database has updated for second polygon cycle :)');
                           dbHandle.query(
                             `UPDATE map SET ?
                             WHERE id = ${data.id}`,
                             [thirdPolygon],
                             (err, results) => {
                               if (results) {
-                                console.log('Database has updated for third polygon cycle :)');
+                                return;
                               }
                             }
                           );
@@ -293,7 +297,6 @@ checkValidateMaps = () => {
                     WHERE user_id = ${data.id}`,
                 (err, results) => {
                   if (results) {
-                    console.log('Mail is send, it s ready !!! :)');
                     return;
                   }
                 }
@@ -309,12 +312,11 @@ checkValidateMaps = () => {
 const main = async () => {
   getEmployeePosition();
   getIsochroneAuto();
-  getIsochroneCycle(); // ====> STOP
+  getIsochroneCycle();
   getDistance();
-  getDuration(); // ====> STOP
+  getDuration();
   checkValidateMaps();
   await closeScript();
-  console.log('Closing...');
 };
 
 const closeScript = () => {
