@@ -395,6 +395,7 @@ class Resultat extends Component {
           survey =>
             survey.id_rh === this.props.location.state.currentId &&
             survey.survey_name === this.props.location.state.surveyNameSelected
+          //add the date true
         );
 
         this.setState({
