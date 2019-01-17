@@ -465,8 +465,9 @@ app.post('/admin/list/geolocation', (req, res) => {
                 let tableData = {
                   companyName: data.company_name,
                   societyAddress: societyPosition,
-                  employeeAddress: 'En cours',
                   employeePosition: 'En cours',
+                  employeeAddress: 'En cours',
+
                   id: data.id
                 };
                 allMapData.push(tableData);
