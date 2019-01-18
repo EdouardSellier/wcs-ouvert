@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import questions from "./questions";
 import axios from "axios";
 import "./css/EnqueteEmployee.css";
+import { urlBackEnd } from "../conf";
 
 const MultipleOption = props => {
   return (
@@ -177,7 +178,7 @@ class EnqueteEmployee extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/employee/send/sondage",
+      url: `${urlBackEnd}/employee/send/sondage`,
       data: statesForm,
       headers: {
         Authorization: `Bearer ${token}`
@@ -195,9 +196,7 @@ class EnqueteEmployee extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "get",
-      url:
-        "https://backend.mouv-r.fr/employee/list/" +
-        this.props.match.params.token,
+      url: `${urlBackEnd}/employee/list/` + this.props.match.params.token,
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -13,6 +13,7 @@ import axios from "axios";
 import JsonTable from "ts-react-json-table";
 import NotificationAlert from "react-notification-alert";
 import "./css/EspaceAdmin.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -77,7 +78,7 @@ class ListeEntreprises extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/admin/list/society",
+      url: `${urlBackEnd}/admin/list/society`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -162,7 +163,7 @@ class ListeEntreprises extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/admin/payment",
+      url: `${urlBackEnd}/admin/payment`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Col, Form } from "reactstrap";
 import "./css/Contact.css";
 import axios from "axios";
+import { urlBackEnd } from "../conf";
 
 class Contact extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class Contact extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/contact",
+      url: `${urlBackEnd}/contact`,
       data: body
     })
       .then(res => {

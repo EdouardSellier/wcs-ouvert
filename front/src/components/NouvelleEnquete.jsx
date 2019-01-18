@@ -6,6 +6,7 @@ import NotificationAlert from "react-notification-alert";
 import csv from "csv";
 import axios from "axios";
 import "./css/EnqueteRH.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -70,7 +71,7 @@ class NouvelleEnquete extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/survey",
+      url: `${urlBackEnd}/user/survey`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

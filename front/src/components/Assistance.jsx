@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Form } from "reactstrap";
 import axios from "axios";
+import { urlBackEnd } from "../conf";
 
 class Assistance extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class Assistance extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/assistance",
+      url: `${urlBackEnd}/assistance`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

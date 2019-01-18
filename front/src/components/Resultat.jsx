@@ -4,6 +4,7 @@ import questions from "./questions";
 import { Pie } from "react-chartjs-2";
 import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
+import { urlBackEnd } from "../conf";
 import "./css/Resultat.css";
 
 const ResultBar = props => {
@@ -384,7 +385,7 @@ class Resultat extends Component {
 
     const token = localStorage.getItem("token");
 
-    fetch("https://backend.mouv-r.fr/user/resultat", {
+    fetch(`${urlBackEnd}/user/resultat`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -13,6 +13,7 @@ import {
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import "./css/EspaceRH.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -139,7 +140,7 @@ class EnqueteRH extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/send/survey",
+      url: `${urlBackEnd}/user/send/survey`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

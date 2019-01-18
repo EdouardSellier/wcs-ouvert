@@ -4,6 +4,7 @@ import NotificationAlert from "react-notification-alert";
 import JsonTable from "ts-react-json-table";
 import axios from "axios";
 import "./css/EspaceAdmin.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -53,7 +54,7 @@ class ListeEnquetes extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/admin/list/survey",
+      url: `${urlBackEnd}/admin/list/survey`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

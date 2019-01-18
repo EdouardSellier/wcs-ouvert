@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import "./css/EnqueteRH.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -48,7 +49,7 @@ class ListeEnquetesRH extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/list/survey",
+      url: `${urlBackEnd}/user/list/survey`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
