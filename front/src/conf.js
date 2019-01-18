@@ -1,4 +1,4 @@
-const urlBackEnd = process.env.BEND_ADDRESS;
+const urlBackEnd = process.env.REACT_APP_BEND_ADDRESS;
 
 module.exports = {
   urlBackEnd
