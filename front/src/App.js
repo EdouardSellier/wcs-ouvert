@@ -37,9 +37,7 @@ const UserRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
     render={props =>
-      authChecker.getUser() &&
-      authChecker.isAdmin() === "0" &&
-      authChecker.hasPaid() === "1" ? (
+      authChecker.getUser() && authChecker.isAdmin() === "0" ? (
         <Component {...props} />
       ) : (
         <Redirect

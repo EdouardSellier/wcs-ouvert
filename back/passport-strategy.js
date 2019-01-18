@@ -51,7 +51,7 @@ passport.use(
   new JWTStrategy(
     {
       jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-      secretOrKey: jwtSecret
+      secretOrKey: `${jwtSecret}`
     },
     (jwtPayload, cb) => {
       const user = jwtPayload;

@@ -5,6 +5,7 @@ import JsonTable from "ts-react-json-table";
 import axios from "axios";
 import { CSVLink } from "react-csv";
 import "./css/EspaceAdmin.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -56,7 +57,7 @@ class ListeGeoloc extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/admin/list/geolocation",
+      url: `${urlBackEnd}/admin/list/geolocation`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

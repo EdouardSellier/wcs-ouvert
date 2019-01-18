@@ -10,6 +10,8 @@ import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
 import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
+import { urlBackEnd } from "../conf";
+
 
 const errorSocietyAddress = {
   place: "tr",
@@ -172,7 +174,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/employee",
+      url: `${urlBackEnd}/user/geolocation/employee`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -195,7 +197,7 @@ class Geolocalisation extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/society",
+      url: `${urlBackEnd}/user/geolocation/society`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -228,7 +230,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/list",
+      url: `${urlBackEnd}/user/geolocation/list`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -259,7 +261,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/results",
+      url: `${urlBackEnd}/user/geolocation/results`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

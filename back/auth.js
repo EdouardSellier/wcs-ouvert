@@ -27,13 +27,15 @@ router.post('/connexion', (req, res) => {
 
 router.post('/inscription', (req, res) => {
   const formData = req.body;
-  bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-    formData.password = hash;
-    dbHandle.query(`INSERT INTO user SET ?`, formData, (errorRequest, results) => {
-      if (errorRequest) {
-        return res.status(500).send(`We crashed, here is the message : ${errorRequest}`);
-      }
-      return res.status(201).send(`Signup successful`);
+  bcrypt.genSalt(saltRounds, (errGenSalt, resGenSalt) => {
+    bcrypt.hash(req.body.password, resGenSalt, (err, hash) => {
+      formData.password = hash;
+      dbHandle.query(`INSERT INTO user SET ?`, formData, (errorRequest, results) => {
+        if (errorRequest) {
+          return res.status(500).send(`We crashed, here is the message : ${errorRequest}`);
+        }
+        return res.status(201).send(`Signup successful`);
+      });
     });
   });
 });
