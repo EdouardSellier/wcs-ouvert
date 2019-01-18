@@ -5,6 +5,7 @@ import axios from "axios";
 import NotificationAlert from "react-notification-alert";
 import Zoom from "react-reveal/Zoom";
 import "./css/EspaceAdmin.css";
+import { urlBackEnd } from "../conf";
 
 const errorMsg = {
   place: "tr",
@@ -31,7 +32,9 @@ class EspaceAdmin extends Component {
   handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
+    localStorage.removeItem("is_admin");
     localStorage.removeItem("currentUser");
+    localStorage.removeItem("currentId");
     localStorage.removeItem("id");
     this.props.history.push("/");
   };
@@ -43,7 +46,7 @@ class EspaceAdmin extends Component {
   getSocietyStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("https://backend.mouv-r.fr/admin/list/society/", {
+      .get(`${urlBackEnd}/admin/list/society/`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -72,7 +75,7 @@ class EspaceAdmin extends Component {
   getSurveyStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("https://backend.mouv-r.fr/admin/list/survey", {
+      .get(`${urlBackEnd}/admin/list/survey`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -103,7 +106,7 @@ class EspaceAdmin extends Component {
   getGeolocationStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("https://backend.mouv-r.fr/admin/list/geolocation", {
+      .get(`${urlBackEnd}admin/list/geolocation`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
