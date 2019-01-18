@@ -43,7 +43,7 @@ class EspaceAdmin extends Component {
   getSocietyStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/society/", {
+      .get("https://backend.mouv-r.fr/admin/list/society/", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -72,7 +72,7 @@ class EspaceAdmin extends Component {
   getSurveyStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/survey", {
+      .get("https://backend.mouv-r.fr/admin/list/survey", {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -103,7 +103,7 @@ class EspaceAdmin extends Component {
   getGeolocationStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get("http://localhost:8080/admin/list/geolocation", {
+      .get("https://backend.mouv-r.fr/admin/list/geolocation", {
         headers: {
           Authorization: `Bearer ${token}`
         }
