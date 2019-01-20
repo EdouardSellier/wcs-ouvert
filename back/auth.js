@@ -1,7 +1,7 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const { jwtSecret, dbHandle, saltRounds } = require('./conf');
 
 const router = express.Router();
@@ -27,8 +27,8 @@ router.post('/connexion', (req, res) => {
 
 router.post('/inscription', (req, res) => {
   const formData = req.body;
-  bcrypt.genSalt(saltRounds, (errGenSalt, resGenSalt) => {
-    bcrypt.hash(req.body.password, resGenSalt, (err, hash) => {
+  bcrypt.genSalt(saltRounds, (err, salt) => {
+    bcrypt.hash(formData.password, salt, (err, hash) => {
       formData.password = hash;
       dbHandle.query(`INSERT INTO user SET ?`, formData, (errorRequest, results) => {
         if (errorRequest) {
