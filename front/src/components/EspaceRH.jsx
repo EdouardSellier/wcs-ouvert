@@ -11,7 +11,6 @@ class EspaceRH extends Component {
     localStorage.removeItem("is_admin");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentId");
-    localStorage.removeItem("id");
     this.props.history.push("/");
   };
   render() {
