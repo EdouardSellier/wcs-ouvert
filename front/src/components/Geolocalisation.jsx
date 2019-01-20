@@ -12,7 +12,6 @@ import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
 import { urlBackEnd } from "../conf";
 
-
 const errorSocietyAddress = {
   place: "tr",
   message:
@@ -117,7 +116,7 @@ class Geolocalisation extends Component {
         let societyPosition = result.data.features[0].geometry.coordinates;
         let latSociety = societyPosition[1];
         let lngSociety = societyPosition[0];
-        const userId = localStorage.getItem("id");
+        const userId = localStorage.getItem("currentId");
         let allSocietyData = {
           address: dataStr,
           lat: latSociety,
@@ -166,7 +165,7 @@ class Geolocalisation extends Component {
     });
     let addressSociety = this.state.societyMapData.address;
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       employee: allEmployeeData,
       society: addressSociety,
@@ -224,7 +223,7 @@ class Geolocalisation extends Component {
 
   getAddressesFromDb = () => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       user_id: userId
     };
@@ -254,7 +253,7 @@ class Geolocalisation extends Component {
   displayResults = address => {
     const token = localStorage.getItem("token");
     let addressSociety = address.split(":");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       user_id: userId,
       address: addressSociety.slice(0, 1)

@@ -35,7 +35,6 @@ class EspaceAdmin extends Component {
     localStorage.removeItem("is_admin");
     localStorage.removeItem("currentUser");
     localStorage.removeItem("currentId");
-    localStorage.removeItem("id");
     this.props.history.push("/");
   };
 
@@ -106,7 +105,7 @@ class EspaceAdmin extends Component {
   getGeolocationStat = () => {
     const token = localStorage.getItem("token");
     axios
-      .get(`${urlBackEnd}admin/list/geolocation`, {
+      .get(`${urlBackEnd}/admin/list/geolocation`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
