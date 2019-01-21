@@ -10,6 +10,7 @@ import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
 import ScrollAnimation from "react-animate-on-scroll";
 import "./css/Geolocalisation.css";
+import { urlBackEnd } from "../conf";
 
 const errorSocietyAddress = {
   place: "tr",
@@ -115,7 +116,7 @@ class Geolocalisation extends Component {
         let societyPosition = result.data.features[0].geometry.coordinates;
         let latSociety = societyPosition[1];
         let lngSociety = societyPosition[0];
-        const userId = localStorage.getItem("id");
+        const userId = localStorage.getItem("currentId");
         let allSocietyData = {
           address: dataStr,
           lat: latSociety,
@@ -164,7 +165,7 @@ class Geolocalisation extends Component {
     });
     let addressSociety = this.state.societyMapData.address;
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       employee: allEmployeeData,
       society: addressSociety,
@@ -172,7 +173,7 @@ class Geolocalisation extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/employee",
+      url: `${urlBackEnd}/user/geolocation/employee`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -195,7 +196,7 @@ class Geolocalisation extends Component {
     const token = localStorage.getItem("token");
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/society",
+      url: `${urlBackEnd}/user/geolocation/society`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -222,13 +223,13 @@ class Geolocalisation extends Component {
 
   getAddressesFromDb = () => {
     const token = localStorage.getItem("token");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       user_id: userId
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/list",
+      url: `${urlBackEnd}/user/geolocation/list`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -252,14 +253,14 @@ class Geolocalisation extends Component {
   displayResults = address => {
     const token = localStorage.getItem("token");
     let addressSociety = address.split(":");
-    const userId = localStorage.getItem("id");
+    const userId = localStorage.getItem("currentId");
     const body = {
       user_id: userId,
       address: addressSociety.slice(0, 1)
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/user/geolocation/results",
+      url: `${urlBackEnd}/user/geolocation/results`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`

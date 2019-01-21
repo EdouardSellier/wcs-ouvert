@@ -3,6 +3,7 @@ import { withRouter } from "react-router-dom";
 import { Col } from "reactstrap";
 import axios from "axios";
 import NotificationAlert from "react-notification-alert";
+import { urlBackEnd } from "../conf";
 
 const dangerMsg = {
   place: "br",
@@ -35,7 +36,7 @@ class Connexion extends Component {
     event.preventDefault();
     const token = localStorage.getItem("token");
     axios
-      .post("https://backend.mouv-r.fr/auth/connexion", this.state, {
+      .post(`${urlBackEnd}/auth/connexion`, this.state, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -44,7 +45,6 @@ class Connexion extends Component {
         const { token, user } = response.data;
         localStorage.setItem("currentId", user.id);
         localStorage.setItem("currentUser", this.state.mail);
-        localStorage.setItem("id", user.id);
         localStorage.setItem("token", token);
         localStorage.setItem("is_admin", user.admin);
         localStorage.setItem("has_paid", user.has_paid);

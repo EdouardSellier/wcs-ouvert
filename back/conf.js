@@ -19,6 +19,14 @@ const apiKey = {
   key: process.env.DB_APIKEY
 };
 
-const saltRounds = process.env.DB_SALTROUND;
+const saltRounds = 10;
 const portServer = process.env.DB_PORTSERVER;
-module.exports = { userTransporter, jwtSecret, dbHandle, saltRounds, portServer, apiKey };
+
+module.exports = {
+  userTransporter,
+  jwtSecret,
+  dbHandle,
+  saltRounds,
+  portServer,
+  apiKey
+};

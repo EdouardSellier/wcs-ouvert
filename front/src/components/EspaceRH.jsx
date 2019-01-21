@@ -8,8 +8,9 @@ class EspaceRH extends Component {
   handleLogOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("has_paid");
+    localStorage.removeItem("is_admin");
     localStorage.removeItem("currentUser");
-    localStorage.removeItem("id");
+    localStorage.removeItem("currentId");
     this.props.history.push("/");
   };
   render() {

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Col, Form } from "reactstrap";
 import "./css/Contact.css";
 import axios from "axios";
+import { urlBackEnd } from "../conf";
 
 class Contact extends Component {
   constructor(props) {
@@ -31,7 +32,7 @@ class Contact extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/contact",
+      url: `${urlBackEnd}/contact`,
       data: body
     })
       .then(res => {
@@ -61,7 +62,7 @@ class Contact extends Component {
             <p className="mt-3 text-left">
               Si vous rencontrez un problème, n’hésitez pas à nous contacter par
               mail via le formulaire ci-dessous ou à nous joindre par téléphone
-              au <i className="fa fa-phone" /> 03.20.61.90.89.
+              au <i className="fa fa-phone" /> 0320619089.
             </p>
             <Form
               onSubmit={this.contactForm}

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Container, Row, Col, Form } from "reactstrap";
 import axios from "axios";
+import { urlBackEnd } from "../conf";
 
 class Assistance extends Component {
   constructor(props) {
@@ -36,7 +37,7 @@ class Assistance extends Component {
     };
     axios({
       method: "post",
-      url: "https://backend.mouv-r.fr/assistance",
+      url: `${urlBackEnd}/assistance`,
       data: body,
       headers: {
         Authorization: `Bearer ${token}`
@@ -86,7 +87,7 @@ class Assistance extends Component {
               <p className="mt-3 text-left">
                 Si vous rencontrez un problème, n’hésitez pas à nous contacter
                 par mail via le formulaire ci-dessous ou à nous joindre par
-                téléphone au <i className="fa fa-phone" /> 03.20.61.90.89.
+                téléphone au <i className="fa fa-phone" /> 0320619089.
               </p>
               <Form onSubmit={this.contactForm} className="mt-2">
                 <div className="form-group">

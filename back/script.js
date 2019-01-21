@@ -276,19 +276,17 @@ checkValidateMaps = () => {
         });
         allMails.map(data => {
           let transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false,
+            service: 'Gmail',
             auth: {
               user: userTransporter.user,
               pass: userTransporter.pass
             }
           });
           let mailOptions = {
-            from: '"OUVERT" <no-reply@ouvert.com>',
+            from: '"MOUV-R" <no-reply@mouv-r.com>',
             to: data.mail,
             subject: 'Votre géolocalisation est prête ✔',
-            html: `<h1>Géolocalisation</h1><p>L'analyse des trajets de vos employés est prête, vous pouvez dès à présent vous rendre sur votre espace pour consulter les résultats</p><p>Bien à vous,</p><p>L'équipe Mouv'R</p>`
+            html: `<p>Madame, Monsieur,</p><p>L'analyse des trajets de vos employés est prête, vous pouvez dès à présent vous rendre sur votre espace pour consulter les résultats</p><p>Bonne journée,</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
           };
           transporter.sendMail(mailOptions, (error, info) => {
             if (info) {
