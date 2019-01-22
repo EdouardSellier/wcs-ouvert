@@ -1,15 +1,22 @@
 import React, { Component } from "react";
 import { Container, Row, Col } from "reactstrap";
-import { Link, NavLink } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import axios from "axios";
 import "./css/EnqueteRH.css";
 import { urlBackEnd } from "../conf";
 
-const errorMsg = {
+const errorListSurvey = {
   place: "tr",
   message:
     "Nous n'avons pas réussi à récupérer la liste de vos enquêtes, nous vous invitons à contacter l'assistance. Merci de votre compréhension",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const errorResult = {
+  place: "tr",
+  message:
+    "Vous devez d'abord sélectionner une enquête avant de consulter les résultats.",
   type: "danger",
   autoDismiss: 4
 };
@@ -24,8 +31,12 @@ class ListeEnquetesRH extends Component {
     };
   }
 
-  alertFunctionError = () => {
-    this.refs.notificationAlertError.notificationAlert(errorMsg);
+  alertFunctionErrorListSurvey = () => {
+    this.refs.notificationAlertErrorList.notificationAlert(errorListSurvey);
+  };
+
+  alertFunctionErrorResult = () => {
+    this.refs.notificationAlertErrorResult.notificationAlert(errorResult);
   };
 
   handleSubmit = event => {
@@ -66,8 +77,26 @@ class ListeEnquetesRH extends Component {
         });
       })
       .catch(error => {
-        this.alertFunctionError();
+        this.alertFunctionErrorListSurvey();
       });
+  };
+
+  getResult = () => {
+    if (this.state.surveyNameSelected !== "") {
+      this.props.history.push({
+        pathname: "/resultat",
+        state: {
+          surveyNameSelected: this.state.surveyNameSelected,
+          currentId: this.state.currentId
+        }
+      });
+    } else {
+      this.alertFunctionErrorResult();
+    }
+  };
+
+  getAssistance = () => {
+    this.props.history.push("/assistance");
   };
 
   componentDidMount = () => {
@@ -75,6 +104,7 @@ class ListeEnquetesRH extends Component {
   };
 
   render() {
+    console.log(this.state.surveyNameSelected);
     return (
       <div>
         <Container className="mt-4">
@@ -95,7 +125,8 @@ class ListeEnquetesRH extends Component {
           </Row>
         </Container>
         <Container className="mt-5">
-          <NotificationAlert ref="notificationAlertError" />
+          <NotificationAlert ref="notificationAlertErrorList" />
+          <NotificationAlert ref="notificationAlertErrorResult" />
           <Col lg={{ size: 6, offset: 3 }}>
             <select
               onChange={event => this.changeSurveyName(event)}
@@ -111,41 +142,35 @@ class ListeEnquetesRH extends Component {
         <Container className="mt-5 mb-4">
           <Row className="mt-5">
             <Col lg={{ size: 4, offset: 1 }}>
-              <div className="card shadow mt-5 mb-4">
+              <div
+                className="card shadow mt-5 mb-4 clickCard"
+                onClick={this.getResult}
+              >
                 <div className="card-body">
-                  <NavLink
-                    to={{
-                      pathname: "/resultat",
-                      state: {
-                        surveyNameSelected: this.state.surveyNameSelected,
-                        currentId: this.state.currentId
-                      }
-                    }}
-                  >
-                    <img
-                      src="./img/surveyResults.jpg"
-                      alt="icon"
-                      width="150"
-                      height="150"
-                      className="cardIcon mb-4"
-                    />
-                  </NavLink>
+                  <img
+                    src="./img/surveyResults.jpg"
+                    alt="icon"
+                    width="150"
+                    height="150"
+                    className="cardIcon mb-4"
+                  />
                   <h4>Consulter les résultats</h4>
                 </div>
               </div>
             </Col>
             <Col lg={{ size: 4, offset: 1 }}>
-              <div className="card shadow mt-5 mb-4">
+              <div
+                className="card shadow mt-5 mb-4 clickCard"
+                onClick={this.getAssistance}
+              >
                 <div className="card-body">
-                  <Link to="/assistance">
-                    <img
-                      src="./img/assistance.jpg"
-                      alt="icon"
-                      width="150"
-                      height="150"
-                      className="cardIcon mb-4"
-                    />
-                  </Link>
+                  <img
+                    src="./img/assistance.jpg"
+                    alt="icon"
+                    width="150"
+                    height="150"
+                    className="cardIcon mb-4"
+                  />
                   <h4>Demander de l'assistance</h4>
                 </div>
               </div>
