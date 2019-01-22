@@ -193,13 +193,9 @@ class EnqueteEmployee extends Component {
   };
 
   componentDidMount() {
-    const token = localStorage.getItem("token");
     axios({
       method: "get",
-      url: `${urlBackEnd}/employee/list/` + this.props.match.params.token,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: `${urlBackEnd}/employee/list/` + this.props.match.params.token
     })
       .then(res => {
         if (res.data.length === 0) {
