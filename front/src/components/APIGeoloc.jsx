@@ -286,28 +286,28 @@ class APIGeoloc extends Component {
                         {this.state.nbPersUnder5 > 1 ? "s" : ""} (
                         {this.state.percentUnder5}%) habite
                         {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 5
-                        km en voiture de son lieu de travail.
+                        km en voiture du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPers5To10} salarié
                         {this.state.nbPers5To10 > 1 ? "s" : ""} (
                         {this.state.percent5To10}%) habite
                         {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 5 et 10
-                        km en voiture de son lieu de travail.
+                        km en voiture du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPers10To20} salarié
                         {this.state.nbPers10To20 > 1 ? "s" : ""} (
                         {this.state.percent10To20}%) habite
-                        {this.state.nbPers10To200 > 1 ? "nt" : ""} entre 10 et
-                        20 km en voiture de son lieu de travail.
+                        {this.state.nbPers10To20 > 1 ? "nt" : ""} entre 10 et 20
+                        km en voiture du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPersOver20} salarié
                         {this.state.nbPersOver20 > 1 ? "s" : ""} (
                         {this.state.percentOver20}%) habite
                         {this.state.nbPersOver20 > 1 ? "nt" : ""} à plus de 20
-                        km en voiture de son lieu de travail.
+                        km en voiture du lieu de travail.
                       </p>
                     </div>
                   ) : (
@@ -317,28 +317,28 @@ class APIGeoloc extends Component {
                         {this.state.nbPersUnder5 > 1 ? "s" : ""} (
                         {this.state.percentUnder5}%) habite
                         {this.state.nbPersUnder5 > 1 ? "nt" : ""} à moins de 10
-                        minutes à vélo de son lieu de travail.
+                        minutes à vélo du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPers5To10} salarié
                         {this.state.nbPers5To10 > 1 ? "s" : ""} (
                         {this.state.percent5To10}%) habite
                         {this.state.nbPers5To10 > 1 ? "nt" : ""} entre 10 et 20
-                        minutes à vélo de son lieu de travail.
+                        minutes à vélo du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPers10To15} salarié
                         {this.state.nbPers10To15 > 1 ? "s" : ""} (
                         {this.state.percent10To15}%) habite
                         {this.state.nbPers10To15 > 1 ? "nt" : ""} entre 20 et 30
-                        minutes à vélo de son lieu de travail.
+                        minutes à vélo du lieu de travail.
                       </p>
                       <p>
                         {this.state.nbPersOver15} salarié
                         {this.state.nbPersOver15 > 1 ? "s" : ""} (
                         {this.state.percentOver15}%) habite
                         {this.state.nbPersOver15 > 1 ? "nt" : ""} à plus de 30
-                        minutes à vélo de son lieu de travail.
+                        minutes à vélo du lieu de travail.
                       </p>
                     </div>
                   )}

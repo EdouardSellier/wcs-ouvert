@@ -246,74 +246,75 @@ app.post('/user/geolocation/results', (req, res) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
+        let isReady = 0;
         results.map(result => {
-          let isReady = result.is_ready;
-          if (isReady === 1) {
-            dbHandle.query(
-              `SELECT maps_employee.id AS emp_id, concat(maps_employee.lat, ",", maps_employee.lng) AS employeesPositions, maps_employee.distance AS emp_distance, maps_employee.duration AS emp_duration, maps_employee.map_id AS emp_map_id, map.lat AS map_lat, map.lng AS map_lng, map.isochrone5_auto, map.isochrone10_auto, map.isochrone20_auto, map.isochrone5_cycle, map.isochrone10_cycle, map.isochrone15_cycle FROM maps_employee INNER JOIN map ON maps_employee.map_id = map.id WHERE map.user_id = "${userId}" AND map.address = "${address}"`,
-              (err, results) => {
-                if (err) {
-                  res.status(500).send('The database crashed ! The reason is ' + err);
-                } else {
-                  let allResults = {};
-                  let societyData = {};
-                  let employeeData = {};
-                  let employeeId = [];
-                  let employeesPositions = [];
-                  let employeeDistance = [];
-                  let employeeDuration = [];
-                  results.map(result => {
-                    let allId = [];
-                    allId.push(result.emp_id);
-                    allId.map(id => {
-                      employeeId.push(id);
-                    });
-                    let allEmployeesPositions = [];
-                    allEmployeesPositions.push(result.employeesPositions);
-                    allEmployeesPositions.map(position => {
-                      employeesPositions.push(position);
-                    });
-                    let allDistance = [];
-                    allDistance.push(result.emp_distance);
-                    allDistance.map(distance => {
-                      employeeDistance.push(distance);
-                    });
-                    let allDuration = [];
-                    allDuration.push(result.emp_duration);
-                    allDuration.map(duration => {
-                      employeeDuration.push(duration);
-                    });
-                    employeeData = {
-                      id: employeeId,
-                      position: employeesPositions,
-                      distance: employeeDistance,
-                      duration: employeeDuration,
-                      map_id: result.emp_map_id
-                    };
-                    societyData = {
-                      lat: result.map_lat,
-                      lng: result.map_lng,
-                      isochrone5_auto: result.isochrone5_auto,
-                      isochrone10_auto: result.isochrone10_auto,
-                      isochrone20_auto: result.isochrone20_auto,
-                      isochrone5_cycle: result.isochrone5_cycle,
-                      isochrone10_cycle: result.isochrone10_cycle,
-                      isochrone15_cycle: result.isochrone15_cycle
-                    };
-                  });
-                  allResults = {
-                    employeeData: employeeData,
-                    employeeLength: employeeData.position.length,
-                    societyData: societyData
-                  };
-                  res.json(allResults);
-                }
-              }
-            );
-          } else {
-            res.status(200).send('In progress');
-          }
+          isReady = result.is_ready;
         });
+        if (isReady === 1) {
+          dbHandle.query(
+            `SELECT maps_employee.id AS emp_id, concat(maps_employee.lat, ",", maps_employee.lng) AS employeesPositions, maps_employee.distance AS emp_distance, maps_employee.duration AS emp_duration, maps_employee.map_id AS emp_map_id, map.lat AS map_lat, map.lng AS map_lng, map.isochrone5_auto, map.isochrone10_auto, map.isochrone20_auto, map.isochrone5_cycle, map.isochrone10_cycle, map.isochrone15_cycle FROM maps_employee INNER JOIN map ON maps_employee.map_id = map.id WHERE map.user_id = "${userId}" AND map.address = "${address}"`,
+            (err, results) => {
+              if (err) {
+                res.status(500).send('The database crashed ! The reason is ' + err);
+              } else {
+                let allResults = {};
+                let societyData = {};
+                let employeeData = {};
+                let employeeId = [];
+                let employeesPositions = [];
+                let employeeDistance = [];
+                let employeeDuration = [];
+                results.map(result => {
+                  let allId = [];
+                  allId.push(result.emp_id);
+                  allId.map(id => {
+                    employeeId.push(id);
+                  });
+                  let allEmployeesPositions = [];
+                  allEmployeesPositions.push(result.employeesPositions);
+                  allEmployeesPositions.map(position => {
+                    employeesPositions.push(position);
+                  });
+                  let allDistance = [];
+                  allDistance.push(result.emp_distance);
+                  allDistance.map(distance => {
+                    employeeDistance.push(distance);
+                  });
+                  let allDuration = [];
+                  allDuration.push(result.emp_duration);
+                  allDuration.map(duration => {
+                    employeeDuration.push(duration);
+                  });
+                  employeeData = {
+                    id: employeeId,
+                    position: employeesPositions,
+                    distance: employeeDistance,
+                    duration: employeeDuration,
+                    map_id: result.emp_map_id
+                  };
+                  societyData = {
+                    lat: result.map_lat,
+                    lng: result.map_lng,
+                    isochrone5_auto: result.isochrone5_auto,
+                    isochrone10_auto: result.isochrone10_auto,
+                    isochrone20_auto: result.isochrone20_auto,
+                    isochrone5_cycle: result.isochrone5_cycle,
+                    isochrone10_cycle: result.isochrone10_cycle,
+                    isochrone15_cycle: result.isochrone15_cycle
+                  };
+                });
+                allResults = {
+                  employeeData: employeeData,
+                  employeeLength: employeeData.position.length,
+                  societyData: societyData
+                };
+                res.json(allResults);
+              }
+            }
+          );
+        } else {
+          res.status(200).send('In progress');
+        }
       }
     }
   );
