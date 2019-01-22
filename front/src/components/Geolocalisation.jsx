@@ -15,7 +15,7 @@ import { urlBackEnd } from "../conf";
 const errorSocietyAddress = {
   place: "tr",
   message:
-    "Nous avons rencontré un problème avec votre adresse postale, merci de vérifier les champs",
+    "Nous avons rencontré un problème avec votre adresse postale, merci de vérifier et de compléter tous les champs",
   type: "danger",
   autoDismiss: 4
 };
@@ -101,36 +101,45 @@ class Geolocalisation extends Component {
 
   handleSubmitSocietyAddress = event => {
     event.preventDefault();
-    let addressSocietyToArray = [
-      this.state.nbSociety,
-      this.state.streetSociety,
-      this.state.zipCodeSociety,
-      this.state.citySociety
-    ];
-    let dataStr = addressSocietyToArray.join(" ");
-    const regex = / /gi;
-    let queryAddress = dataStr.replace(regex, "+");
-    axios
-      .get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`)
-      .then(result => {
-        let societyPosition = result.data.features[0].geometry.coordinates;
-        let latSociety = societyPosition[1];
-        let lngSociety = societyPosition[0];
-        const userId = localStorage.getItem("currentId");
-        let allSocietyData = {
-          address: dataStr,
-          lat: latSociety,
-          lng: lngSociety,
-          user_id: userId
-        };
-        this.setState({
-          societyMapData: allSocietyData,
-          isChecked: true
+    if (
+      this.state.nbSociety === undefined ||
+      this.state.streetSociety === undefined ||
+      this.state.zipCodeSociety === undefined ||
+      this.state.citySociety === undefined
+    ) {
+      this.alertFunctionError(errorSocietyAddress);
+    } else {
+      let addressSocietyToArray = [
+        this.state.nbSociety,
+        this.state.streetSociety,
+        this.state.zipCodeSociety,
+        this.state.citySociety
+      ];
+      let dataStr = addressSocietyToArray.join(" ");
+      const regex = / /gi;
+      let queryAddress = dataStr.replace(regex, "+");
+      axios
+        .get(`https://api-adresse.data.gouv.fr/search/?q=${queryAddress}`)
+        .then(result => {
+          let societyPosition = result.data.features[0].geometry.coordinates;
+          let latSociety = societyPosition[1];
+          let lngSociety = societyPosition[0];
+          const userId = localStorage.getItem("currentId");
+          let allSocietyData = {
+            address: dataStr,
+            lat: latSociety,
+            lng: lngSociety,
+            user_id: userId
+          };
+          this.setState({
+            societyMapData: allSocietyData,
+            isChecked: true
+          });
+        })
+        .catch(error => {
+          this.alertFunctionError(errorOnSubmit);
         });
-      })
-      .catch(error => {
-        this.alertFunctionError(errorSocietyAddress);
-      });
+    }
   };
 
   handleFiles = files => {
@@ -507,7 +516,7 @@ class Geolocalisation extends Component {
                       </ReactFileReader>
                       <span className="titleExample">
                         Merci de suivre cet exemple pour l'import de votre
-                        fichier CSV
+                        fichier (CSV UTF-8)
                       </span>
                       <img
                         src="https://www.motorradreifendirekt.de/_ui/desktop/common/mctshop/images/icons/info-icon.png"
@@ -517,7 +526,7 @@ class Geolocalisation extends Component {
                         className="ml-2"
                         data-toggle="tooltip"
                         data-placement="top"
-                        title="Fichier informatique de type tableur (Excel) avec une extension .csv"
+                        title="Fichier informatique de type tableur (Excel) avec une extension .csv. L'extension .csv et le format (UTF-8) sont indispensables pour la bonne prise en compte de votre fichier."
                       />
                       <table className="mt-3 table table-striped csvExample">
                         <tbody>
