@@ -57,6 +57,21 @@ app.get('/employee/list/:token', (req, res) => {
   );
 });
 
+app.post('/employee/send/sondage', (req, res) => {
+  const formData = req.body;
+  dbHandle.query(
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
+    formData,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).send('SUCCESS');
+      }
+    }
+  );
+});
+
 app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
   next();
 });
@@ -104,21 +119,6 @@ app.post('/user/survey', (req, res) => {
       res.status(200).send('SUCCESS');
     }
   });
-});
-
-app.post('/employee/send/sondage', (req, res) => {
-  const formData = req.body;
-  dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
-    formData,
-    (err, results) => {
-      if (err) {
-        res.status(500).send('The database crashed ! The reason is ' + err);
-      } else {
-        res.status(200).send('SUCCESS');
-      }
-    }
-  );
 });
 
 app.post('/user/list/survey', (req, res) => {
