@@ -35,3 +35,7 @@
 .surveyTextArea {
   width: 60%;
 }
+
+.clickCard {
+  cursor: pointer;
+}

@@ -366,9 +366,9 @@ class Resultat extends Component {
     });
   }
 
-  handleSubmit = event => {
+  handleBack = event => {
     event.preventDefault();
-    this.props.history.push("/monespace");
+    this.props.history.push("/listeenquetesrh");
   };
 
   componentDidMount() {
@@ -377,10 +377,10 @@ class Resultat extends Component {
         !this.props.location.state.currentId &&
         !this.props.location.state.surveyNameSelected
       ) {
-        this.props.history.push("/");
+        this.props.history.push("/monespace");
       }
     } catch {
-      this.props.history.push("/");
+      this.props.history.push("/monespace");
     }
 
     const token = localStorage.getItem("token");
@@ -410,14 +410,14 @@ class Resultat extends Component {
       <div className="container-fluid mt-2">
         <Row>
           <Col lg={{ size: 2 }} className="pb-4">
-            <button className="mt-2 btn text-white" onClick={this.handleSubmit}>
-              <i className="fa fa-home" /> Revenir à l'accueil
+            <button className="mt-2 btn text-white" onClick={this.handleBack}>
+              <i className="fa fa-arrow-left" /> Précédent
             </button>
           </Col>
           <Col lg={{ size: 8 }}>
-            <h2 className="text-white">
+            <h1 className="text-white">
               <b>Consulter les résultats de mon enquête</b>
-            </h2>
+            </h1>
           </Col>
         </Row>
         <Row>
@@ -438,6 +438,7 @@ class Resultat extends Component {
                     dataFetch={this.state.dataFetch}
                     label={data.label}
                     number={data.number}
+                    key={data.id}
                   />
                 );
               case "multipleOption":
@@ -448,6 +449,7 @@ class Resultat extends Component {
                     dataFetch={this.state.dataFetch}
                     label={data.label}
                     number={data.number}
+                    key={data.id}
                   />
                 );
               case "number":
@@ -458,6 +460,7 @@ class Resultat extends Component {
                     dataFetch={this.state.dataFetch}
                     label={data.label}
                     number={data.number}
+                    key={data.id}
                   />
                 );
               default:
