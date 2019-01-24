@@ -63,9 +63,9 @@ class Assistance extends Component {
 
   render() {
     return (
-      <div>
-        <div className="text-white mb-5">
-          <Container className="mt-2">
+      <div className="pageHeight">
+        <div className="text-white">
+          <Container className="mt-4">
             <Row>
               <Col lg={{ size: 2 }}>
                 <button
