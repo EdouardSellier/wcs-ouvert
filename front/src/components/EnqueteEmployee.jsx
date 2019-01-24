@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import questions from "./questions";
 import axios from "axios";
+import NotificationAlert from "react-notification-alert";
 import "./css/EnqueteEmployee.css";
 import { urlBackEnd } from "../conf";
 
@@ -111,6 +112,30 @@ const Number = props => {
   );
 };
 
+const errorOnSubmit = {
+  place: "tr",
+  message:
+    "Nous avons rencontré un problème lors de l'enregistrement de vos réponses, nous vous remercions de patienter quelques instants.",
+  type: "danger",
+  autoDismiss: 4
+};
+
+const successOnSubmit = {
+  place: "tr",
+  message:
+    "Nous avons remercions d'avoir répondu à l'enquête, vos réponses ont bien été enregistrées.",
+  type: "success",
+  autoDismiss: 4
+};
+
+const errorAlreadyAnswered = {
+  place: "tr",
+  message:
+    "Vous avez déjà répondu à l'enquête, vous ne pouvez pas y répondre une seconde fois.",
+  type: "danger",
+  autoDismiss: 4
+};
+
 class EnqueteEmployee extends Component {
   constructor(props) {
     super(props);
@@ -153,39 +178,50 @@ class EnqueteEmployee extends Component {
         carpooling_three: "------",
         other_than_car: "",
         commentary: ""
-      }
+      },
+      hideButton: false
     };
   }
 
+  alertFunctionError = () => {
+    this.refs.notificationAlertError.notificationAlert(errorOnSubmit);
+  };
+
+  alertFunctionSuccess = () => {
+    this.refs.notificationAlertSuccess.notificationAlert(successOnSubmit);
+  };
+
+  alertFunctionErrorAlreadyAnswered = () => {
+    this.refs.notificationAlertErrorAlreadyAnswered.notificationAlert(
+      errorAlreadyAnswered
+    );
+  };
+
   changeFormState = (event, index, col) => {
     let statesForm = this.state.statesForm;
-
     if (col === undefined) {
       statesForm[index] = event.target.value;
     } else {
       statesForm[index + col] = event.target.value;
     }
-
     this.setState({
       statesForm: statesForm
     });
   };
 
-  submit = event => {
+  handleSubmit = event => {
     event.preventDefault();
     let statesForm = this.state.statesForm;
-
-    const token = localStorage.getItem("token");
     axios({
       method: "post",
       url: `${urlBackEnd}/employee/send/sondage`,
-      data: statesForm,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      data: statesForm
     })
       .then(res => {
-        this.props.history.push("/");
+        this.alertFunctionSuccess();
+        this.setState({
+          hideButton: true
+        });
       })
       .catch(error => {
         this.alertFunctionError();
@@ -193,31 +229,23 @@ class EnqueteEmployee extends Component {
   };
 
   componentDidMount() {
-    const token = localStorage.getItem("token");
     axios({
       method: "get",
-      url: `${urlBackEnd}/employee/list/` + this.props.match.params.token,
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      url: `${urlBackEnd}/employee/list/` + this.props.match.params.token
     })
       .then(res => {
-        if (res.data.length === 0) {
-          this.props.history.push("/");
+        if (res.data[0].date_response !== null) {
+          this.alertFunctionErrorAlreadyAnswered();
+          this.setState({
+            hideButton: true
+          });
         } else {
-          if (res.data[0].date_response !== null) {
-            this.props.history.push("/");
-          } else {
-            let statesForm = this.state.statesForm;
-            statesForm.token_employee = this.props.match.params.token;
-            this.setState({
-              statesForm: statesForm
-            });
-          }
+          let statesForm = this.state.statesForm;
+          statesForm.token_employee = this.props.match.params.token;
         }
       })
       .catch(error => {
-        this.props.history.push("/");
+        this.alertFunctionError();
       });
   }
 
@@ -228,11 +256,14 @@ class EnqueteEmployee extends Component {
           <h1>
             <b>Enquête de mobilité</b>
           </h1>
+          <NotificationAlert ref="notificationAlertError" />
+          <NotificationAlert ref="notificationAlertSuccess" />
+          <NotificationAlert ref="notificationAlertErrorAlreadyAnswered" />
           <div className="d-flex justify-content-center mt-5">
             <div className="textAlignLeft col-8">
               <form
                 className="card shadow p-5 mb-3"
-                onSubmit={event => this.submit(event)}
+                onSubmit={event => this.handleSubmit(event)}
               >
                 {questions.map(data => {
                   switch (data.type) {
@@ -272,7 +303,11 @@ class EnqueteEmployee extends Component {
                       return <p>Il y a une erreur.</p>;
                   }
                 })}
-                <button className="btn btn-lg text-white">Envoyer</button>
+                {this.state.hideButton === false ? (
+                  <button className="btn text-white">Envoyer</button>
+                ) : (
+                  <div className="hasAnswered">Merci d'avoir répondu !</div>
+                )}
               </form>
             </div>
           </div>

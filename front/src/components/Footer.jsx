@@ -125,7 +125,12 @@ class Footer extends Component {
           </Row>
           <Row>
             <Col>
-              <a href="https://wildcodeschool.fr" className="madeWithLove mb-2">
+              <a
+                href="https://wildcodeschool.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="madeWithLove mb-2"
+              >
                 Made with <span className="heart">♥</span> by Wild Code School
               </a>
             </Col>

@@ -15,39 +15,61 @@ app.use(cors());
 app.use('/auth', require('./auth'));
 
 app.post('/contact', (req, res) => {
-  nodemailer.createTestAccount((err, account) => {
-    const htmlEmail = `
+  const htmlEmail = `
     <ul>
       <li>Email: ${req.body.email}</li>
     </ul>
     <h3>Message</h3>
     <p>${req.body.message}</p>
   `;
-
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: userTransporter.user,
-        pass: userTransporter.pass
-      }
-    });
-
-    let mailOptions = {
-      from: req.body.email,
-      to: 'etude.ouvert@gmail.com',
-      subject: "Nouveau message - Mouv'R",
-      html: htmlEmail
-    };
-
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        res.status(500).send('An error occured with confirmation e-mail after sign up.');
-      }
-    });
+  let transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    secure: false,
+    auth: {
+      user: userTransporter.user,
+      pass: userTransporter.pass
+    }
+  });
+  let mailOptions = {
+    from: req.body.email,
+    to: 'etude.ouvert@gmail.com',
+    subject: "Nouveau message - Mouv'R",
+    html: htmlEmail
+  };
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      res.status(500).send('An error occured with confirmation e-mail after sign up.');
+    }
   });
   res.status(200).send('SUCCESS');
+});
+
+app.get('/employee/list/:token', (req, res) => {
+  dbHandle.query(
+    `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.post('/employee/send/sondage', (req, res) => {
+  const formData = req.body;
+  dbHandle.query(
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
+    formData,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).send('SUCCESS');
+      }
+    }
+  );
 });
 
 app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next) => {
@@ -55,37 +77,31 @@ app.all('/*', passport.authenticate('jwt', { session: false }), (req, res, next)
 });
 
 app.post('/assistance', (req, res) => {
-  nodemailer.createTestAccount((err, account) => {
-    const htmlEmail = `
+  const htmlEmail = `
     <ul>
       <li>Email: ${req.body.email}</li>
     </ul>
     <h3>Message</h3>
     <p>${req.body.message}</p>
   `;
-
-    let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: userTransporter.user,
-        pass: userTransporter.pass
-      }
-    });
-
-    let mailOptions = {
-      from: req.body.email,
-      to: 'etude.ouvert@gmail.com',
-      subject: "Nouveau message - MOUV'R",
-      html: htmlEmail
-    };
-
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        res.status(500).send('An error occured with confirmation e-mail after sign up.');
-      }
-    });
+  let transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    secure: false,
+    auth: {
+      user: userTransporter.user,
+      pass: userTransporter.pass
+    }
+  });
+  let mailOptions = {
+    from: req.body.email,
+    to: 'etude.ouvert@gmail.com',
+    subject: "Nouveau message - MOUV'R",
+    html: htmlEmail
+  };
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      res.status(500).send('An error occured with confirmation e-mail after sign up.');
+    }
   });
   res.status(200).send('SUCCESS');
 });
@@ -103,21 +119,6 @@ app.post('/user/survey', (req, res) => {
       res.status(200).send('SUCCESS');
     }
   });
-});
-
-app.post('/employee/send/sondage', (req, res) => {
-  const formData = req.body;
-  dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
-    formData,
-    (err, results) => {
-      if (err) {
-        res.status(500).send('The database crashed ! The reason is ' + err);
-      } else {
-        res.status(200).send('SUCCESS');
-      }
-    }
-  );
 });
 
 app.post('/user/list/survey', (req, res) => {
@@ -147,26 +148,12 @@ app.get('/user/resultat', (req, res) => {
   );
 });
 
-app.get('/employee/list/:token', (req, res) => {
-  dbHandle.query(
-    `SELECT date_response FROM response WHERE token_employee = '${req.params.token}'`,
-    (err, results) => {
-      if (err) {
-        res.status(500).send('The database crashed ! The reason is ' + err);
-      } else {
-        res.status(200).json(results);
-      }
-    }
-  );
-});
-
 app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
     let transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
+      service: 'Gmail',
       secure: false,
       auth: {
         user: userTransporter.user,
@@ -174,10 +161,13 @@ app.post('/user/send/survey', (req, res) => {
       }
     });
     let mailOptions = {
-      from: '"OUVERT" <no-reply@ouvert.com>',
+      from: '"MOUV-R" <no-reply@mouv-r.com>',
       to: mail,
       subject: 'Enquête de mobilité ✔',
-      html: `<h1>Enquête de mobilité</h1><p>Votre employeur vous a envoyé une enquête permettant de mieux connaître vos habitudes de déplacement pour vous rendre sur votre lieu de travail</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><a href='http://localhost:3000/enquete/${tokenSurvey}'>Cliquez sur ce lien</a><p>Bien à vous,</p><p>L'équipe Mov'R</p>`
+      html: `<p>Madame, Monsieur,</p><p>Vous êtes invités à répondre à une enquête relative aux habitudes de
+      déplacement des salariés de l’entreprise.</p><p>En effet, votre employeur travaille à la mise en place d’un plan de mobilité. Cette démarche a pour objectif de vous proposer, pour vos déplacements
+      quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
+      adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
@@ -256,74 +246,75 @@ app.post('/user/geolocation/results', (req, res) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
       } else {
+        let isReady = 0;
         results.map(result => {
-          let isReady = result.is_ready;
-          if (isReady === 1) {
-            dbHandle.query(
-              `SELECT maps_employee.id AS emp_id, concat(maps_employee.lat, ",", maps_employee.lng) AS employeesPositions, maps_employee.distance AS emp_distance, maps_employee.duration AS emp_duration, maps_employee.map_id AS emp_map_id, map.lat AS map_lat, map.lng AS map_lng, map.isochrone5_auto, map.isochrone10_auto, map.isochrone20_auto, map.isochrone5_cycle, map.isochrone10_cycle, map.isochrone15_cycle FROM maps_employee INNER JOIN map ON maps_employee.map_id = map.id WHERE map.user_id = "${userId}" AND map.address = "${address}"`,
-              (err, results) => {
-                if (err) {
-                  res.status(500).send('The database crashed ! The reason is ' + err);
-                } else {
-                  let allResults = {};
-                  let societyData = {};
-                  let employeeData = {};
-                  let employeeId = [];
-                  let employeesPositions = [];
-                  let employeeDistance = [];
-                  let employeeDuration = [];
-                  results.map(result => {
-                    let allId = [];
-                    allId.push(result.emp_id);
-                    allId.map(id => {
-                      employeeId.push(id);
-                    });
-                    let allEmployeesPositions = [];
-                    allEmployeesPositions.push(result.employeesPositions);
-                    allEmployeesPositions.map(position => {
-                      employeesPositions.push(position);
-                    });
-                    let allDistance = [];
-                    allDistance.push(result.emp_distance);
-                    allDistance.map(distance => {
-                      employeeDistance.push(distance);
-                    });
-                    let allDuration = [];
-                    allDuration.push(result.emp_duration);
-                    allDuration.map(duration => {
-                      employeeDuration.push(duration);
-                    });
-                    employeeData = {
-                      id: employeeId,
-                      position: employeesPositions,
-                      distance: employeeDistance,
-                      duration: employeeDuration,
-                      map_id: result.emp_map_id
-                    };
-                    societyData = {
-                      lat: result.map_lat,
-                      lng: result.map_lng,
-                      isochrone5_auto: result.isochrone5_auto,
-                      isochrone10_auto: result.isochrone10_auto,
-                      isochrone20_auto: result.isochrone20_auto,
-                      isochrone5_cycle: result.isochrone5_cycle,
-                      isochrone10_cycle: result.isochrone10_cycle,
-                      isochrone15_cycle: result.isochrone15_cycle
-                    };
-                  });
-                  allResults = {
-                    employeeData: employeeData,
-                    employeeLength: employeeData.position.length,
-                    societyData: societyData
-                  };
-                  res.json(allResults);
-                }
-              }
-            );
-          } else {
-            res.status(200).send('In progress');
-          }
+          isReady = result.is_ready;
         });
+        if (isReady === 1) {
+          dbHandle.query(
+            `SELECT maps_employee.id AS emp_id, concat(maps_employee.lat, ",", maps_employee.lng) AS employeesPositions, maps_employee.distance AS emp_distance, maps_employee.duration AS emp_duration, maps_employee.map_id AS emp_map_id, map.lat AS map_lat, map.lng AS map_lng, map.isochrone5_auto, map.isochrone10_auto, map.isochrone20_auto, map.isochrone5_cycle, map.isochrone10_cycle, map.isochrone15_cycle FROM maps_employee INNER JOIN map ON maps_employee.map_id = map.id WHERE map.user_id = "${userId}" AND map.address = "${address}"`,
+            (err, results) => {
+              if (err) {
+                res.status(500).send('The database crashed ! The reason is ' + err);
+              } else {
+                let allResults = {};
+                let societyData = {};
+                let employeeData = {};
+                let employeeId = [];
+                let employeesPositions = [];
+                let employeeDistance = [];
+                let employeeDuration = [];
+                results.map(result => {
+                  let allId = [];
+                  allId.push(result.emp_id);
+                  allId.map(id => {
+                    employeeId.push(id);
+                  });
+                  let allEmployeesPositions = [];
+                  allEmployeesPositions.push(result.employeesPositions);
+                  allEmployeesPositions.map(position => {
+                    employeesPositions.push(position);
+                  });
+                  let allDistance = [];
+                  allDistance.push(result.emp_distance);
+                  allDistance.map(distance => {
+                    employeeDistance.push(distance);
+                  });
+                  let allDuration = [];
+                  allDuration.push(result.emp_duration);
+                  allDuration.map(duration => {
+                    employeeDuration.push(duration);
+                  });
+                  employeeData = {
+                    id: employeeId,
+                    position: employeesPositions,
+                    distance: employeeDistance,
+                    duration: employeeDuration,
+                    map_id: result.emp_map_id
+                  };
+                  societyData = {
+                    lat: result.map_lat,
+                    lng: result.map_lng,
+                    isochrone5_auto: result.isochrone5_auto,
+                    isochrone10_auto: result.isochrone10_auto,
+                    isochrone20_auto: result.isochrone20_auto,
+                    isochrone5_cycle: result.isochrone5_cycle,
+                    isochrone10_cycle: result.isochrone10_cycle,
+                    isochrone15_cycle: result.isochrone15_cycle
+                  };
+                });
+                allResults = {
+                  employeeData: employeeData,
+                  employeeLength: employeeData.position.length,
+                  societyData: societyData
+                };
+                res.json(allResults);
+              }
+            }
+          );
+        } else {
+          res.status(200).send('In progress');
+        }
       }
     }
   );
@@ -337,8 +328,7 @@ app.post('/admin/payment', (req, res) => {
       res.status(500).send('The database crashed ! The reason is ' + err);
     } else {
       let transporter = nodemailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 587,
+        service: 'Gmail',
         secure: false,
         auth: {
           user: userTransporter.user,
@@ -347,10 +337,11 @@ app.post('/admin/payment', (req, res) => {
       });
       if (formData.has_paid === 1) {
         let mailOptions = {
-          from: '"OUVERT" <no-reply@ouvert.com>',
+          from: '"MOUV-R" <no-reply@mouv-r.com>',
           to: req.body.mail,
-          subject: 'Votre inscription est confirmée ✔',
-          html: `<h1>Bienvenue !</h1><p>Nous avons bien reçu votre règlement et vous confirmons que votre inscription a bien été prise en compte. <br/> Vous pouvez dès à présent profiter de nos services en vous connectant à votre compte : <a href='http://localhost:3000/connexion'>Cliquez sur ce lien</a></p><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+          subject: 'Votre compte est activé ✔',
+          html: `<p>Madame, Monsieur</p><p>Nous vous confirmons la réception du paiement relatif à votre inscription
+          et à l’accès aux fonctionnalités de MOUV’R.</p><p>Votre compte est désormais activé.</p><p>Bonne journée,</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
@@ -360,10 +351,11 @@ app.post('/admin/payment', (req, res) => {
         });
       } else if (formData.has_paid === 0) {
         let mailOptions = {
-          from: '"OUVERT" <no-reply@ouvert.com>',
+          from: '"MOUV-R" <no-reply@mouv-r.com>',
           to: req.body.mail,
-          subject: "Votre compte n'est plus actif",
-          html: `<h1>Désactivation de votre compte</h1><p>Sauf erreur de notre part, nous n'avons pas reçu votre règlement pour bénéficier de nos services. Nous avons ainsi désactivé votre compte. En cas de problème, vous pouvez nous contacter par e-mail ou par téléphone : <a href='http://localhost:3000/contact'>Cliquez sur ce lien</a>.</p><p>Bien à vous,</p><p>L'équipe MOUV'R</p>`
+          subject: 'Désactivation du compte pour défaut de paiement',
+          html: `<p>Madame, Monsieur,</p><p>Nous vous informons que l’accès aux fonctionnalités de MOUV’R a été
+          désactivé du fait de la clôture du contrat.</p><p>N’hésitez pas à reprendre contact avec nous pour accéder de nouveau à l’ensemble des fonctionnalités de notre outil.</p><p>Bonne journée,</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
         };
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {

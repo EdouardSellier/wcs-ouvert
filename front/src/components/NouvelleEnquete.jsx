@@ -16,6 +16,14 @@ const errorMsg = {
   autoDismiss: 4
 };
 
+const errorCsv = {
+  place: "tr",
+  message:
+    "Il semblerait que votre fichier ne contienne pas d'adresses e-mails.",
+  type: "danger",
+  autoDismiss: 4
+};
+
 class NouvelleEnquete extends Component {
   constructor(props) {
     super(props);
@@ -30,6 +38,10 @@ class NouvelleEnquete extends Component {
 
   alertFunctionError = () => {
     this.refs.notificationAlertError.notificationAlert(errorMsg);
+  };
+
+  alertFunctionErrorCsv = () => {
+    this.refs.notificationAlertError.notificationAlert(errorCsv);
   };
 
   handleSubmit = event => {
@@ -51,10 +63,26 @@ class NouvelleEnquete extends Component {
     const reader = new FileReader();
     reader.onload = e => {
       csv.parse(reader.result, (err, data) => {
-        this.setState({
-          mailsData: reader.result,
-          mailsArray: data
+        let searchTypo = "@";
+        let correctFile = false;
+        data.map(mail => {
+          return mail.map(one => {
+            if (one.indexOf(searchTypo) === -1) {
+              correctFile = false;
+            } else {
+              correctFile = true;
+            }
+            return mail;
+          });
         });
+        if (correctFile === false) {
+          this.alertFunctionErrorCsv();
+        } else {
+          this.setState({
+            mailsData: reader.result,
+            mailsArray: data
+          });
+        }
       });
     };
     reader.readAsText(files[0]);

@@ -351,16 +351,15 @@ class Home extends Component {
                     <h4>Démarche d’inscription</h4>
                   </div>
                   <div className="card-body pt-4">
-                    En 3 clics, les premières étapes de votre PDM sont réalisées
-                    ! Pour en savoir plus sur nos services et les modalités
-                    d’inscription,
+                    En 3 clics, les premières étapes de votre plan de mobilité
+                    sont réalisées ! Pour en savoir plus sur nos services et les
+                    modalités d’inscription,
                     <button
                       className="toggleButton"
                       onClick={this.toggleInscription}
                     >
-                      cliquez ici
+                      cliquez ici.
                     </button>
-                    .
                   </div>
                   <Modal
                     isOpen={this.state.modalInscription}
