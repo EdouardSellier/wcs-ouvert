@@ -617,12 +617,7 @@ class Geolocalisation extends Component {
                         isReady = "En cours";
                       }
                       return (
-                        <option
-                          key={address.address}
-                          //onChange={() => {
-                          //  this.displayResults(address.address);
-                          //}}
-                        >
+                        <option key={address.address}>
                           {address.address} : {isReady}
                         </option>
                       );
