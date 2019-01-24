@@ -3,6 +3,23 @@ import { Col, Form } from "reactstrap";
 import "./css/Contact.css";
 import axios from "axios";
 import { urlBackEnd } from "../conf";
+import NotificationAlert from "react-notification-alert";
+
+const successMsg = {
+  place: "tr",
+  message:
+    "Votre message a bien été envoyé, nous vous répondrons dans les meilleurs délais.",
+  type: "success",
+  autoDismiss: 4
+};
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Il semblerait qu'il y ait un problème avec l'envoi de votre message, merci de nous contacter par téléphone si le problème persiste.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class Contact extends Component {
   constructor(props) {
@@ -15,6 +32,10 @@ class Contact extends Component {
       }
     };
   }
+
+  alertFunction = msg => {
+    this.refs.notificationAlertMsg.notificationAlert(msg);
+  };
 
   handleChange = e => {
     let fields = this.state.fields;
@@ -41,21 +62,20 @@ class Contact extends Component {
           fields["email"] = "";
           fields["message"] = "";
           this.setState({
-            confirmation: (
-              <p className="confirm">Le message a bien été envoyé</p>
-            ),
             fields: fields
           });
+          this.alertFunction(successMsg);
         }
       })
       .catch(error => {
-        console.log(error);
+        this.alertFunction(errorMsg);
       });
   };
 
   render() {
     return (
       <div>
+        <NotificationAlert ref="notificationAlertMsg" />
         <Col lg={{ size: 6, offset: 3 }}>
           <div className="contact card shadow p-5">
             <h2>Nous contacter</h2>
