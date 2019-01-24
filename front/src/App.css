@@ -3,7 +3,6 @@
 }
 
 body {
-  min-height: 80vh;
   background: linear-gradient(rgba(63, 60, 60, 0.4), rgba(63, 36, 36, 0.4)),
     url("/img/background.jpg") no-repeat center fixed;
   -webkit-background-size: cover;
@@ -49,4 +48,14 @@ button {
   text-shadow: 1px 1px 1px black;
   letter-spacing: 1px;
   text-align: left;
+}
+
+.goTop {
+  position: fixed;
+  bottom: 5%;
+  text-align: right;
+}
+
+.pageHeight {
+  min-height: calc(100vh - 132px);
 }

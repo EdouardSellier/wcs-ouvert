@@ -13,9 +13,10 @@ class EspaceRH extends Component {
     localStorage.removeItem("currentId");
     this.props.history.push("/");
   };
+
   render() {
     return (
-      <div className="espaceRh">
+      <div className="pageHeight">
         <Container>
           <Row>
             <Col xs={{ size: 8, offset: 2 }}>

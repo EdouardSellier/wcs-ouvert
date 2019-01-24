@@ -44,7 +44,7 @@ class Footer extends Component {
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col lg={{ size: 2, offset: 5 }}>
               <div className="legalMentions mb-2" onClick={this.toggle}>
                 Mentions Légales
               </div>

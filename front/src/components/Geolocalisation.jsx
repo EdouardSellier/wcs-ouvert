@@ -377,6 +377,16 @@ class Geolocalisation extends Component {
   render() {
     return (
       <div className="text-white">
+        <div className="col-1 offset-11 mb-2">
+          <button
+            className="btn goTop text-white"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
+            <i className="fa fa-arrow-up" />
+          </button>
+        </div>
         <div className="listAddress mt-2">
           <Container>
             <Row>
