@@ -104,7 +104,6 @@ class ListeEnquetesRH extends Component {
   };
 
   render() {
-    console.log(this.state.surveyNameSelected);
     return (
       <div>
         <Container className="mt-4">

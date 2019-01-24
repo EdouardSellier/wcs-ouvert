@@ -87,7 +87,7 @@ class Assistance extends Component {
               <p className="mt-3 text-left">
                 Si vous rencontrez un problème, n’hésitez pas à nous contacter
                 par mail via le formulaire ci-dessous ou à nous joindre par
-                téléphone au <i className="fa fa-phone" /> 0320619089.
+                téléphone au <i className="fa fa-phone" /> 03 20 61 90 89.
               </p>
               <Form onSubmit={this.contactForm} className="mt-2">
                 <div className="form-group">

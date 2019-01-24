@@ -60,7 +60,9 @@ app.get('/employee/list/:token', (req, res) => {
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
   dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${
+      formData.token_employee
+    } AND date_response=NULL'`,
     formData,
     (err, results) => {
       if (err) {
@@ -148,6 +150,20 @@ app.get('/user/resultat', (req, res) => {
   );
 });
 
+app.post('/user/answers', (req, res) => {
+  const surveyName = req.body.survey_name;
+  dbHandle.query(
+    `SELECT COUNT(date_response) AS nb_response FROM response WHERE date_response IS NOT NULL AND survey_name = "${surveyName}"`,
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
 app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
@@ -167,7 +183,7 @@ app.post('/user/send/survey', (req, res) => {
       html: `<p>Madame, Monsieur,</p><p>Vous êtes invités à répondre à une enquête relative aux habitudes de
       déplacement des salariés de l’entreprise.</p><p>En effet, votre employeur travaille à la mise en place d’un plan de mobilité. Cette démarche a pour objectif de vous proposer, pour vos déplacements
       quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
-      adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
+      adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='http://localhost:8080/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
     };
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
