@@ -7,7 +7,8 @@ const questions = [
     index: "genre",
     number: 1,
     coordinateImg: [0, 25, -100, 60],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "age",
@@ -23,7 +24,8 @@ const questions = [
     index: "age",
     number: 2,
     coordinateImg: [1, 80, -100, 50],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "principalTransport",
@@ -45,7 +47,8 @@ const questions = [
     index: "principal_transport_",
     number: 3,
     coordinateImg: [25, 140, 160, 150],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "ocasionalyTransport",
@@ -67,7 +70,8 @@ const questions = [
     index: "ocasionaly_transport_",
     number: 4,
     coordinateImg: [29, 17, 150, 160],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "reasonTransport",
@@ -89,7 +93,8 @@ const questions = [
     index: "reason_transport",
     number: 5,
     coordinateImg: [25, 180, 150, 100],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
 
   {
@@ -100,7 +105,8 @@ const questions = [
     index: "distance_klm",
     number: 6,
     coordinateImg: [-56, 11, 320, 26],
-    pageAdded: false
+    pageAdded: false,
+    symbol: "klm"
   },
   {
     id: "distanceMin",
@@ -110,7 +116,8 @@ const questions = [
     index: "distance_min",
     number: 7,
     coordinateImg: [-56, 51, 320, 26],
-    pageAdded: false
+    pageAdded: false,
+    symbol: "min"
   },
 
   {
@@ -121,7 +128,8 @@ const questions = [
     index: "distance_money",
     number: 8,
     coordinateImg: [-56, 94, 320, 26],
-    pageAdded: false
+    pageAdded: false,
+    symbol: "€"
   },
   {
     id: "elements",
@@ -139,7 +147,8 @@ const questions = [
     index: "elements_",
     number: 9,
     coordinateImg: [28, 141, 150, 150],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "parkingPlace",
@@ -154,7 +163,8 @@ const questions = [
     index: "parking_place",
     number: 10,
     coordinateImg: [3, 25, -100, 150],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "midday",
@@ -169,7 +179,8 @@ const questions = [
     index: "midday",
     number: 11,
     coordinateImg: [4, 114, -100, 60],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "frequencyMidday",
@@ -186,7 +197,8 @@ const questions = [
     index: "frequency_midday",
     number: 12,
     coordinateImg: [0, 206, -100, 70],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "transportMidday",
@@ -209,7 +221,8 @@ const questions = [
     index: "transport_midday",
     number: 13,
     coordinateImg: [3, 28, -100, 110],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "frequencyPro",
@@ -227,7 +240,8 @@ const questions = [
     index: "frequency_pro",
     number: 14,
     coordinateImg: [13, 179, -113, 120],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "distancePro",
@@ -245,7 +259,8 @@ const questions = [
     index: "distance_pro",
     number: 15,
     coordinateImg: [2, 15, -100, 110],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "deplacementPro",
@@ -267,7 +282,8 @@ const questions = [
     index: "deplacement_pro",
     number: 16,
     coordinateImg: [0, 98, -100, 90],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "reasonPersoCar",
@@ -285,7 +301,8 @@ const questions = [
     index: "reason_perso_car",
     number: 17,
     coordinateImg: [0, 200, -100, 120],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "deplacementMethodPro",
@@ -303,7 +320,8 @@ const questions = [
     index: "deplacement_method_pro",
     number: 18,
     coordinateImg: [5, 11, -100, 120],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "communTransport",
@@ -320,7 +338,8 @@ const questions = [
     index: "commun_transport_",
     number: 19,
     coordinateImg: [30, 153, 150, 134],
-    pageAdded: true
+    pageAdded: true,
+    symbol: ""
   },
   {
     id: "bike",
@@ -342,7 +361,8 @@ const questions = [
     index: "bike_",
     number: 20,
     coordinateImg: [28, 13, 150, 138],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "carpooling",
@@ -360,7 +380,8 @@ const questions = [
     index: "carpooling_",
     number: 21,
     coordinateImg: [26, 165, 150, 125],
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "otherThanCar",
@@ -374,7 +395,8 @@ const questions = [
     coordinateTitle: [],
     coordinateImg: [],
     indexImgPdf: null,
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   },
   {
     id: "commentary",
@@ -388,7 +410,8 @@ const questions = [
     coordinateTitle: [],
     coordinateImg: [],
     indexImgPdf: null,
-    pageAdded: false
+    pageAdded: false,
+    symbol: ""
   }
 ];
 

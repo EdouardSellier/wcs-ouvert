@@ -299,7 +299,10 @@ const ResultText = props => {
           id={props.number}
         >
           La moyenne des salariés ayant répondu est de{" "}
-          <span className="dataResultText">{result}€</span>
+          <span className="dataResultText">
+            {result}
+            {props.symbol}
+          </span>
         </Col>
       </Col>
     </React.Fragment>
@@ -323,10 +326,44 @@ class Resultat extends Component {
       loadingPdf: true
     });
     const pdf = new jsPDF();
+
     pdf.text(15, 15, "Résultat de votre enquête :");
-    let numDiv = 1;
+    let idNum = 0;
+    questions.map(question => {
+      if (question.number < 22) {
+        let input = document.getElementById(question.number);
+        html2canvas(input).then(canvas => {
+          let imgData = canvas.toDataURL("image/png");
+          pdf.addImage(
+            imgData,
+            "PNG",
+            question.coordinateImg[0],
+            question.coordinateImg[1],
+            question.coordinateImg[2],
+            question.coordinateImg[3]
+          );
+          if (question.pageAdded === true) {
+            pdf.addPage();
+          }
+          idNum++;
+          alert(idNum);
+          if (idNum >= 20) {
+            pdf.save("resultat-enquete.pdf");
+
+            this.setState({
+              loadingPdf: false
+            });
+          }
+        });
+      }
+    });
+
+    /*let numDiv = 1;
+
     const addPdfImage = () => {
+
       let input = document.getElementById(numDiv);
+
       html2canvas(input).then(canvas => {
         let imgData = canvas.toDataURL("image/png");
         pdf.addImage(
@@ -337,9 +374,11 @@ class Resultat extends Component {
           questions[numDiv - 1].coordinateImg[2],
           questions[numDiv - 1].coordinateImg[3]
         );
+
         if (questions[numDiv - 1].pageAdded === true) {
           pdf.addPage();
         }
+
         if (numDiv < 21) {
           numDiv++;
           addPdfImage();
@@ -351,7 +390,7 @@ class Resultat extends Component {
         }
       });
     };
-    addPdfImage();
+    addPdfImage();*/
   }
 
   handleBack = event => {
@@ -476,6 +515,7 @@ class Resultat extends Component {
                     dataFetch={this.state.dataFetch}
                     label={data.label}
                     number={data.number}
+                    symbol={data.symbol}
                     key={data.id}
                   />
                 );
