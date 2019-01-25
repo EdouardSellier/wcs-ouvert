@@ -1,8 +1,10 @@
+//EDOUARD
+
 import React, { Component } from "react";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
 import { Pie } from "react-chartjs-2";
-import domtoimage from "dom-to-image";
+import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import { urlBackEnd } from "../conf";
@@ -15,7 +17,11 @@ const ResultBar = props => {
         lg={{ size: 6 }}
         className="d-flex bidule justify-content-center mt-5"
       >
-        <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+        <Col
+          xs={{ size: 12 }}
+          className="mb-5 pb-5 pr-5 px-0 bg-light"
+          id={props.number}
+        >
           <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
             {props.label}
           </Col>
@@ -104,7 +110,6 @@ const ResultPie = props => {
         .length
     )
   );
-
   possibilities.map(data =>
     pies.pie2.push(
       props.dataFetch.filter(state => state[props.index + "two"] === data)
@@ -205,7 +210,11 @@ const ResultPie = props => {
   let idTab = 0;
   return (
     <Col lg={{ size: 6 }} className="d-flex justify-content-center mt-5">
-      <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+      <Col
+        xs={{ size: 12 }}
+        className="mb-5 pb-5 pr-5 px-0 bg-light"
+        id={props.number}
+      >
         <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
           {props.label}
         </Col>
@@ -280,7 +289,7 @@ const ResultText = props => {
 
   return (
     <React.Fragment>
-      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light">
+      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light" id={props.number}>
         <Col xs={{ size: 12 }} className="my-5 componentTitle">
           {props.label}
         </Col>
@@ -304,68 +313,45 @@ class Resultat extends Component {
     this.state = {
       hovering: true,
       dataFetch: [],
-      nbResponse: 0
+      nbResponse: 0,
+      loadingPdf: false
     };
   }
 
-  handlePdf(img) {
-    let newPdf = new jsPDF();
-    const allImages = img;
-    newPdf.text(15, 15, "Résultat de votre enquête :");
-
-    newPdf.setFontSize(10);
-
-    questions.map(data => {
-      if (data.number < 22) {
-        newPdf.text(
-          data.coordinateTitle[0],
-          data.coordinateTitle[1],
-          data.contentPDF
+  handlePdf() {
+    this.setState({
+      loadingPdf: true
+    });
+    const pdf = new jsPDF();
+    pdf.text(15, 15, "Résultat de votre enquête :");
+    let numDiv = 1;
+    const addPdfImage = () => {
+      let input = document.getElementById(numDiv);
+      html2canvas(input).then(canvas => {
+        let imgData = canvas.toDataURL("image/png");
+        pdf.addImage(
+          imgData,
+          "PNG",
+          questions[numDiv - 1].coordinateImg[0],
+          questions[numDiv - 1].coordinateImg[1],
+          questions[numDiv - 1].coordinateImg[2],
+          questions[numDiv - 1].coordinateImg[3]
         );
-
-        newPdf.addImage(
-          allImages[data.indexImgPdf],
-          "JPEG",
-          data.coordinateImg[0],
-          data.coordinateImg[1],
-          data.coordinateImg[2],
-          data.coordinateImg[3]
-        );
-
-        if (data.pageAdded === true) {
-          newPdf.addPage();
+        if (questions[numDiv - 1].pageAdded === true) {
+          pdf.addPage();
         }
-      }
-      return false;
-    });
-
-    newPdf.save("resultat-enquete.pdf");
-  }
-
-  handleImg() {
-    let allCaptures = [];
-
-    questions.map(data => {
-      if (data.number < 22) {
-        allCaptures.push(document.getElementById(data.number));
-      }
-      return false;
-    });
-
-    let allImagesData = [];
-
-    allCaptures.map(capture => {
-      return domtoimage.toPng(capture).then(dataUrl => {
-        let imgData = new Image();
-
-        imgData = new Image(1000, 1000);
-
-        imgData.src = dataUrl;
-        allImagesData.push(imgData);
-
-        this.handlePdf(allImagesData);
+        if (numDiv < 21) {
+          numDiv++;
+          addPdfImage();
+        } else {
+          pdf.save("resultat-enquete.pdf");
+          this.setState({
+            loadingPdf: false
+          });
+        }
       });
-    });
+    };
+    addPdfImage();
   }
 
   handleBack = event => {
@@ -501,11 +487,14 @@ class Resultat extends Component {
         <Row>
           <Col xs={{ size: 12 }} className="pb-5 mt-5">
             <button
-              onClick={() => this.handleImg()}
+              onClick={() => this.handlePdf()}
               className="mb-4 mt-3 btn btn-lg text-white pdfButton"
             >
               <i className="fa fa-file-pdf-o" /> Télécharger PDF
             </button>
+            {this.state.loadingPdf && (
+              <img className="spinnerResultat" src="img/Spinner.gif" />
+            )}
           </Col>
         </Row>
       </div>
