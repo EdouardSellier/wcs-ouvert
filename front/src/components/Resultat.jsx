@@ -4,6 +4,7 @@ import questions from "./questions";
 import { Pie } from "react-chartjs-2";
 import domtoimage from "dom-to-image";
 import jsPDF from "jspdf";
+import axios from "axios";
 import { urlBackEnd } from "../conf";
 import "./css/Resultat.css";
 
@@ -302,7 +303,8 @@ class Resultat extends Component {
 
     this.state = {
       hovering: true,
-      dataFetch: []
+      dataFetch: [],
+      nbResponse: 0
     };
   }
 
@@ -372,6 +374,26 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
+    this.getResult();
+    const token = localStorage.getItem("token");
+    const body = {
+      survey_name: this.props.location.state.surveyNameSelected
+    };
+    axios
+      .post(`${urlBackEnd}/user/answers`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(result => {
+        let hasAnswered = result.data[0].nb_response;
+        this.setState({
+          nbResponse: hasAnswered
+        });
+      });
+  }
+
+  getResult = () => {
     try {
       if (
         !this.props.location.state.currentId &&
@@ -382,9 +404,7 @@ class Resultat extends Component {
     } catch {
       this.props.history.push("/monespace");
     }
-
     const token = localStorage.getItem("token");
-
     fetch(`${urlBackEnd}/user/resultat`, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -398,17 +418,26 @@ class Resultat extends Component {
             survey.survey_name === this.props.location.state.surveyNameSelected
           //add the date true
         );
-
         this.setState({
           dataFetch: dataFetch,
           hovering: true
         });
       });
-  }
+  };
 
   render() {
     return (
       <div className="container-fluid mt-2">
+        <div className="col-1 offset-11 mb-2">
+          <button
+            className="btn goTop text-white"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
+            <i className="fa fa-arrow-up" />
+          </button>
+        </div>
         <Row>
           <Col lg={{ size: 2 }} className="pb-4">
             <button className="mt-2 btn text-white" onClick={this.handleBack}>
@@ -423,8 +452,8 @@ class Resultat extends Component {
         </Row>
         <Row>
           <Col lg={{ size: 12 }} className="contentTotalResult mt-5">
-            <b>{this.state.dataFetch.length}</b> salarié(s) ayant répondu au
-            sondage pour l'instant.
+            <b>{this.state.nbResponse}</b> salarié(s) ayant répondu au sondage
+            pour l'instant.
           </Col>
         </Row>
         <Row className="px-5 mt-5 d-flex justify-content-center">

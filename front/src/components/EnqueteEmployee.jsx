@@ -225,6 +225,9 @@ class EnqueteEmployee extends Component {
       })
       .catch(error => {
         this.alertFunctionError();
+        this.setState({
+          hideButton: true
+        });
       });
   };
 
@@ -246,6 +249,9 @@ class EnqueteEmployee extends Component {
       })
       .catch(error => {
         this.alertFunctionError();
+        this.setState({
+          hideButton: true
+        });
       });
   }
 

@@ -90,7 +90,17 @@ class Home extends Component {
     return (
       <div className="home">
         <Header />
-        <div className="">
+        <div className="col-1 offset-11 mb-2">
+          <button
+            className="btn goTop text-white"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
+            <i className="fa fa-arrow-up" />
+          </button>
+        </div>
+        <div>
           <div className="centered">
             <Zoom>
               BIENVENUE SUR NOTRE OUTIL
