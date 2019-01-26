@@ -326,11 +326,12 @@ class Resultat extends Component {
       loadingPdf: true
     });
     const pdf = new jsPDF();
-
+    let i = 0;
     pdf.text(15, 15, "Résultat de votre enquête :");
-    let idNum = 0;
-    questions.map(question => {
-      if (question.number < 22) {
+
+    questions
+      .filter(question => question.type !== "text")
+      .map(question => {
         let input = document.getElementById(question.number);
         html2canvas(input).then(canvas => {
           let imgData = canvas.toDataURL("image/png");
@@ -345,52 +346,17 @@ class Resultat extends Component {
           if (question.pageAdded === true) {
             pdf.addPage();
           }
-          idNum++;
-          alert(idNum);
-          if (idNum >= 20) {
+          i++;
+          if (
+            i >= questions.filter(question => question.type !== "text").length
+          ) {
             pdf.save("resultat-enquete.pdf");
-
             this.setState({
               loadingPdf: false
             });
           }
         });
-      }
-    });
-
-    /*let numDiv = 1;
-
-    const addPdfImage = () => {
-
-      let input = document.getElementById(numDiv);
-
-      html2canvas(input).then(canvas => {
-        let imgData = canvas.toDataURL("image/png");
-        pdf.addImage(
-          imgData,
-          "PNG",
-          questions[numDiv - 1].coordinateImg[0],
-          questions[numDiv - 1].coordinateImg[1],
-          questions[numDiv - 1].coordinateImg[2],
-          questions[numDiv - 1].coordinateImg[3]
-        );
-
-        if (questions[numDiv - 1].pageAdded === true) {
-          pdf.addPage();
-        }
-
-        if (numDiv < 21) {
-          numDiv++;
-          addPdfImage();
-        } else {
-          pdf.save("resultat-enquete.pdf");
-          this.setState({
-            loadingPdf: false
-          });
-        }
       });
-    };
-    addPdfImage();*/
   }
 
   handleBack = event => {

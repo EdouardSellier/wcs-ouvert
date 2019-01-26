@@ -100,22 +100,24 @@ const questions = [
   {
     id: "distanceKlm",
     type: "number",
-    label: "Quelle distance (en km) parcourez-vous pour :",
+    label:
+      "Quelle distance (en km) parcourez-vous pour vous rendre sur votre lieu de travail ?",
     possibilities: [],
     index: "distance_klm",
     number: 6,
     coordinateImg: [-56, 11, 320, 26],
     pageAdded: false,
-    symbol: "klm"
+    symbol: "km"
   },
   {
     id: "distanceMin",
     type: "number",
-    label: "Combien de temps (en minutes) mettez-vous pour :",
+    label:
+      "Combien de temps (en minutes) mettez-vous pour faire le trajet domicile – travail (aller ou retour) ?",
     possibilities: [],
     index: "distance_min",
     number: 7,
-    coordinateImg: [-56, 51, 320, 26],
+    coordinateImg: [-25, 51, 260, 26],
     pageAdded: false,
     symbol: "min"
   },
@@ -123,7 +125,8 @@ const questions = [
   {
     id: "distanceMoney",
     type: "number",
-    label: "Quel budget (en euros) dépensez-vous pour :",
+    label:
+      "Quel budget (en euros) dépensez-vous pour vos trajets domicile – travail ?",
     possibilities: [],
     index: "distance_money",
     number: 8,
@@ -300,7 +303,7 @@ const questions = [
     ],
     index: "reason_perso_car",
     number: 17,
-    coordinateImg: [0, 200, -100, 120],
+    coordinateImg: [6, 200, -100, 120],
     pageAdded: true,
     symbol: ""
   },
