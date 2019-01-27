@@ -15,6 +15,13 @@ const userTransporter = {
   pass: process.env.DBTRANSPORTER_PASSWORD
 };
 
+const authTransporter = {
+  auth: {
+    api_key: '509a3813f869c27410c2f0603fdc51de-2d27312c-ce3cf0fa',
+    domain: 'sandbox1d4fa01e7f12481abec8665884e7c3ac.mailgun.org'
+  }
+};
+
 const apiKey = {
   key: process.env.DB_APIKEY
 };
@@ -24,6 +31,7 @@ const portServer = process.env.DB_PORTSERVER;
 
 module.exports = {
   userTransporter,
+  authTransporter,
   jwtSecret,
   dbHandle,
   saltRounds,
