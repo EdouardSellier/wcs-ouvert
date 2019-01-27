@@ -69,13 +69,13 @@ const questions = [
     ],
     index: "ocasionaly_transport_",
     number: 4,
-    coordinateImg: [29, 17, 150, 160],
+    coordinateImg: [29, 17, 150, 130],
     pageAdded: false,
     symbol: ""
   },
   {
     id: "reasonTransport",
-    type: "option",
+    type: "multipleOption",
     label:
       "Quelle(s) raison(s) motive(nt) le choix de votre mode de déplacements principal ?",
     possibilities: [
@@ -90,9 +90,9 @@ const questions = [
       "Indépendance",
       "Autre raison"
     ],
-    index: "reason_transport",
+    index: "reason_transport_",
     number: 5,
-    coordinateImg: [25, 180, 150, 100],
+    coordinateImg: [29, 150, 150, 130],
     pageAdded: true,
     symbol: ""
   },
