@@ -1,5 +1,3 @@
-//EDOUARD
-
 import React, { Component } from "react";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
@@ -322,6 +320,8 @@ class Resultat extends Component {
   }
 
   handlePdf() {
+    /* This is another method to extract this page in pdf. It's not
+        a recursive method and there is no way a possibility to generate a infinite loop. */
     this.setState({
       loadingPdf: true
     });
@@ -356,6 +356,7 @@ class Resultat extends Component {
             });
           }
         });
+        return false;
       });
   }
 
@@ -499,7 +500,11 @@ class Resultat extends Component {
               <i className="fa fa-file-pdf-o" /> Télécharger PDF
             </button>
             {this.state.loadingPdf && (
-              <img className="spinnerResultat" src="img/Spinner.gif" />
+              <img
+                className="spinnerResultat"
+                alt="spinner"
+                src="img/Spinner.gif"
+              />
             )}
           </Col>
         </Row>
