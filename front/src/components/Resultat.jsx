@@ -26,7 +26,7 @@ const ResultBar = props => {
           <Col xs={{ size: 12 }} className="px-0">
             <Row id={props.number}>
               {props.possibilities.map(data => (
-                <React.Fragment>
+                <React.Fragment key={data}>
                   <Col xs={{ size: 4 }} className="pt-2 pr-0 alignCenter">
                     <Col xs={{ size: 12 }} className="textAlignRight pr-1">
                       {data}
@@ -222,7 +222,7 @@ const ResultPie = props => {
               idTab += 1;
 
               return (
-                <Col lg={{ size: 12 }}>
+                <Col lg={{ size: 12 }} key={idTab}>
                   <Col xs={{ size: 12 }} className="d-flex my-1">
                     <Col xs={{ size: 4 }} className="centerRight">
                       <Col

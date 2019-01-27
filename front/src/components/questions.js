@@ -92,7 +92,7 @@ const questions = [
     ],
     index: "reason_transport_",
     number: 5,
-    coordinateImg: [29, 150, 150, 130],
+    coordinateImg: [31, 150, 150, 130],
     pageAdded: true,
     symbol: ""
   },
