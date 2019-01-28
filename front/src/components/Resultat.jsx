@@ -320,15 +320,12 @@ class Resultat extends Component {
   }
 
   handlePdf() {
-    /* This is another method to extract this page in pdf. It's not
-        a recursive method and there is no way a possibility to generate a infinite loop. */
     this.setState({
       loadingPdf: true
     });
     const pdf = new jsPDF();
     let i = 0;
     pdf.text(15, 15, "Résultat de votre enquête :");
-
     questions
       .filter(question => question.type !== "text")
       .map(question => {
@@ -397,18 +394,17 @@ class Resultat extends Component {
       this.props.history.push("/monespace");
     }
     const token = localStorage.getItem("token");
-    fetch(`${urlBackEnd}/user/resultat`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(results => results.json())
-      .then(data => {
-        let dataFetch = data.filter(
+    axios
+      .get(`${urlBackEnd}/user/resultat`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        let dataFetch = res.data.filter(
           survey =>
             survey.id_rh === this.props.location.state.currentId &&
             survey.survey_name === this.props.location.state.surveyNameSelected
-          //add the date true
         );
         this.setState({
           dataFetch: dataFetch,

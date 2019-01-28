@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
-const { portServer, dbHandle, userTransporter } = require('./conf');
+const { portServer, dbHandle, userTransporter, authTransporter } = require('./conf');
 require('./passport-strategy');
 const nodemailer = require('nodemailer');
+const mg = require('nodemailer-mailgun-transport');
 const uuidv4 = require('uuid');
 const app = express();
+const nodemailerMailgun = nodemailer.createTransport(mg(authTransporter));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -168,14 +170,6 @@ app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
-    let transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      secure: false,
-      auth: {
-        user: userTransporter.user,
-        pass: userTransporter.pass
-      }
-    });
     let mailOptions = {
       from: '"MOUV-R" <no-reply@mouv-r.com>',
       to: mail,
@@ -185,7 +179,7 @@ app.post('/user/send/survey', (req, res) => {
       quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
       adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
     };
-    transporter.sendMail(mailOptions, (error, info) => {
+    nodemailerMailgun.sendMail(mailOptions, (error, info) => {
       if (error) {
         res.status(500).send('An error occured during mail sending.');
       }
