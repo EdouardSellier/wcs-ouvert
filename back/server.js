@@ -105,7 +105,7 @@ app.post('/user/survey', (req, res) => {
   });
 });
 
-app.post('/employee/send/sondage', (req, res) => {
+app.put('/employee/send/sondage', (req, res) => {
   const formData = req.body;
   dbHandle.query(
     `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
@@ -329,7 +329,7 @@ app.post('/user/geolocation/results', (req, res) => {
   );
 });
 
-app.post('/admin/payment', (req, res) => {
+app.put('/admin/payment', (req, res) => {
   const formData = req.body;
   const idSociety = req.body.id;
   dbHandle.query(`UPDATE user SET ? WHERE user.id=${idSociety}`, formData, (err, results) => {
