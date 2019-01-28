@@ -4,7 +4,6 @@ import questions from "./questions";
 import { Pie } from "react-chartjs-2";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import axios from "axios";
 import { urlBackEnd } from "../conf";
 import "./css/Resultat.css";
 
@@ -310,7 +309,6 @@ const ResultText = props => {
 class Resultat extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       hovering: true,
       dataFetch: [],
@@ -363,26 +361,6 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
-    this.getResult();
-    const token = localStorage.getItem("token");
-    const body = {
-      survey_name: this.props.location.state.surveyNameSelected
-    };
-    axios
-      .post(`${urlBackEnd}/user/answers`, body, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(result => {
-        let hasAnswered = result.data[0].nb_response;
-        this.setState({
-          nbResponse: hasAnswered
-        });
-      });
-  }
-
-  getResult = () => {
     try {
       if (
         !this.props.location.state.currentId &&
@@ -394,24 +372,25 @@ class Resultat extends Component {
       this.props.history.push("/monespace");
     }
     const token = localStorage.getItem("token");
-    axios
-      .get(`${urlBackEnd}/user/resultat`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        let dataFetch = res.data.filter(
+    fetch(`${urlBackEnd}/user/resultat`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(results => results.json())
+      .then(data => {
+        let dataFetch = data.filter(
           survey =>
             survey.id_rh === this.props.location.state.currentId &&
             survey.survey_name === this.props.location.state.surveyNameSelected
         );
         this.setState({
           dataFetch: dataFetch,
-          hovering: true
+          hovering: true,
+          nbResponse: data.length
         });
       });
-  };
+  }
 
   render() {
     return (
