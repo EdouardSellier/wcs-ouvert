@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import { Row, Col } from "reactstrap";
 import questions from "./questions";
 import { Pie } from "react-chartjs-2";
-import domtoimage from "dom-to-image";
+import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import axios from "axios";
 import { urlBackEnd } from "../conf";
 import "./css/Resultat.css";
 
@@ -14,14 +15,18 @@ const ResultBar = props => {
         lg={{ size: 6 }}
         className="d-flex bidule justify-content-center mt-5"
       >
-        <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+        <Col
+          xs={{ size: 12 }}
+          className="mb-5 pb-5 pr-5 px-0 bg-light"
+          id={props.number}
+        >
           <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
             {props.label}
           </Col>
           <Col xs={{ size: 12 }} className="px-0">
             <Row id={props.number}>
               {props.possibilities.map(data => (
-                <React.Fragment>
+                <React.Fragment key={data}>
                   <Col xs={{ size: 4 }} className="pt-2 pr-0 alignCenter">
                     <Col xs={{ size: 12 }} className="textAlignRight pr-1">
                       {data}
@@ -103,7 +108,6 @@ const ResultPie = props => {
         .length
     )
   );
-
   possibilities.map(data =>
     pies.pie2.push(
       props.dataFetch.filter(state => state[props.index + "two"] === data)
@@ -204,7 +208,11 @@ const ResultPie = props => {
   let idTab = 0;
   return (
     <Col lg={{ size: 6 }} className="d-flex justify-content-center mt-5">
-      <Col xs={{ size: 12 }} className="mb-5 pb-5 pr-5 px-0 bg-light">
+      <Col
+        xs={{ size: 12 }}
+        className="mb-5 pb-5 pr-5 px-0 bg-light"
+        id={props.number}
+      >
         <Col xs={{ size: 12 }} className="componentTitle my-4 px-5">
           {props.label}
         </Col>
@@ -214,7 +222,7 @@ const ResultPie = props => {
               idTab += 1;
 
               return (
-                <Col lg={{ size: 12 }}>
+                <Col lg={{ size: 12 }} key={idTab}>
                   <Col xs={{ size: 12 }} className="d-flex my-1">
                     <Col xs={{ size: 4 }} className="centerRight">
                       <Col
@@ -279,7 +287,7 @@ const ResultText = props => {
 
   return (
     <React.Fragment>
-      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light">
+      <Col xs={{ size: 9 }} className="mb-5 pb-5 bg-light" id={props.number}>
         <Col xs={{ size: 12 }} className="my-5 componentTitle">
           {props.label}
         </Col>
@@ -289,7 +297,10 @@ const ResultText = props => {
           id={props.number}
         >
           La moyenne des salariés ayant répondu est de{" "}
-          <span className="dataResultText">{result}€</span>
+          <span className="dataResultText">
+            {result}
+            {props.symbol}
+          </span>
         </Col>
       </Col>
     </React.Fragment>
@@ -302,68 +313,48 @@ class Resultat extends Component {
 
     this.state = {
       hovering: true,
-      dataFetch: []
+      dataFetch: [],
+      nbResponse: 0,
+      loadingPdf: false
     };
   }
 
-  handlePdf(img) {
-    let newPdf = new jsPDF();
-    const allImages = img;
-    newPdf.text(15, 15, "Résultat de votre enquête :");
-
-    newPdf.setFontSize(10);
-
-    questions.map(data => {
-      if (data.number < 22) {
-        newPdf.text(
-          data.coordinateTitle[0],
-          data.coordinateTitle[1],
-          data.contentPDF
-        );
-
-        newPdf.addImage(
-          allImages[data.indexImgPdf],
-          "JPEG",
-          data.coordinateImg[0],
-          data.coordinateImg[1],
-          data.coordinateImg[2],
-          data.coordinateImg[3]
-        );
-
-        if (data.pageAdded === true) {
-          newPdf.addPage();
-        }
-      }
-      return false;
+  handlePdf() {
+    this.setState({
+      loadingPdf: true
     });
-
-    newPdf.save("resultat-enquete.pdf");
-  }
-
-  handleImg() {
-    let allCaptures = [];
-
-    questions.map(data => {
-      if (data.number < 22) {
-        allCaptures.push(document.getElementById(data.number));
-      }
-      return false;
-    });
-
-    let allImagesData = [];
-
-    allCaptures.map(capture => {
-      return domtoimage.toPng(capture).then(dataUrl => {
-        let imgData = new Image();
-
-        imgData = new Image(1000, 1000);
-
-        imgData.src = dataUrl;
-        allImagesData.push(imgData);
-
-        this.handlePdf(allImagesData);
+    const pdf = new jsPDF();
+    let i = 0;
+    pdf.text(15, 15, "Résultat de votre enquête :");
+    questions
+      .filter(question => question.type !== "text")
+      .map(question => {
+        let input = document.getElementById(question.number);
+        html2canvas(input).then(canvas => {
+          let imgData = canvas.toDataURL("image/png");
+          pdf.addImage(
+            imgData,
+            "PNG",
+            question.coordinateImg[0],
+            question.coordinateImg[1],
+            question.coordinateImg[2],
+            question.coordinateImg[3]
+          );
+          if (question.pageAdded === true) {
+            pdf.addPage();
+          }
+          i++;
+          if (
+            i >= questions.filter(question => question.type !== "text").length
+          ) {
+            pdf.save("resultat-enquete.pdf");
+            this.setState({
+              loadingPdf: false
+            });
+          }
+        });
+        return false;
       });
-    });
   }
 
   handleBack = event => {
@@ -372,6 +363,26 @@ class Resultat extends Component {
   };
 
   componentDidMount() {
+    this.getResult();
+    const token = localStorage.getItem("token");
+    const body = {
+      survey_name: this.props.location.state.surveyNameSelected
+    };
+    axios
+      .post(`${urlBackEnd}/user/answers`, body, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(result => {
+        let hasAnswered = result.data[0].nb_response;
+        this.setState({
+          nbResponse: hasAnswered
+        });
+      });
+  }
+
+  getResult = () => {
     try {
       if (
         !this.props.location.state.currentId &&
@@ -382,32 +393,39 @@ class Resultat extends Component {
     } catch {
       this.props.history.push("/monespace");
     }
-
     const token = localStorage.getItem("token");
-
-    fetch(`${urlBackEnd}/user/resultat`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(results => results.json())
-      .then(data => {
-        let dataFetch = data.filter(
+    axios
+      .get(`${urlBackEnd}/user/resultat`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      .then(res => {
+        let dataFetch = res.data.filter(
           survey =>
             survey.id_rh === this.props.location.state.currentId &&
             survey.survey_name === this.props.location.state.surveyNameSelected
         );
-
         this.setState({
           dataFetch: dataFetch,
           hovering: true
         });
       });
-  }
+  };
 
   render() {
     return (
       <div className="container-fluid mt-2">
+        <div className="col-1 offset-11 mb-2">
+          <button
+            className="btn goTop text-white"
+            onClick={() => {
+              window.scrollTo(0, 0);
+            }}
+          >
+            <i className="fa fa-arrow-up" />
+          </button>
+        </div>
         <Row>
           <Col lg={{ size: 2 }} className="pb-4">
             <button className="mt-2 btn text-white" onClick={this.handleBack}>
@@ -422,8 +440,8 @@ class Resultat extends Component {
         </Row>
         <Row>
           <Col lg={{ size: 12 }} className="contentTotalResult mt-5">
-            <b>{this.state.dataFetch.length}</b> salarié(s) ayant répondu au
-            sondage pour l'instant.
+            <b>{this.state.nbResponse}</b> salarié(s) ayant répondu au sondage
+            pour l'instant.
           </Col>
         </Row>
         <Row className="px-5 mt-5 d-flex justify-content-center">
@@ -460,6 +478,7 @@ class Resultat extends Component {
                     dataFetch={this.state.dataFetch}
                     label={data.label}
                     number={data.number}
+                    symbol={data.symbol}
                     key={data.id}
                   />
                 );
@@ -471,11 +490,18 @@ class Resultat extends Component {
         <Row>
           <Col xs={{ size: 12 }} className="pb-5 mt-5">
             <button
-              onClick={() => this.handleImg()}
+              onClick={() => this.handlePdf()}
               className="mb-4 mt-3 btn btn-lg text-white pdfButton"
             >
               <i className="fa fa-file-pdf-o" /> Télécharger PDF
             </button>
+            {this.state.loadingPdf && (
+              <img
+                className="spinnerResultat"
+                alt="spinner"
+                src="img/Spinner.gif"
+              />
+            )}
           </Col>
         </Row>
       </div>

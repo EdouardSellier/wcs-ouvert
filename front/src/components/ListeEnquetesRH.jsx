@@ -104,9 +104,8 @@ class ListeEnquetesRH extends Component {
   };
 
   render() {
-    console.log(this.state.surveyNameSelected);
     return (
-      <div>
+      <div className="pageHeight">
         <Container className="mt-4">
           <Row>
             <Col lg={{ size: 2 }}>
@@ -139,11 +138,11 @@ class ListeEnquetesRH extends Component {
             </select>
           </Col>
         </Container>
-        <Container className="mt-5 mb-4">
+        <Container className="mt-5">
           <Row className="mt-5">
             <Col lg={{ size: 4, offset: 1 }}>
               <div
-                className="card shadow mt-5 mb-4 clickCard"
+                className="card shadow mt-5 clickCard"
                 onClick={this.getResult}
               >
                 <div className="card-body">
@@ -160,7 +159,7 @@ class ListeEnquetesRH extends Component {
             </Col>
             <Col lg={{ size: 4, offset: 1 }}>
               <div
-                className="card shadow mt-5 mb-4 clickCard"
+                className="card shadow mt-5 clickCard"
                 onClick={this.getAssistance}
               >
                 <div className="card-body">

@@ -2,6 +2,23 @@ import React, { Component } from "react";
 import { Container, Row, Col, Form } from "reactstrap";
 import axios from "axios";
 import { urlBackEnd } from "../conf";
+import NotificationAlert from "react-notification-alert";
+
+const successMsg = {
+  place: "tr",
+  message:
+    "Votre message a bien été envoyé, nous vous répondrons dans les meilleurs délais.",
+  type: "success",
+  autoDismiss: 4
+};
+
+const errorMsg = {
+  place: "tr",
+  message:
+    "Il semblerait qu'il y ait un problème avec l'envoi de votre message, merci de nous contacter par téléphone si le problème persiste.",
+  type: "danger",
+  autoDismiss: 4
+};
 
 class Assistance extends Component {
   constructor(props) {
@@ -9,11 +26,14 @@ class Assistance extends Component {
     this.state = {
       fields: {
         email: "",
-        message: "",
-        confirmation: ""
+        message: ""
       }
     };
   }
+
+  alertFunction = msg => {
+    this.refs.notificationAlertMsg.notificationAlert(msg);
+  };
 
   handleBack = event => {
     event.preventDefault();
@@ -49,23 +69,22 @@ class Assistance extends Component {
           fields["email"] = "";
           fields["message"] = "";
           this.setState({
-            confirmation: (
-              <p className="confirm">Le message a bien été envoyé</p>
-            ),
             fields: fields
           });
+          this.alertFunction(successMsg);
         }
       })
       .catch(error => {
-        console.log(error);
+        this.alertFunction(errorMsg);
       });
   };
 
   render() {
     return (
-      <div>
-        <div className="text-white mb-5">
-          <Container className="mt-2">
+      <div className="pageHeight">
+        <div className="text-white">
+          <NotificationAlert ref="notificationAlertMsg" />
+          <Container className="mt-4">
             <Row>
               <Col lg={{ size: 2 }}>
                 <button
@@ -87,7 +106,7 @@ class Assistance extends Component {
               <p className="mt-3 text-left">
                 Si vous rencontrez un problème, n’hésitez pas à nous contacter
                 par mail via le formulaire ci-dessous ou à nous joindre par
-                téléphone au <i className="fa fa-phone" /> 0320619089.
+                téléphone au <i className="fa fa-phone" /> 03 20 61 90 89.
               </p>
               <Form onSubmit={this.contactForm} className="mt-2">
                 <div className="form-group">

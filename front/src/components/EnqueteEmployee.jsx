@@ -150,7 +150,9 @@ class EnqueteEmployee extends Component {
         ocasionaly_transport_one: "Voiture personnelle",
         ocasionaly_transport_two: "------",
         ocasionaly_transport_three: "------",
-        reason_transport: "Rapidité",
+        reason_transport_one: "Rapidité",
+        reason_transport_two: "------",
+        reason_transport_three: "------",
         distance_klm: 0,
         distance_min: 0,
         distance_money: 0,
@@ -225,6 +227,9 @@ class EnqueteEmployee extends Component {
       })
       .catch(error => {
         this.alertFunctionError();
+        this.setState({
+          hideButton: true
+        });
       });
   };
 
@@ -246,6 +251,9 @@ class EnqueteEmployee extends Component {
       })
       .catch(error => {
         this.alertFunctionError();
+        this.setState({
+          hideButton: true
+        });
       });
   }
 

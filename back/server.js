@@ -2,11 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const cors = require('cors');
-const { portServer, dbHandle, userTransporter } = require('./conf');
+const { portServer, dbHandle, userTransporter, authTransporter } = require('./conf');
 require('./passport-strategy');
 const nodemailer = require('nodemailer');
+const mg = require('nodemailer-mailgun-transport');
 const uuidv4 = require('uuid');
 const app = express();
+const nodemailerMailgun = nodemailer.createTransport(mg(authTransporter));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -60,7 +62,9 @@ app.get('/employee/list/:token', (req, res) => {
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
   dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${
+      formData.token_employee
+    } AND date_response=NULL'`,
     formData,
     (err, results) => {
       if (err) {
@@ -137,7 +141,21 @@ app.post('/user/list/survey', (req, res) => {
 
 app.get('/user/resultat', (req, res) => {
   dbHandle.query(
-    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response',
+    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport_one,reason_transport_two,reason_transport_three ,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response',
+    (err, results) => {
+      if (err) {
+        res.status(500).send('The database crashed ! The reason is ' + err);
+      } else {
+        res.status(200).json(results);
+      }
+    }
+  );
+});
+
+app.post('/user/answers', (req, res) => {
+  const surveyName = req.body.survey_name;
+  dbHandle.query(
+    `SELECT COUNT(date_response) AS nb_response FROM response WHERE date_response IS NOT NULL AND survey_name = "${surveyName}"`,
     (err, results) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
@@ -152,14 +170,6 @@ app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
   mailsArray.map(mail => {
     let tokenSurvey = uuidv4();
-    let transporter = nodemailer.createTransport({
-      service: 'Gmail',
-      secure: false,
-      auth: {
-        user: userTransporter.user,
-        pass: userTransporter.pass
-      }
-    });
     let mailOptions = {
       from: '"MOUV-R" <no-reply@mouv-r.com>',
       to: mail,
@@ -169,7 +179,7 @@ app.post('/user/send/survey', (req, res) => {
       quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
       adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
     };
-    transporter.sendMail(mailOptions, (error, info) => {
+    nodemailerMailgun.sendMail(mailOptions, (error, info) => {
       if (error) {
         res.status(500).send('An error occured during mail sending.');
       }
