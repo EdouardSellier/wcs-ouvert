@@ -62,9 +62,7 @@ app.get('/employee/list/:token', (req, res) => {
 app.post('/employee/send/sondage', (req, res) => {
   const formData = req.body;
   dbHandle.query(
-    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${
-      formData.token_employee
-    } AND date_response=NULL'`,
+    `UPDATE response SET ?, date_response=NOW() WHERE token_employee='${formData.token_employee}'`,
     formData,
     (err, results) => {
       if (err) {
@@ -141,7 +139,7 @@ app.post('/user/list/survey', (req, res) => {
 
 app.get('/user/resultat', (req, res) => {
   dbHandle.query(
-    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport_one,reason_transport_two,reason_transport_three ,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response',
+    'SELECT genre,age,principal_transport_one,principal_transport_two,principal_transport_three,ocasionaly_transport_one,ocasionaly_transport_two,ocasionaly_transport_three,reason_transport_one,reason_transport_two,reason_transport_three ,distance_klm,distance_min,distance_money,elements_one,elements_two,elements_three,parking_place,midday,frequency_midday,transport_midday,frequency_pro,distance_pro,deplacement_pro,reason_perso_car,deplacement_method_pro,commun_transport_one,commun_transport_two,commun_transport_three,bike_one,bike_two,bike_three,carpooling_one,carpooling_two,carpooling_three,survey_name,id_rh FROM response WHERE date_response IS NOT NULL',
     (err, results) => {
       if (err) {
         res.status(500).send('The database crashed ! The reason is ' + err);
