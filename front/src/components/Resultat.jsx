@@ -54,12 +54,13 @@ const ResultBar = props => {
                           overflow: "hidden"
                         }}
                       >
-                        {100 /
+                        {(
+                          100 /
                           (props.dataFetch.length /
                             props.dataFetch.filter(
                               dataFetch => dataFetch[props.index] === data
-                            ).length) +
-                          "%"}
+                            ).length)
+                        ).toFixed(1) + "%"}
                       </div>
                     </Col>
                   </Col>
@@ -282,7 +283,7 @@ const ResultText = props => {
     result += data[props.index];
     return false;
   });
-  result = (result / props.dataFetch.length).toFixed(2);
+  result = (result / props.dataFetch.length).toFixed(1);
 
   return (
     <React.Fragment>
@@ -387,7 +388,7 @@ class Resultat extends Component {
         this.setState({
           dataFetch: dataFetch,
           hovering: true,
-          nbResponse: data.length
+          nbResponse: dataFetch.length
         });
       });
   }

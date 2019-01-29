@@ -47,7 +47,9 @@ router.post('/inscription', (req, res) => {
           from: '"MOUV-R" <no-reply@mouv-r.com>',
           to: req.body.mail,
           subject: "Confirmation d'inscription ✔",
-          html: `<p>Madame, Monsieur,</p><p>Votre demande d’inscription a bien été prise en compte. Notre équipe va vous contacter par téléphone et vous enverra la facture correspondant à l’offre sélectionnée dans les meilleurs délais. Une fois la facture réglée, l’accès à l’ensemble des fonctionnalités de notre outil vous sera donné.</p><p>Nous vous remercions de bien vouloir y répondre, cela ne prendra que quelques minutes.</p><p>Pour rappel, le coût d'utilisation de Mouv'R est le suivant :</p><ul><li>De 0 à 500 salariés : 500 € HT / an</li><li>De 500 à 1 000 salariés : 800 € HT / an</li><li>De 1 000 à 2 000 salariés : 1 000 € HT / an</li><li>Au-delà de 2 000 salariés: sur devis</li></ul><p>Bonne journée et à bientôt</p><p>Cordialement,</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
+          html: `<p>Madame, Monsieur,</p><p>Votre demande d’inscription a bien été prise en compte. Notre équipe va
+          prendre contact avec vous dans les plus brefs délais pour vous présenter le tarif
+          de notre outil MOUV’R et valider votre accès.</p><p>Bonne journée et à bientôt</p><p>Cordialement,</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
         };
         transporter.sendMail(mailOptions, (error, info) => {
           if (error) {
