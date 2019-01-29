@@ -54,12 +54,13 @@ const ResultBar = props => {
                           overflow: "hidden"
                         }}
                       >
-                        {100 /
+                        {(
+                          100 /
                           (props.dataFetch.length /
                             props.dataFetch.filter(
                               dataFetch => dataFetch[props.index] === data
-                            ).length) +
-                          "%"}
+                            ).length)
+                        ).toFixed(1) + "%"}
                       </div>
                     </Col>
                   </Col>
@@ -297,7 +298,7 @@ const ResultText = props => {
         >
           La moyenne des salariés ayant répondu est de{" "}
           <span className="dataResultText">
-            {result}
+            {result.toFixed(1)}
             {props.symbol}
           </span>
         </Col>
