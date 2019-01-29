@@ -172,7 +172,7 @@ app.post('/user/send/survey', (req, res) => {
       from: '"MOUV-R" <no-reply@mouv-r.com>',
       to: mail,
       subject: 'Enquête de mobilité ✔',
-      html: `<p>Madame, Monsieur,</p><p>Vous êtes invités à répondre à une enquête relative aux habitudes de
+      html: `<p>Madame, Monsieur,</p><p>Vous êtes invité(e) à répondre à une enquête relative aux habitudes de
       déplacement des salariés de l’entreprise.</p><p>En effet, votre employeur travaille à la mise en place d’un plan de mobilité. Cette démarche a pour objectif de vous proposer, pour vos déplacements
       quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
       adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`

@@ -396,16 +396,6 @@ class Resultat extends Component {
   render() {
     return (
       <div className="container-fluid mt-2">
-        <div className="col-1 offset-11 mb-2">
-          <button
-            className="btn goTop text-white"
-            onClick={() => {
-              window.scrollTo(0, 0);
-            }}
-          >
-            <i className="fa fa-arrow-up" />
-          </button>
-        </div>
         <Row>
           <Col lg={{ size: 2 }} className="pb-4">
             <button className="mt-2 btn text-white" onClick={this.handleBack}>
