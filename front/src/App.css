@@ -50,12 +50,6 @@ button {
   text-align: left;
 }
 
-.goTop {
-  position: fixed;
-  bottom: 5%;
-  text-align: right;
-}
-
 .pageHeight {
   min-height: calc(100vh - 132px);
 }

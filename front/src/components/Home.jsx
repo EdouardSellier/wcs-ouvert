@@ -90,22 +90,10 @@ class Home extends Component {
     return (
       <div className="home">
         <Header />
-        <div className="col-1 offset-11 mb-2">
-          <button
-            className="btn goTop text-white"
-            onClick={() => {
-              window.scrollTo(0, 0);
-            }}
-          >
-            <i className="fa fa-arrow-up" />
-          </button>
-        </div>
         <div>
           <div className="centered">
-            <Zoom>
-              BIENVENUE SUR NOTRE OUTIL
-              <br /> DE PLAN DE MOBILITÉ !
-            </Zoom>
+            <Zoom>BIENVENUE SUR NOTRE OUTIL DE PLAN DE MOBILITÉ !</Zoom>
+            <img src="./img/logo.PNG" alt="cook" className="mt-5" />
           </div>
         </div>
         <div className="m-4">
