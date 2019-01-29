@@ -283,7 +283,7 @@ const ResultText = props => {
     result += data[props.index];
     return false;
   });
-  result = (result / props.dataFetch.length).toFixed(2);
+  result = (result / props.dataFetch.length).toFixed(1);
 
   return (
     <React.Fragment>
@@ -298,7 +298,7 @@ const ResultText = props => {
         >
           La moyenne des salariés ayant répondu est de{" "}
           <span className="dataResultText">
-            {result.toFixed(1)}
+            {result}
             {props.symbol}
           </span>
         </Col>
@@ -388,7 +388,7 @@ class Resultat extends Component {
         this.setState({
           dataFetch: dataFetch,
           hovering: true,
-          nbResponse: data.length
+          nbResponse: dataFetch.length
         });
       });
   }
