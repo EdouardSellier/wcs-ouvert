@@ -93,7 +93,7 @@ class Home extends Component {
         <div>
           <div className="centered">
             <Zoom>BIENVENUE SUR NOTRE OUTIL DE PLAN DE MOBILITÉ !</Zoom>
-            <img src="./img/logo.PNG" alt="cook" className="mt-5" />
+            <img src="./img/Image1.png" alt="cook" className="mt-5 img-fluid" />
           </div>
         </div>
         <div className="m-4">
