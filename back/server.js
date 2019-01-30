@@ -523,6 +523,11 @@ app.post('/admin/list/survey', (req, res) => {
   });
 });
 
+// A pragmatic solution to force MySQL to keep the connection alive on production :
+setInterval(() => {
+  dbHandle.query('SELECT 1');
+});
+
 app.listen(portServer, err => {
   if (err) {
     throw new Error('Something bad happened...');
