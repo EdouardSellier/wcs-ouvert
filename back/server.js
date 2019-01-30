@@ -166,10 +166,10 @@ app.post('/user/answers', (req, res) => {
 
 app.post('/user/send/survey', (req, res) => {
   const mailsArray = req.body.mails;
-  let mailOptions = {};
   let tokenSurvey = uuidv4();
+  let listErrors = [];
   mailsArray.map(mail => {
-    mailOptions = {
+    let mailOptions = {
       from: '"MOUV-R" <no-reply@mouv-r.com>',
       to: mail,
       subject: 'Enquête de mobilité ✔',
@@ -178,23 +178,28 @@ app.post('/user/send/survey', (req, res) => {
       quotidiens, des solutions de mobilité, alternatives à la voiture individuelle,
       adaptées à votre situation.</p><p>Répondre à cette enquête vous prendra 5 minutes : <a href='https://mouv-r.fr/enquete/${tokenSurvey}'>Cliquez sur ce lien</a></p><p>Merci d’avance pour votre participation et bonne journée.</p><p>Edouard Sellier, chargé de mission mobilité au sein du bureau d’écolonomie OUVERT</p>`
     };
-  });
-  nodemailerMailgun.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      res.status(500).send('An error occured during mail sending.');
-    }
-    dbHandle.query(
-      `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
-        req.body.survey_name
-      }','${req.body.user_id}')`,
-      function(err) {
-        if (err) {
-          res.status(500).send('The database crashed ! The reason is ' + err);
-        }
-        res.status(200).send('SUCCESS');
+    nodemailerMailgun.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        listErrors.push(`Error while sending mail to ${mail} ! The reason is ${error}`);
+      } else {
+        dbHandle.query(
+          `INSERT INTO response (token_employee,survey_name,id_rh) VALUES ('${tokenSurvey}','${
+            req.body.survey_name
+          }','${req.body.user_id}')`,
+          function(err) {
+            if (err) {
+              listErrors.push('The database crashed ! The reason is ' + err);
+            }
+          }
+        );
       }
-    );
+    });
   });
+  if (listErrors.length > 0) {
+    res.status(500).send(`There were ${listErrors.length} error(s)`);
+  } else {
+    res.status(200).send(`SUCCESS`);
+  }
 });
 
 app.post('/user/geolocation/employee', (req, res) => {
@@ -525,9 +530,9 @@ app.post('/admin/list/survey', (req, res) => {
 });
 
 // A pragmatic solution to force MySQL to keep the connection alive on production :
-setInterval(() => {
+/*setInterval(() => {
   dbHandle.query('SELECT 1');
-});
+});*/
 
 app.listen(portServer, err => {
   if (err) {
